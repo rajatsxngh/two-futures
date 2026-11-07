@@ -1,0 +1,101 @@
+{
+  "_comment": "Client tools for the Future Maya agent. Names, parameter identifiers and types must match exactly what you enter in the ElevenLabs dashboard (Agent > Tools > Add tool > Client). The front end registers handlers with the same names in frontend/src/components/voice/VoiceSession.tsx. Parameters mirror backend/app/models.py WhatIfRequest and TransferRequest (minus `customer`, which the app fills in).",
+  "tools": [
+    {
+      "type": "client",
+      "name": "update_plan",
+      "description": "Plan path only. Re-runs the plan-path forecast with a change the user describes (new job, raise or pay cut, move, big purchase, saving more, spending more, job loss) and returns the new 2031 numbers plus one ready-made sentence to say. Only fill numbers the user actually said. Never call on the same path.",
+      "expects_response": true,
+      "response_timeout_secs": 10,
+      "parameters": {
+        "type": "object",
+        "required": ["description"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "The change in the user's own words, e.g. 'What if I take the Austin job? $8,000 more a year, but rent is $300 higher.'"
+          },
+          "preset": {
+            "type": "string",
+            "enum": ["new_job", "move", "big_purchase", "save_more", "job_loss", "custom"],
+            "description": "Closest kind of change. Use custom if none fits."
+          },
+          "income_change_yearly": {
+            "type": "number",
+            "description": "Gross yearly pay change exactly as said, e.g. 8000 for '$8,000 more a year', -5000 for a $5,000 pay cut. Do not convert to monthly."
+          },
+          "spending_change_monthly": {
+            "type": "number",
+            "description": "Monthly spending change as said, e.g. 300 for 'rent is $300 higher'. Negative means spending less."
+          },
+          "savings_change_monthly": {
+            "type": "number",
+            "description": "Extra monthly saving as said, e.g. 100 for 'save $100 more a month'."
+          },
+          "one_time_cost": {
+            "type": "number",
+            "description": "A single purchase or cost as said, e.g. 2500 for a $2,500 trip."
+          },
+          "job_loss_months": {
+            "type": "integer",
+            "description": "Months with no income, e.g. 3 for 'lose my job for 3 months'."
+          },
+          "start_month": {
+            "type": "string",
+            "description": "YYYY-MM when the change starts, only if the user said when. Leave empty otherwise."
+          }
+        }
+      }
+    },
+    {
+      "type": "client",
+      "name": "start_transfer",
+      "description": "Schedules the simulated next-step transfer. Call ONLY after the user clearly says yes to the amount, the accounts and how often. Returns the status and first date.",
+      "expects_response": true,
+      "response_timeout_secs": 10,
+      "parameters": {
+        "type": "object",
+        "required": ["amount", "from_account_id", "to_account_id", "frequency", "confirmed"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Dollar amount per transfer from the fact sheet's NEXT STEP, e.g. 150."
+          },
+          "from_account_id": {
+            "type": "string",
+            "description": "Source account id. Use 'spend' (the Spend checking account)."
+          },
+          "to_account_id": {
+            "type": "string",
+            "description": "Destination account id. Use 'reserve' (the Reserve savings account)."
+          },
+          "frequency": {
+            "type": "string",
+            "enum": ["payday", "monthly", "once"],
+            "description": "How often. Use 'payday' unless the user clearly asked otherwise."
+          },
+          "confirmed": {
+            "type": "boolean",
+            "description": "True only after a clear yes from the user to amount, accounts and frequency."
+          }
+        }
+      }
+    },
+    {
+      "type": "client",
+      "name": "highlight_metric",
+      "description": "Makes a number glow on screen when you mention it. Fire and forget; never mention it out loud.",
+      "expects_response": false,
+      "parameters": {
+        "type": "object",
+        "required": ["metric_id"],
+        "properties": {
+          "metric_id": {
+            "type": "string",
+            "description": "One of: same_path.2031.cushion_months, same_path.2031.card_debt, same_path.2031.car_paid_off, same_path.2031.ira, plan.2031.cushion_months, plan.2031.card_debt, plan.2031.car_paid_off, plan.2031.ira, next_step.score_2031. Use the ids for your own path."
+          }
+        }
+      }
+    }
+  ]
+}
