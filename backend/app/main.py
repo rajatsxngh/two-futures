@@ -8,11 +8,12 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import config
+from .engine import actions
 from .engine import data as customer_data
 from .engine.forecast import forecast_for
-from .engine.futures import futures_for
 from .engine.health import health_for
 from .engine.profile import profile_for
+from .engine.whatif import WhatIfError
 from .fixtures import load
 from .models import (
     ForecastResponse,
@@ -83,22 +84,37 @@ def get_futures(customer: str = CustomerParam):
     check_customer(customer)
     if config.USE_FIXTURES:
         return load(customer, "futures")
-    return futures_for(customer, config.DEMO_TODAY).response
+    return actions.current_futures(customer, config.DEMO_TODAY).response
 
 
 @app.post("/api/update_plan", response_model=UpdatePlanResponse)
 def update_plan(req: WhatIfRequest):
-    return load(check_customer(req.customer), "update_plan")
+    """Apply a what-if to the plan path. What-ifs stack until /api/reset."""
+    check_customer(req.customer)
+    if config.USE_FIXTURES:
+        return load(req.customer, "update_plan")
+    try:
+        return actions.apply_whatif(req.customer, req, config.DEMO_TODAY)
+    except WhatIfError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
 
 
 @app.post("/api/start_transfer", response_model=TransferResponse)
 def start_transfer(req: TransferRequest):
+    """Schedule a simulated transfer. Refused without confirmed=true: nothing moves without a clear yes."""
     check_customer(req.customer)
     if not req.confirmed:
         raise HTTPException(status_code=400, detail="Transfer needs a clear yes (confirmed=true). Nothing moved.")
-    return load(req.customer, "start_transfer")
+    if config.USE_FIXTURES:
+        return load(req.customer, "start_transfer")
+    try:
+        return actions.schedule_transfer(req, config.DEMO_TODAY)
+    except actions.TransferError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @app.post("/api/reset", response_model=ResetResponse)
 def reset(customer: str = CustomerParam):
-    return ResetResponse(ok=True, customer=check_customer(customer))
+    """Clear what-ifs and scheduled transfers: back to the starting demo state."""
+    actions.reset(check_customer(customer))
+    return ResetResponse(ok=True, customer=customer)

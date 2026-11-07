@@ -82,7 +82,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M5: What-if and actions API (F6, F7 backend)
+## M5: What-if and actions API (F6, F7 backend) ✅ done
 **Depends on:** M4 (a what-if re-runs the plan path)
 **Goal:** change a decision and get new numbers back, plus a simulated transfer and a demo reset.
 
@@ -92,6 +92,8 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 - Server-side session state, so what-ifs stack and reset clears them.
 
 **Done when:** each of the 5 presets has a test; the Austin case returns about +$170/mo; reset puts Maya back to 55; a recalculation takes under 1 second.
+
+> **As built:** what-ifs stack on the plan path and `GET /api/futures` reflects them until reset. "Save more" also lowers spending by the same amount, since moving money between your own accounts creates none. Job loss pauses plan transfers while there's no pay. Buy-a-home returns 422 until M11. Transfers are de-duplicated, so a retried "yes" doesn't schedule twice. A what-if takes about 0.45 s.
 
 ---
 

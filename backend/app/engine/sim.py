@@ -59,6 +59,22 @@ def make_draws(p: Params, n_months: int, runs: int = A.RUNS, seed: int = A.SEED 
 
 
 @dataclass
+class Adjust:
+    """Month-by-month changes from what-ifs (plan path only). Arrays have one entry per simulated month."""
+
+    income: np.ndarray  # change to monthly take-home
+    spending: np.ndarray  # change to monthly spending
+    pool: np.ndarray  # extra automatic saving
+    one_time: np.ndarray  # one-time costs (savings first, then the card)
+    pause: np.ndarray  # bool: plan transfers paused (e.g. while out of work)
+
+    @classmethod
+    def none(cls, n: int) -> "Adjust":
+        z = np.zeros(n)
+        return cls(income=z.copy(), spending=z.copy(), pool=z.copy(), one_time=z.copy(), pause=np.zeros(n, dtype=bool))
+
+
+@dataclass
 class SimResult:
     path: PathId
     months: list[date]  # index i+1 in the arrays below; index 0 is today
@@ -70,12 +86,15 @@ class SimResult:
     spend_typical: np.ndarray  # runs x (months+1)
     event_split: dict[str, tuple[float, float]] = field(default_factory=dict)  # title -> (from savings, on card), medians
     transfer: float = 0.0
+    income: np.ndarray | None = None  # monthly take-home per month, after what-ifs
 
 
-def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_events: list[dict]) -> SimResult:
+def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_events: list[dict],
+             adjust: Adjust | None = None) -> SimResult:
     plan = path == "plan"
     months = month_starts(p.today, A.TARGET_YEAR)
     n = len(months)
+    adj = adjust or Adjust.none(n)
     runs = draws.surprises.shape[0]
     trim = np.array([1 - A.FLEXIBLE_TRIM if (plan and c.flexible) else 1.0 for c in p.categories])
 
@@ -103,10 +122,10 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
     event_by_month = {(e["date"].year, e["date"].month): e for e in shared_events}
     split_log: dict[str, tuple[np.ndarray, np.ndarray]] = {}
 
-    def typical_spend() -> np.ndarray:
+    def typical_spend(extra: float = 0.0) -> np.ndarray:
         card_int = sum(bal[c.id] * (c.rate or 0) / 100 / 12 for c in cards)
         mins = sum(np.where(bal[l.id] > 0.005, l.min_payment or 0, 0) for l in p.loans)
-        return fixed_regular + var_typ + card_int + mins
+        return fixed_regular + var_typ + card_int + mins + extra
 
     def liquid() -> np.ndarray:
         return bal[chk] + (bal[sav] if sav else 0)
@@ -117,11 +136,11 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
 
     for i, md in enumerate(months):
         # income and fixed bills
-        bal[chk] += p.take_home_monthly
+        bal[chk] += p.take_home_monthly + adj.income[i]
         fixed = p.fixed_in_month(md, plan)
         var = (draws.spending[:, i, :] * trim).sum(axis=1)
-        bal[chk] -= fixed + var
-        spent = fixed + var
+        bal[chk] -= fixed + var + adj.spending[i]
+        spent = fixed + var + adj.spending[i]
 
         # card: pay this month's interest (new charges are already in `var`)
         for c in cards:
@@ -149,9 +168,9 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
 
         # plan waterfall (rules 1, 4, 5)
         if plan:
-            st = typical_spend()
+            st = typical_spend(adj.spending[i])
             cush = liquid() / st
-            pool = base_pool + freed
+            pool = np.zeros(runs) if adj.pause[i] else base_pool + freed + adj.pool[i]
             bal[chk] -= pool
             building = cush < A.CUSHION_TARGET
             to_sav = np.where(building, pool, 0.0)
@@ -173,7 +192,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
             ira_extra[:, i] = to_ira
 
         # surprises: savings first, then the card
-        s = draws.surprises[:, i].copy()
+        s = draws.surprises[:, i].copy() + adj.one_time[i]
         ev = event_by_month.get((md.year, md.month))
         if ev:
             s = s + ev["amount"]
@@ -230,12 +249,12 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
             bal[a.id] = np.where(np.abs(bal[a.id]) < 0.005, 0.0, bal[a.id])
             hist[a.id][:, i + 1] = bal[a.id]
         spending[:, i] = spent
-        st = typical_spend()
+        st = typical_spend(adj.spending[i])
         spend_typ[:, i + 1] = st
         cushion[:, i + 1] = liquid() / st
 
     return SimResult(
         path=path, months=months, balances=hist, spending=spending, ira_extra=ira_extra, card_interest=card_interest, cushion=cushion,
-        spend_typical=spend_typ, transfer=transfer,
+        spend_typical=spend_typ, transfer=transfer, income=p.take_home_monthly + adj.income,
         event_split={k: (float(np.median(a)), float(np.median(b))) for k, (a, b) in split_log.items()},
     )

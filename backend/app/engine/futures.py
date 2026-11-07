@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, timedelta
+import json
 from functools import lru_cache
 
 import numpy as np
@@ -19,6 +20,7 @@ from ..models import (
     PathResult,
     Plan,
     PlanAction,
+    WhatIfRequest,
     YearSnapshot,
 )
 from . import assumptions as A
@@ -28,6 +30,7 @@ from .forecast import rule1_transfer
 from .health import FinancialState, band_of, health_for, score_state
 from .params import Params, build_params
 from .sim import PathId, SimResult, make_draws, month_starts, simulate
+from .whatif import to_adjust
 
 LABELS: dict[PathId, str] = {"same_path": "Same path", "plan": "With a plan"}
 
@@ -92,7 +95,7 @@ def state_for_year(p: Params, sim: SimResult, year: int, today: date) -> Financi
     elif p.reserve_contrib:
         auto.insert(0, f"Savings ${p.reserve_contrib:,.0f}/month")
     return FinancialState(
-        take_home_monthly=p.take_home_monthly,
+        take_home_monthly=float(sim.income[cols].mean()) if sim.income is not None else p.take_home_monthly,
         spending_monthly=med(sim.spending[:, cols].mean(axis=1)),
         late_payments_12m=0,
         checking=bal[p.checking.id],
@@ -264,7 +267,8 @@ def _plan(p: Params, plan_sim: SimResult, transfer: float, low: float) -> Plan:
 
 
 def _fact_sheet(path: PathId, p: Params, health_today: HealthResponse, snap: YearSnapshot, events: list[LifeEvent],
-                interest_total: float, plan: Plan, next_step_text: str, today: date) -> FactSheet:
+                interest_total: float, plan: Plan, next_step_text: str, today: date,
+                whatif_lines: list[str] | None = None) -> FactSheet:
     c = p.data.customer
     ind = {i.id: i for i in health_today.indicators}
     rent = next((b for b in p.fixed_bills if b.category == "housing"), None)
@@ -319,20 +323,27 @@ def _fact_sheet(path: PathId, p: Params, health_today: HealthResponse, snap: Yea
         "", f"TODAY ({today.year}):", *today_facts,
         "", f"YOUR LIFE IN {y}:", *facts,
         "", f"PLAN: {plan_summary}", f"NEXT STEP: {next_step_text}",
+        *(["", "WHAT-IFS APPLIED (already in the numbers above):", *whatif_lines] if whatif_lines else []),
     ])
     return FactSheet(path=path, today_facts=today_facts, future_facts=facts, plan_summary=plan_summary,
                      next_step=next_step_text, opening_line=opening, text=text)
 
 
-def build_futures(data: CustomerData, today: date) -> FuturesBundle:
+def build_futures(data: CustomerData, today: date,
+                  applied: list[tuple[WhatIfRequest, str]] | None = None) -> FuturesBundle:
+    """Both paths. `applied` what-ifs (request, sentence) change the plan path only."""
+    applied = applied or []
     p = build_params(data, today)
     health_today = health_for(data, today)
     transfer, low = rule1_transfer(p)
     months = month_starts(today, A.TARGET_YEAR)
     draws = make_draws(p, len(months))
     shared = A.SHARED_EVENTS.get(data.customer.id, [])
-    sims: dict[PathId, SimResult] = {path: simulate(p, path, draws, transfer if path == "plan" else 0.0, shared)
-                                     for path in ("same_path", "plan")}
+    adjust = to_adjust(p, months, [w for w, _ in applied])
+    sims: dict[PathId, SimResult] = {
+        "same_path": simulate(p, "same_path", draws, 0.0, shared),
+        "plan": simulate(p, "plan", draws, transfer, shared, adjust),
+    }
 
     car = next((l for l in p.loans if l.type == AccountType.auto_loan), None)
     car_paid = {k: payoff_date(s, car.id, car.due_day) if car else None for k, s in sims.items()}
@@ -383,7 +394,8 @@ def build_futures(data: CustomerData, today: date) -> FuturesBundle:
     fact_sheets = {}
     for k, s in sims.items():
         fact_sheets[k] = _fact_sheet(k, p, health_today, snaps_all[k][-1], events_all[k],
-                                     med(s.card_interest.sum(axis=1)), plan, next_text, today)
+                                     med(s.card_interest.sum(axis=1)), plan, next_text, today,
+                                     [f"{w.description} -> {line}" for w, line in applied] if k == "plan" else None)
 
     response = FuturesResponse(
         as_of=today, target_year=A.TARGET_YEAR, paths=paths, plan=plan, next_step=next_step,
@@ -398,6 +410,13 @@ def build_futures(data: CustomerData, today: date) -> FuturesBundle:
     return FuturesBundle(response=response, params=p, sims=sims, month_labels=labels, monthly_same=monthly_same)
 
 
-@lru_cache(maxsize=None)
-def futures_for(customer_id: str, today: date) -> FuturesBundle:
-    return build_futures(load(customer_id), today)
+@lru_cache(maxsize=256)
+def _cached(customer_id: str, today: date, key: str) -> FuturesBundle:
+    applied = [(WhatIfRequest.model_validate(w), line) for w, line in json.loads(key)]
+    return build_futures(load(customer_id), today, applied)
+
+
+def futures_for(customer_id: str, today: date,
+                applied: list[tuple[WhatIfRequest, str]] | None = None) -> FuturesBundle:
+    key = json.dumps([[w.model_dump(mode="json"), line] for w, line in (applied or [])], sort_keys=True)
+    return _cached(customer_id, today, key)
