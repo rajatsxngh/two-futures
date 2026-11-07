@@ -10,10 +10,11 @@ A 360° Financial Health Navigator built for PNC's HackUTD challenge. See your w
 | Folder | What it is |
 |---|---|
 | `backend/` | FastAPI + NumPy. `app/models.py` is the API contract; `app/main.py` holds the routes. |
-| `backend/app/fixtures/` | Placeholder JSON served by the stub endpoints until the engine lands (M2–M5). Built by `scripts/make_fixtures.py`. |
+| `backend/app/engine/` | The engine: data loading, health score, profile (M2–M3); forecast and what-if arrive in M4–M5. |
+| `backend/app/fixtures/` | Placeholder JSON for endpoints the engine doesn't cover yet (and for `USE_FIXTURES=1`). Built by `scripts/make_fixtures.py`. |
 | `frontend/` | Next.js 16 + React + Tailwind + Recharts. `src/lib/api.ts` is the typed client. |
 | `agent/` | ElevenLabs agent prompt and setup (M8). |
-| `data/` | Generated demo customers (M2). |
+| `data/` | Made-up demo customers (Maya, and Jordan & Priya with all 8 account types). Built by `scripts/generate_data.py`. |
 
 ## Run it
 
@@ -34,6 +35,7 @@ The web app runs at http://localhost:3000 and the API at http://localhost:8000 (
 | Command | What it does |
 |---|---|
 | `npm run check` | Backend tests, front-end type check and lint |
+| `npm run data` | Regenerate the demo customers in `data/` (fixed seed, same output every run) |
 | `npm run fixtures` | Rebuild fixture JSON (validated against the models) |
 | `npm run gen:types` | After changing `backend/app/models.py`: export OpenAPI and regenerate `frontend/src/lib/api-schema.ts` |
 

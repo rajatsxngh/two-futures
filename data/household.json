@@ -1,0 +1,6657 @@
+{
+ "customer": {
+  "id": "household",
+  "name": "Jordan and Priya",
+  "age": 34,
+  "city": "Plano",
+  "state": "TX",
+  "occupation": "Teacher and engineer",
+  "pay_schedule": "semimonthly",
+  "take_home_per_paycheck": 5400.0,
+  "next_payday": "2026-11-15",
+  "setup": {
+   "insurance": {
+    "health": true,
+    "auto": true,
+    "renters_or_home": true,
+    "disability": true
+   },
+   "planning_ahead": "yes"
+  }
+ },
+ "accounts": [
+  {
+   "id": "spend",
+   "type": "checking",
+   "name": "Spend",
+   "institution": "PNC",
+   "balance": 5200.0,
+   "rate": 0.01,
+   "group": "cash"
+  },
+  {
+   "id": "reserve",
+   "type": "savings",
+   "name": "Reserve",
+   "institution": "PNC",
+   "balance": 14800.0,
+   "rate": 0.03,
+   "monthly_contribution": 400.0,
+   "group": "savings_cds"
+  },
+  {
+   "id": "cd",
+   "type": "cd",
+   "name": "18-month CD",
+   "institution": "PNC",
+   "balance": 10000.0,
+   "rate": 4.1,
+   "maturity_date": "2027-09-01",
+   "term_months": 18,
+   "original_amount": 10000.0,
+   "group": "savings_cds"
+  },
+  {
+   "id": "ira",
+   "type": "ira",
+   "name": "Traditional IRA",
+   "institution": "Bluebonnet Investments",
+   "balance": 48200.0,
+   "monthly_contribution": 500.0,
+   "group": "retirement"
+  },
+  {
+   "id": "auto1",
+   "type": "auto_loan",
+   "name": "Auto loan (SUV)",
+   "institution": "Lone Star Credit Union",
+   "balance": 21500.0,
+   "rate": 5.9,
+   "min_payment": 520.0,
+   "due_day": 10,
+   "original_amount": 34000.0,
+   "term_months": 72,
+   "group": "debt"
+  },
+  {
+   "id": "auto2",
+   "type": "auto_loan",
+   "name": "Auto loan (sedan)",
+   "institution": "PNC",
+   "balance": 6300.0,
+   "rate": 4.9,
+   "min_payment": 280.0,
+   "due_day": 20,
+   "original_amount": 18000.0,
+   "term_months": 60,
+   "group": "debt"
+  },
+  {
+   "id": "personal",
+   "type": "personal_loan",
+   "name": "Personal loan",
+   "institution": "PNC",
+   "balance": 7800.0,
+   "rate": 11.5,
+   "min_payment": 260.0,
+   "due_day": 12,
+   "original_amount": 12000.0,
+   "term_months": 48,
+   "group": "debt"
+  },
+  {
+   "id": "card",
+   "type": "credit_card",
+   "name": "Cash Rewards Visa",
+   "institution": "PNC",
+   "balance": 1900.0,
+   "rate": 22.99,
+   "limit": 12000.0,
+   "min_payment": 57.0,
+   "due_day": 25,
+   "group": "debt"
+  },
+  {
+   "id": "mortgage",
+   "type": "mortgage",
+   "name": "Mortgage",
+   "institution": "PNC",
+   "balance": 286000.0,
+   "rate": 6.25,
+   "min_payment": 1950.0,
+   "due_day": 1,
+   "original_amount": 300000.0,
+   "term_months": 360,
+   "group": "debt"
+  }
+ ],
+ "bills": [
+  {
+   "id": "mortgage",
+   "name": "Mortgage",
+   "amount": 1950.0,
+   "category": "mortgage",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 1,
+    "date": null
+   }
+  },
+  {
+   "id": "auto1",
+   "name": "SUV payment",
+   "amount": 520.0,
+   "category": "auto_loan",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 10,
+    "date": null
+   }
+  },
+  {
+   "id": "personal",
+   "name": "Personal loan",
+   "amount": 260.0,
+   "category": "personal_loan",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 12,
+    "date": null
+   }
+  },
+  {
+   "id": "insurance",
+   "name": "Car insurance (2 cars)",
+   "amount": 238.0,
+   "category": "insurance",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 14,
+    "date": null
+   }
+  },
+  {
+   "id": "utilities",
+   "name": "Utilities",
+   "amount": 260.0,
+   "category": "utilities",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 18,
+    "date": null
+   }
+  },
+  {
+   "id": "auto2",
+   "name": "Sedan payment",
+   "amount": 280.0,
+   "category": "auto_loan",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 20,
+    "date": null
+   }
+  },
+  {
+   "id": "card_pay",
+   "name": "Credit card payment",
+   "amount": 57.0,
+   "category": "card_payment",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 25,
+    "date": null
+   }
+  },
+  {
+   "id": "daycare_deposit",
+   "name": "Daycare deposit",
+   "amount": 600.0,
+   "category": "childcare",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "once",
+    "day": null,
+    "date": "2027-02-01"
+   }
+  },
+  {
+   "id": "cd_maturity",
+   "name": "CD matures",
+   "amount": 10615.0,
+   "category": "cd_maturity",
+   "account_id": "cd",
+   "due_rule": {
+    "kind": "once",
+    "day": null,
+    "date": "2027-09-01"
+   }
+  }
+ ],
+ "transactions": [
+  {
+   "id": "t00001",
+   "date": "2025-11-09",
+   "amount": -140.53,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00002",
+   "date": "2025-11-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00003",
+   "date": "2025-11-11",
+   "amount": -211.56,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00004",
+   "date": "2025-11-11",
+   "amount": -121.63,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00005",
+   "date": "2025-11-11",
+   "amount": -39.2,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00006",
+   "date": "2025-11-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00007",
+   "date": "2025-11-12",
+   "amount": -97.77,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00008",
+   "date": "2025-11-13",
+   "amount": -140.02,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00009",
+   "date": "2025-11-13",
+   "amount": -25.97,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00010",
+   "date": "2025-11-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00011",
+   "date": "2025-11-14",
+   "amount": -86.86,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00012",
+   "date": "2025-11-14",
+   "amount": -157.14,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00013",
+   "date": "2025-11-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00014",
+   "date": "2025-11-15",
+   "amount": -258.74,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00015",
+   "date": "2025-11-15",
+   "amount": -110.61,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00016",
+   "date": "2025-11-16",
+   "amount": -243.12,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00017",
+   "date": "2025-11-16",
+   "amount": -46.26,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00018",
+   "date": "2025-11-17",
+   "amount": -164.62,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00019",
+   "date": "2025-11-17",
+   "amount": -84.56,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00020",
+   "date": "2025-11-17",
+   "amount": -46.51,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00021",
+   "date": "2025-11-17",
+   "amount": -100.66,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00022",
+   "date": "2025-11-18",
+   "amount": -258.4,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00023",
+   "date": "2025-11-18",
+   "amount": -137.13,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00024",
+   "date": "2025-11-19",
+   "amount": -40.02,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00025",
+   "date": "2025-11-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00026",
+   "date": "2025-11-21",
+   "amount": -182.54,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00027",
+   "date": "2025-11-21",
+   "amount": -92.75,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00028",
+   "date": "2025-11-21",
+   "amount": -243.79,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00029",
+   "date": "2025-11-22",
+   "amount": -128.12,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00030",
+   "date": "2025-11-23",
+   "amount": -106.43,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00031",
+   "date": "2025-11-23",
+   "amount": -137.97,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00032",
+   "date": "2025-11-24",
+   "amount": -73.09,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00033",
+   "date": "2025-11-24",
+   "amount": -135.0,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00034",
+   "date": "2025-11-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00035",
+   "date": "2025-11-25",
+   "amount": -156.96,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00036",
+   "date": "2025-11-25",
+   "amount": -1141.73,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00037",
+   "date": "2025-11-25",
+   "amount": 1141.73,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00038",
+   "date": "2025-11-26",
+   "amount": -239.86,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00039",
+   "date": "2025-11-27",
+   "amount": -237.55,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00040",
+   "date": "2025-11-27",
+   "amount": -37.79,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00041",
+   "date": "2025-11-27",
+   "amount": -55.09,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00042",
+   "date": "2025-11-27",
+   "amount": -6.14,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00043",
+   "date": "2025-11-28",
+   "amount": -105.61,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00044",
+   "date": "2025-11-30",
+   "amount": -178.26,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00045",
+   "date": "2025-11-30",
+   "amount": -53.82,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00046",
+   "date": "2025-12-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00047",
+   "date": "2025-12-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00048",
+   "date": "2025-12-01",
+   "amount": -133.84,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00049",
+   "date": "2025-12-01",
+   "amount": -127.06,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00050",
+   "date": "2025-12-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00051",
+   "date": "2025-12-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00052",
+   "date": "2025-12-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00053",
+   "date": "2025-12-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00054",
+   "date": "2025-12-02",
+   "amount": -108.5,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00055",
+   "date": "2025-12-02",
+   "amount": -146.43,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00056",
+   "date": "2025-12-03",
+   "amount": -299.54,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00057",
+   "date": "2025-12-03",
+   "amount": -92.92,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00058",
+   "date": "2025-12-04",
+   "amount": -244.51,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00059",
+   "date": "2025-12-04",
+   "amount": -133.59,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00060",
+   "date": "2025-12-05",
+   "amount": -242.85,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00061",
+   "date": "2025-12-06",
+   "amount": -34.8,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00062",
+   "date": "2025-12-06",
+   "amount": -54.41,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00063",
+   "date": "2025-12-07",
+   "amount": -84.27,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00064",
+   "date": "2025-12-08",
+   "amount": -161.22,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00065",
+   "date": "2025-12-09",
+   "amount": -134.35,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00066",
+   "date": "2025-12-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00067",
+   "date": "2025-12-11",
+   "amount": -231.42,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00068",
+   "date": "2025-12-11",
+   "amount": -43.46,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00069",
+   "date": "2025-12-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00070",
+   "date": "2025-12-13",
+   "amount": -151.37,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00071",
+   "date": "2025-12-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00072",
+   "date": "2025-12-14",
+   "amount": -124.13,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00073",
+   "date": "2025-12-14",
+   "amount": -111.0,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00074",
+   "date": "2025-12-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00075",
+   "date": "2025-12-15",
+   "amount": -228.47,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00076",
+   "date": "2025-12-15",
+   "amount": -98.55,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00077",
+   "date": "2025-12-15",
+   "amount": -92.79,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00078",
+   "date": "2025-12-16",
+   "amount": -98.57,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00079",
+   "date": "2025-12-16",
+   "amount": -49.58,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00080",
+   "date": "2025-12-17",
+   "amount": -230.64,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00081",
+   "date": "2025-12-17",
+   "amount": -63.86,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00082",
+   "date": "2025-12-18",
+   "amount": -209.69,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00083",
+   "date": "2025-12-19",
+   "amount": -73.38,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00084",
+   "date": "2025-12-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00085",
+   "date": "2025-12-20",
+   "amount": -86.32,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00086",
+   "date": "2025-12-20",
+   "amount": -152.74,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00087",
+   "date": "2025-12-20",
+   "amount": -137.11,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00088",
+   "date": "2025-12-21",
+   "amount": -213.65,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00089",
+   "date": "2025-12-22",
+   "amount": -128.29,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00090",
+   "date": "2025-12-23",
+   "amount": -171.44,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00091",
+   "date": "2025-12-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00092",
+   "date": "2025-12-25",
+   "amount": -79.87,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00093",
+   "date": "2025-12-25",
+   "amount": -69.61,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00094",
+   "date": "2025-12-25",
+   "amount": -1216.15,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00095",
+   "date": "2025-12-25",
+   "amount": 1216.15,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00096",
+   "date": "2025-12-26",
+   "amount": -57.96,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00097",
+   "date": "2025-12-27",
+   "amount": -137.03,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00098",
+   "date": "2025-12-27",
+   "amount": -49.36,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00099",
+   "date": "2025-12-28",
+   "amount": -95.52,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00100",
+   "date": "2025-12-28",
+   "amount": -52.33,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00101",
+   "date": "2025-12-31",
+   "amount": -205.33,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00102",
+   "date": "2025-12-31",
+   "amount": -121.45,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00103",
+   "date": "2025-12-31",
+   "amount": -63.86,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00104",
+   "date": "2026-01-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00105",
+   "date": "2026-01-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00106",
+   "date": "2026-01-01",
+   "amount": -15.28,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00107",
+   "date": "2026-01-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00108",
+   "date": "2026-01-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00109",
+   "date": "2026-01-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00110",
+   "date": "2026-01-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00111",
+   "date": "2026-01-02",
+   "amount": -106.35,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00112",
+   "date": "2026-01-02",
+   "amount": -282.54,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00113",
+   "date": "2026-01-03",
+   "amount": -102.36,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00114",
+   "date": "2026-01-03",
+   "amount": -185.69,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00115",
+   "date": "2026-01-04",
+   "amount": -110.92,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00116",
+   "date": "2026-01-05",
+   "amount": -56.57,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00117",
+   "date": "2026-01-06",
+   "amount": -87.43,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00118",
+   "date": "2026-01-07",
+   "amount": -6.14,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00119",
+   "date": "2026-01-07",
+   "amount": -191.2,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00120",
+   "date": "2026-01-08",
+   "amount": -80.06,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00121",
+   "date": "2026-01-09",
+   "amount": -309.45,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00122",
+   "date": "2026-01-09",
+   "amount": -74.36,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00123",
+   "date": "2026-01-09",
+   "amount": -142.17,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00124",
+   "date": "2026-01-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00125",
+   "date": "2026-01-10",
+   "amount": -45.01,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00126",
+   "date": "2026-01-10",
+   "amount": -90.13,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00127",
+   "date": "2026-01-10",
+   "amount": -136.66,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00128",
+   "date": "2026-01-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00129",
+   "date": "2026-01-12",
+   "amount": -60.58,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00130",
+   "date": "2026-01-12",
+   "amount": -44.48,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00131",
+   "date": "2026-01-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00132",
+   "date": "2026-01-14",
+   "amount": -199.62,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00133",
+   "date": "2026-01-14",
+   "amount": -87.47,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00134",
+   "date": "2026-01-14",
+   "amount": -135.41,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00135",
+   "date": "2026-01-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00136",
+   "date": "2026-01-15",
+   "amount": -139.22,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00137",
+   "date": "2026-01-15",
+   "amount": -134.08,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00138",
+   "date": "2026-01-15",
+   "amount": -52.57,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00139",
+   "date": "2026-01-16",
+   "amount": -54.37,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00140",
+   "date": "2026-01-16",
+   "amount": -181.78,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00141",
+   "date": "2026-01-17",
+   "amount": -82.68,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00142",
+   "date": "2026-01-18",
+   "amount": -362.96,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00143",
+   "date": "2026-01-18",
+   "amount": -80.14,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00144",
+   "date": "2026-01-19",
+   "amount": -42.84,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00145",
+   "date": "2026-01-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00146",
+   "date": "2026-01-20",
+   "amount": -227.45,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00147",
+   "date": "2026-01-21",
+   "amount": -182.11,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00148",
+   "date": "2026-01-21",
+   "amount": -6.14,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00149",
+   "date": "2026-01-22",
+   "amount": -132.59,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00150",
+   "date": "2026-01-22",
+   "amount": -77.74,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00151",
+   "date": "2026-01-22",
+   "amount": -78.99,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00152",
+   "date": "2026-01-22",
+   "amount": -164.13,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00153",
+   "date": "2026-01-23",
+   "amount": -177.17,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00154",
+   "date": "2026-01-23",
+   "amount": -20.07,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00155",
+   "date": "2026-01-23",
+   "amount": -169.06,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00156",
+   "date": "2026-01-24",
+   "amount": -307.16,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00157",
+   "date": "2026-01-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00158",
+   "date": "2026-01-25",
+   "amount": -177.48,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00159",
+   "date": "2026-01-25",
+   "amount": -167.16,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00160",
+   "date": "2026-01-25",
+   "amount": -2484.55,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00161",
+   "date": "2026-01-25",
+   "amount": 2484.55,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00162",
+   "date": "2026-01-26",
+   "amount": -26.62,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00163",
+   "date": "2026-01-27",
+   "amount": -163.39,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00164",
+   "date": "2026-01-28",
+   "amount": -45.51,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00165",
+   "date": "2026-01-30",
+   "amount": -46.57,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00166",
+   "date": "2026-01-30",
+   "amount": -191.26,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00167",
+   "date": "2026-02-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00168",
+   "date": "2026-02-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00169",
+   "date": "2026-02-01",
+   "amount": -89.68,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00170",
+   "date": "2026-02-01",
+   "amount": -6.14,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00171",
+   "date": "2026-02-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00172",
+   "date": "2026-02-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00173",
+   "date": "2026-02-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00174",
+   "date": "2026-02-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00175",
+   "date": "2026-02-02",
+   "amount": -183.93,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00176",
+   "date": "2026-02-03",
+   "amount": -85.46,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00177",
+   "date": "2026-02-03",
+   "amount": -151.78,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00178",
+   "date": "2026-02-04",
+   "amount": -105.18,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00179",
+   "date": "2026-02-04",
+   "amount": -9.65,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00180",
+   "date": "2026-02-05",
+   "amount": -281.62,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00181",
+   "date": "2026-02-05",
+   "amount": -115.69,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00182",
+   "date": "2026-02-05",
+   "amount": -60.72,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00183",
+   "date": "2026-02-05",
+   "amount": -37.29,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00184",
+   "date": "2026-02-06",
+   "amount": -163.08,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00185",
+   "date": "2026-02-06",
+   "amount": -47.9,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00186",
+   "date": "2026-02-07",
+   "amount": -107.89,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00187",
+   "date": "2026-02-07",
+   "amount": -107.93,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00188",
+   "date": "2026-02-08",
+   "amount": -116.55,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00189",
+   "date": "2026-02-08",
+   "amount": -109.71,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00190",
+   "date": "2026-02-08",
+   "amount": -109.14,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00191",
+   "date": "2026-02-09",
+   "amount": -121.42,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00192",
+   "date": "2026-02-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00193",
+   "date": "2026-02-11",
+   "amount": -134.57,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00194",
+   "date": "2026-02-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00195",
+   "date": "2026-02-12",
+   "amount": -41.18,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00196",
+   "date": "2026-02-13",
+   "amount": -184.63,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00197",
+   "date": "2026-02-13",
+   "amount": -94.8,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00198",
+   "date": "2026-02-13",
+   "amount": -142.44,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00199",
+   "date": "2026-02-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00200",
+   "date": "2026-02-14",
+   "amount": -94.82,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00201",
+   "date": "2026-02-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00202",
+   "date": "2026-02-15",
+   "amount": -283.87,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00203",
+   "date": "2026-02-15",
+   "amount": -52.04,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00204",
+   "date": "2026-02-16",
+   "amount": -223.52,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00205",
+   "date": "2026-02-17",
+   "amount": -80.87,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00206",
+   "date": "2026-02-18",
+   "amount": -279.27,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00207",
+   "date": "2026-02-18",
+   "amount": -245.25,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00208",
+   "date": "2026-02-18",
+   "amount": -192.02,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00209",
+   "date": "2026-02-19",
+   "amount": -175.35,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00210",
+   "date": "2026-02-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00211",
+   "date": "2026-02-20",
+   "amount": -64.59,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00212",
+   "date": "2026-02-21",
+   "amount": -115.83,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00213",
+   "date": "2026-02-22",
+   "amount": -106.37,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00214",
+   "date": "2026-02-22",
+   "amount": -52.43,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00215",
+   "date": "2026-02-23",
+   "amount": -202.4,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00216",
+   "date": "2026-02-23",
+   "amount": -40.37,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00217",
+   "date": "2026-02-23",
+   "amount": -108.77,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00218",
+   "date": "2026-02-24",
+   "amount": -73.52,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00219",
+   "date": "2026-02-24",
+   "amount": -6.14,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00220",
+   "date": "2026-02-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00221",
+   "date": "2026-02-25",
+   "amount": -211.64,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00222",
+   "date": "2026-02-25",
+   "amount": -1972.68,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00223",
+   "date": "2026-02-25",
+   "amount": 1972.68,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00224",
+   "date": "2026-02-26",
+   "amount": -64.8,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00225",
+   "date": "2026-02-27",
+   "amount": -84.09,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00226",
+   "date": "2026-02-27",
+   "amount": -72.07,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00227",
+   "date": "2026-02-28",
+   "amount": -224.13,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00228",
+   "date": "2026-03-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00229",
+   "date": "2026-03-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00230",
+   "date": "2026-03-01",
+   "amount": -254.36,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00231",
+   "date": "2026-03-01",
+   "amount": -99.84,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00232",
+   "date": "2026-03-01",
+   "amount": -100.29,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00233",
+   "date": "2026-03-01",
+   "amount": -197.08,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00234",
+   "date": "2026-03-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00235",
+   "date": "2026-03-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00236",
+   "date": "2026-03-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00237",
+   "date": "2026-03-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00238",
+   "date": "2026-03-02",
+   "amount": -214.69,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00239",
+   "date": "2026-03-02",
+   "amount": -115.92,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00240",
+   "date": "2026-03-02",
+   "amount": -274.66,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00241",
+   "date": "2026-03-03",
+   "amount": -51.69,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00242",
+   "date": "2026-03-03",
+   "amount": -178.11,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00243",
+   "date": "2026-03-04",
+   "amount": -79.85,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00244",
+   "date": "2026-03-04",
+   "amount": -206.72,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00245",
+   "date": "2026-03-05",
+   "amount": -103.18,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00246",
+   "date": "2026-03-05",
+   "amount": -91.09,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00247",
+   "date": "2026-03-07",
+   "amount": -85.18,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00248",
+   "date": "2026-03-07",
+   "amount": -56.83,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00249",
+   "date": "2026-03-09",
+   "amount": -58.16,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00250",
+   "date": "2026-03-09",
+   "amount": -202.14,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00251",
+   "date": "2026-03-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00252",
+   "date": "2026-03-11",
+   "amount": -196.73,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00253",
+   "date": "2026-03-11",
+   "amount": -41.41,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00254",
+   "date": "2026-03-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00255",
+   "date": "2026-03-12",
+   "amount": -99.27,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00256",
+   "date": "2026-03-13",
+   "amount": -214.32,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00257",
+   "date": "2026-03-13",
+   "amount": -103.73,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00258",
+   "date": "2026-03-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00259",
+   "date": "2026-03-14",
+   "amount": -279.65,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00260",
+   "date": "2026-03-14",
+   "amount": -67.32,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00261",
+   "date": "2026-03-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00262",
+   "date": "2026-03-17",
+   "amount": -225.09,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00263",
+   "date": "2026-03-18",
+   "amount": -285.74,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00264",
+   "date": "2026-03-18",
+   "amount": -109.44,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00265",
+   "date": "2026-03-19",
+   "amount": -6.14,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00266",
+   "date": "2026-03-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00267",
+   "date": "2026-03-20",
+   "amount": -27.91,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00268",
+   "date": "2026-03-21",
+   "amount": -87.43,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00269",
+   "date": "2026-03-23",
+   "amount": -179.94,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00270",
+   "date": "2026-03-23",
+   "amount": -84.15,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00271",
+   "date": "2026-03-24",
+   "amount": -45.98,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00272",
+   "date": "2026-03-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00273",
+   "date": "2026-03-25",
+   "amount": -93.88,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00274",
+   "date": "2026-03-25",
+   "amount": -94.64,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00275",
+   "date": "2026-03-25",
+   "amount": -2125.55,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00276",
+   "date": "2026-03-25",
+   "amount": 2125.55,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00277",
+   "date": "2026-03-27",
+   "amount": -295.83,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00278",
+   "date": "2026-03-27",
+   "amount": -69.18,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00279",
+   "date": "2026-03-28",
+   "amount": -162.92,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00280",
+   "date": "2026-03-29",
+   "amount": -200.7,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00281",
+   "date": "2026-03-29",
+   "amount": -99.72,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00282",
+   "date": "2026-03-29",
+   "amount": -158.78,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00283",
+   "date": "2026-03-30",
+   "amount": -124.29,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00284",
+   "date": "2026-03-30",
+   "amount": -18.98,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00285",
+   "date": "2026-03-31",
+   "amount": -253.72,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00286",
+   "date": "2026-03-31",
+   "amount": -93.59,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00287",
+   "date": "2026-04-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00288",
+   "date": "2026-04-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00289",
+   "date": "2026-04-01",
+   "amount": -299.35,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00290",
+   "date": "2026-04-01",
+   "amount": -67.42,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00291",
+   "date": "2026-04-01",
+   "amount": -76.02,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00292",
+   "date": "2026-04-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00293",
+   "date": "2026-04-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00294",
+   "date": "2026-04-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00295",
+   "date": "2026-04-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00296",
+   "date": "2026-04-02",
+   "amount": -27.59,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00297",
+   "date": "2026-04-03",
+   "amount": -242.62,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00298",
+   "date": "2026-04-04",
+   "amount": -37.87,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00299",
+   "date": "2026-04-04",
+   "amount": -73.32,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00300",
+   "date": "2026-04-05",
+   "amount": -86.88,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00301",
+   "date": "2026-04-05",
+   "amount": -54.7,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00302",
+   "date": "2026-04-05",
+   "amount": -144.57,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00303",
+   "date": "2026-04-07",
+   "amount": -77.97,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00304",
+   "date": "2026-04-07",
+   "amount": -91.32,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00305",
+   "date": "2026-04-08",
+   "amount": -73.22,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00306",
+   "date": "2026-04-08",
+   "amount": -76.45,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00307",
+   "date": "2026-04-09",
+   "amount": -242.58,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00308",
+   "date": "2026-04-09",
+   "amount": -68.96,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00309",
+   "date": "2026-04-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00310",
+   "date": "2026-04-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00311",
+   "date": "2026-04-12",
+   "amount": -59.8,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00312",
+   "date": "2026-04-13",
+   "amount": -142.89,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00313",
+   "date": "2026-04-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00314",
+   "date": "2026-04-14",
+   "amount": -92.24,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00315",
+   "date": "2026-04-14",
+   "amount": -57.32,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00316",
+   "date": "2026-04-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00317",
+   "date": "2026-04-16",
+   "amount": -272.18,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00318",
+   "date": "2026-04-16",
+   "amount": -141.64,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00319",
+   "date": "2026-04-16",
+   "amount": -24.02,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00320",
+   "date": "2026-04-17",
+   "amount": -243.36,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00321",
+   "date": "2026-04-17",
+   "amount": -74.42,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00322",
+   "date": "2026-04-17",
+   "amount": -123.9,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00323",
+   "date": "2026-04-18",
+   "amount": -251.68,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00324",
+   "date": "2026-04-18",
+   "amount": -150.36,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00325",
+   "date": "2026-04-19",
+   "amount": -99.74,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00326",
+   "date": "2026-04-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00327",
+   "date": "2026-04-20",
+   "amount": -228.53,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00328",
+   "date": "2026-04-21",
+   "amount": -90.42,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00329",
+   "date": "2026-04-22",
+   "amount": -246.86,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00330",
+   "date": "2026-04-22",
+   "amount": -79.99,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00331",
+   "date": "2026-04-22",
+   "amount": -200.05,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00332",
+   "date": "2026-04-23",
+   "amount": -31.48,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00333",
+   "date": "2026-04-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00334",
+   "date": "2026-04-25",
+   "amount": -58.84,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00335",
+   "date": "2026-04-25",
+   "amount": -1502.65,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00336",
+   "date": "2026-04-25",
+   "amount": 1502.65,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00337",
+   "date": "2026-04-26",
+   "amount": -113.95,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00338",
+   "date": "2026-04-27",
+   "amount": -33.36,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00339",
+   "date": "2026-04-27",
+   "amount": -68.28,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00340",
+   "date": "2026-04-28",
+   "amount": -199.9,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00341",
+   "date": "2026-04-28",
+   "amount": -265.07,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00342",
+   "date": "2026-04-29",
+   "amount": -229.39,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00343",
+   "date": "2026-04-30",
+   "amount": -174.49,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00344",
+   "date": "2026-04-30",
+   "amount": -89.99,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00345",
+   "date": "2026-05-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00346",
+   "date": "2026-05-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00347",
+   "date": "2026-05-01",
+   "amount": -154.17,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00348",
+   "date": "2026-05-01",
+   "amount": -105.68,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00349",
+   "date": "2026-05-01",
+   "amount": -138.14,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00350",
+   "date": "2026-05-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00351",
+   "date": "2026-05-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00352",
+   "date": "2026-05-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00353",
+   "date": "2026-05-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00354",
+   "date": "2026-05-02",
+   "amount": -218.89,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00355",
+   "date": "2026-05-02",
+   "amount": -107.42,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00356",
+   "date": "2026-05-03",
+   "amount": -245.51,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00357",
+   "date": "2026-05-03",
+   "amount": -70.49,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00358",
+   "date": "2026-05-04",
+   "amount": -73.07,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00359",
+   "date": "2026-05-05",
+   "amount": -107.05,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00360",
+   "date": "2026-05-05",
+   "amount": -77.6,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00361",
+   "date": "2026-05-05",
+   "amount": -182.35,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00362",
+   "date": "2026-05-06",
+   "amount": -90.66,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00363",
+   "date": "2026-05-06",
+   "amount": -43.72,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00364",
+   "date": "2026-05-07",
+   "amount": -140.84,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00365",
+   "date": "2026-05-07",
+   "amount": -84.44,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00366",
+   "date": "2026-05-08",
+   "amount": -101.46,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00367",
+   "date": "2026-05-08",
+   "amount": -62.5,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00368",
+   "date": "2026-05-08",
+   "amount": -117.06,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00369",
+   "date": "2026-05-09",
+   "amount": -242.97,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00370",
+   "date": "2026-05-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00371",
+   "date": "2026-05-10",
+   "amount": -71.47,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00372",
+   "date": "2026-05-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00373",
+   "date": "2026-05-12",
+   "amount": -67.28,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00374",
+   "date": "2026-05-13",
+   "amount": -125.91,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00375",
+   "date": "2026-05-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00376",
+   "date": "2026-05-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00377",
+   "date": "2026-05-15",
+   "amount": -119.83,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00378",
+   "date": "2026-05-16",
+   "amount": -103.79,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00379",
+   "date": "2026-05-16",
+   "amount": -97.26,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00380",
+   "date": "2026-05-16",
+   "amount": -137.42,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00381",
+   "date": "2026-05-17",
+   "amount": -50.63,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00382",
+   "date": "2026-05-18",
+   "amount": -262.33,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00383",
+   "date": "2026-05-18",
+   "amount": -75.43,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00384",
+   "date": "2026-05-18",
+   "amount": -87.45,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00385",
+   "date": "2026-05-19",
+   "amount": -129.9,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00386",
+   "date": "2026-05-19",
+   "amount": -79.79,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00387",
+   "date": "2026-05-19",
+   "amount": -73.65,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00388",
+   "date": "2026-05-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00389",
+   "date": "2026-05-21",
+   "amount": -23.04,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00390",
+   "date": "2026-05-23",
+   "amount": -218.89,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00391",
+   "date": "2026-05-24",
+   "amount": -89.29,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00392",
+   "date": "2026-05-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00393",
+   "date": "2026-05-25",
+   "amount": -84.89,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00394",
+   "date": "2026-05-25",
+   "amount": -202.85,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00395",
+   "date": "2026-05-25",
+   "amount": -1549.74,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00396",
+   "date": "2026-05-25",
+   "amount": 1549.74,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00397",
+   "date": "2026-05-28",
+   "amount": -30.19,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00398",
+   "date": "2026-05-29",
+   "amount": -162.47,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00399",
+   "date": "2026-05-29",
+   "amount": -122.74,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00400",
+   "date": "2026-05-30",
+   "amount": -166.28,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00401",
+   "date": "2026-05-30",
+   "amount": -102.44,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00402",
+   "date": "2026-05-30",
+   "amount": -171.81,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00403",
+   "date": "2026-05-31",
+   "amount": -146.96,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00404",
+   "date": "2026-06-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00405",
+   "date": "2026-06-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00406",
+   "date": "2026-06-01",
+   "amount": -52.29,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00407",
+   "date": "2026-06-01",
+   "amount": -208.94,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00408",
+   "date": "2026-06-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00409",
+   "date": "2026-06-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00410",
+   "date": "2026-06-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00411",
+   "date": "2026-06-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00412",
+   "date": "2026-06-02",
+   "amount": -54.85,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00413",
+   "date": "2026-06-03",
+   "amount": -232.38,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00414",
+   "date": "2026-06-03",
+   "amount": -72.38,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00415",
+   "date": "2026-06-03",
+   "amount": -52.76,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00416",
+   "date": "2026-06-03",
+   "amount": -149.32,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00417",
+   "date": "2026-06-04",
+   "amount": -7.19,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00418",
+   "date": "2026-06-05",
+   "amount": -162.22,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00419",
+   "date": "2026-06-05",
+   "amount": -190.03,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00420",
+   "date": "2026-06-06",
+   "amount": -17.67,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00421",
+   "date": "2026-06-07",
+   "amount": -88.17,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00422",
+   "date": "2026-06-07",
+   "amount": -141.47,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00423",
+   "date": "2026-06-08",
+   "amount": -57.38,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00424",
+   "date": "2026-06-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00425",
+   "date": "2026-06-11",
+   "amount": -88.15,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00426",
+   "date": "2026-06-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00427",
+   "date": "2026-06-12",
+   "amount": -134.96,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00428",
+   "date": "2026-06-13",
+   "amount": -210.57,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00429",
+   "date": "2026-06-13",
+   "amount": -66.05,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00430",
+   "date": "2026-06-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00431",
+   "date": "2026-06-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00432",
+   "date": "2026-06-15",
+   "amount": -273.06,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00433",
+   "date": "2026-06-15",
+   "amount": -29.0,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00434",
+   "date": "2026-06-17",
+   "amount": -108.73,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00435",
+   "date": "2026-06-17",
+   "amount": -174.57,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00436",
+   "date": "2026-06-18",
+   "amount": -273.47,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00437",
+   "date": "2026-06-19",
+   "amount": -140.8,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00438",
+   "date": "2026-06-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00439",
+   "date": "2026-06-20",
+   "amount": -140.06,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00440",
+   "date": "2026-06-21",
+   "amount": -97.83,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00441",
+   "date": "2026-06-23",
+   "amount": -35.25,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00442",
+   "date": "2026-06-24",
+   "amount": -92.51,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00443",
+   "date": "2026-06-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00444",
+   "date": "2026-06-25",
+   "amount": -132.77,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00445",
+   "date": "2026-06-25",
+   "amount": -62.48,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00446",
+   "date": "2026-06-25",
+   "amount": -143.81,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00447",
+   "date": "2026-06-25",
+   "amount": -1582.76,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00448",
+   "date": "2026-06-25",
+   "amount": 1582.76,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00449",
+   "date": "2026-06-26",
+   "amount": -6.14,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00450",
+   "date": "2026-06-29",
+   "amount": -145.02,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00451",
+   "date": "2026-06-29",
+   "amount": -227.63,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00452",
+   "date": "2026-06-30",
+   "amount": -91.18,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00453",
+   "date": "2026-07-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00454",
+   "date": "2026-07-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00455",
+   "date": "2026-07-01",
+   "amount": -23.76,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00456",
+   "date": "2026-07-01",
+   "amount": -99.49,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00457",
+   "date": "2026-07-01",
+   "amount": -69.1,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00458",
+   "date": "2026-07-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00459",
+   "date": "2026-07-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00460",
+   "date": "2026-07-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00461",
+   "date": "2026-07-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00462",
+   "date": "2026-07-02",
+   "amount": -213.85,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00463",
+   "date": "2026-07-03",
+   "amount": -200.19,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00464",
+   "date": "2026-07-03",
+   "amount": -104.71,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00465",
+   "date": "2026-07-05",
+   "amount": -214.1,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00466",
+   "date": "2026-07-05",
+   "amount": -93.06,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00467",
+   "date": "2026-07-06",
+   "amount": -16.45,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00468",
+   "date": "2026-07-08",
+   "amount": -277.48,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00469",
+   "date": "2026-07-08",
+   "amount": -135.7,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00470",
+   "date": "2026-07-08",
+   "amount": -104.8,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00471",
+   "date": "2026-07-09",
+   "amount": -94.1,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00472",
+   "date": "2026-07-09",
+   "amount": -52.57,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00473",
+   "date": "2026-07-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00474",
+   "date": "2026-07-10",
+   "amount": -243.03,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00475",
+   "date": "2026-07-10",
+   "amount": -70.9,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00476",
+   "date": "2026-07-11",
+   "amount": -113.13,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00477",
+   "date": "2026-07-11",
+   "amount": -82.39,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00478",
+   "date": "2026-07-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00479",
+   "date": "2026-07-12",
+   "amount": -236.44,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00480",
+   "date": "2026-07-13",
+   "amount": -51.28,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00481",
+   "date": "2026-07-13",
+   "amount": -106.45,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00482",
+   "date": "2026-07-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00483",
+   "date": "2026-07-14",
+   "amount": -220.92,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00484",
+   "date": "2026-07-14",
+   "amount": -87.61,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00485",
+   "date": "2026-07-14",
+   "amount": -200.07,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00486",
+   "date": "2026-07-14",
+   "amount": -175.23,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00487",
+   "date": "2026-07-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00488",
+   "date": "2026-07-15",
+   "amount": -249.2,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00489",
+   "date": "2026-07-15",
+   "amount": -97.53,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00490",
+   "date": "2026-07-15",
+   "amount": -45.77,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00491",
+   "date": "2026-07-15",
+   "amount": -157.82,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00492",
+   "date": "2026-07-16",
+   "amount": -158.8,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00493",
+   "date": "2026-07-16",
+   "amount": -191.04,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00494",
+   "date": "2026-07-16",
+   "amount": -234.21,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00495",
+   "date": "2026-07-17",
+   "amount": -152.43,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00496",
+   "date": "2026-07-17",
+   "amount": -45.63,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00497",
+   "date": "2026-07-17",
+   "amount": -99.49,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00498",
+   "date": "2026-07-18",
+   "amount": -267.8,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00499",
+   "date": "2026-07-19",
+   "amount": -70.08,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00500",
+   "date": "2026-07-19",
+   "amount": -76.47,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00501",
+   "date": "2026-07-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00502",
+   "date": "2026-07-21",
+   "amount": -204.9,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00503",
+   "date": "2026-07-21",
+   "amount": -90.17,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00504",
+   "date": "2026-07-21",
+   "amount": -42.41,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00505",
+   "date": "2026-07-22",
+   "amount": -65.92,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00506",
+   "date": "2026-07-23",
+   "amount": -88.86,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00507",
+   "date": "2026-07-23",
+   "amount": -209.28,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00508",
+   "date": "2026-07-23",
+   "amount": -121.51,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00509",
+   "date": "2026-07-24",
+   "amount": -246.84,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00510",
+   "date": "2026-07-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00511",
+   "date": "2026-07-25",
+   "amount": -72.74,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00512",
+   "date": "2026-07-25",
+   "amount": -319.47,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00513",
+   "date": "2026-07-25",
+   "amount": -2378.57,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00514",
+   "date": "2026-07-25",
+   "amount": 2378.57,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00515",
+   "date": "2026-07-26",
+   "amount": -90.3,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00516",
+   "date": "2026-07-27",
+   "amount": -123.86,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00517",
+   "date": "2026-07-27",
+   "amount": -39.92,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00518",
+   "date": "2026-07-28",
+   "amount": -211.19,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00519",
+   "date": "2026-07-30",
+   "amount": -6.14,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00520",
+   "date": "2026-07-30",
+   "amount": -22.45,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00521",
+   "date": "2026-07-30",
+   "amount": -152.23,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00522",
+   "date": "2026-08-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00523",
+   "date": "2026-08-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00524",
+   "date": "2026-08-01",
+   "amount": -96.48,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00525",
+   "date": "2026-08-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00526",
+   "date": "2026-08-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00527",
+   "date": "2026-08-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00528",
+   "date": "2026-08-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00529",
+   "date": "2026-08-02",
+   "amount": -266.05,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00530",
+   "date": "2026-08-02",
+   "amount": -122.74,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00531",
+   "date": "2026-08-03",
+   "amount": -219.89,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00532",
+   "date": "2026-08-03",
+   "amount": -129.37,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00533",
+   "date": "2026-08-03",
+   "amount": -118.8,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00534",
+   "date": "2026-08-03",
+   "amount": -152.57,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00535",
+   "date": "2026-08-04",
+   "amount": -97.61,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00536",
+   "date": "2026-08-04",
+   "amount": -95.23,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00537",
+   "date": "2026-08-05",
+   "amount": -200.64,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00538",
+   "date": "2026-08-05",
+   "amount": -97.59,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00539",
+   "date": "2026-08-06",
+   "amount": -306.71,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00540",
+   "date": "2026-08-08",
+   "amount": -194.01,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00541",
+   "date": "2026-08-09",
+   "amount": -72.58,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00542",
+   "date": "2026-08-09",
+   "amount": -190.73,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00543",
+   "date": "2026-08-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00544",
+   "date": "2026-08-10",
+   "amount": -100.23,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00545",
+   "date": "2026-08-10",
+   "amount": -81.74,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00546",
+   "date": "2026-08-11",
+   "amount": -103.1,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00547",
+   "date": "2026-08-11",
+   "amount": -185.47,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00548",
+   "date": "2026-08-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00549",
+   "date": "2026-08-12",
+   "amount": -231.67,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00550",
+   "date": "2026-08-12",
+   "amount": -87.0,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00551",
+   "date": "2026-08-12",
+   "amount": -121.38,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00552",
+   "date": "2026-08-13",
+   "amount": -55.19,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00553",
+   "date": "2026-08-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00554",
+   "date": "2026-08-14",
+   "amount": -76.41,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00555",
+   "date": "2026-08-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00556",
+   "date": "2026-08-15",
+   "amount": -44.26,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00557",
+   "date": "2026-08-16",
+   "amount": -72.07,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00558",
+   "date": "2026-08-17",
+   "amount": -126.16,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00559",
+   "date": "2026-08-17",
+   "amount": -143.73,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00560",
+   "date": "2026-08-18",
+   "amount": -235.63,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00561",
+   "date": "2026-08-18",
+   "amount": -260.57,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00562",
+   "date": "2026-08-18",
+   "amount": -142.91,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00563",
+   "date": "2026-08-19",
+   "amount": -100.56,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00564",
+   "date": "2026-08-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00565",
+   "date": "2026-08-20",
+   "amount": -167.12,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00566",
+   "date": "2026-08-20",
+   "amount": -79.22,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00567",
+   "date": "2026-08-21",
+   "amount": -181.8,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00568",
+   "date": "2026-08-21",
+   "amount": -48.21,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00569",
+   "date": "2026-08-21",
+   "amount": -269.11,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00570",
+   "date": "2026-08-23",
+   "amount": -70.33,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00571",
+   "date": "2026-08-24",
+   "amount": -87.98,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00572",
+   "date": "2026-08-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00573",
+   "date": "2026-08-25",
+   "amount": -122.59,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00574",
+   "date": "2026-08-25",
+   "amount": -97.46,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00575",
+   "date": "2026-08-25",
+   "amount": -6.14,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00576",
+   "date": "2026-08-25",
+   "amount": -2348.31,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00577",
+   "date": "2026-08-25",
+   "amount": 2348.31,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00578",
+   "date": "2026-08-26",
+   "amount": -62.48,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00579",
+   "date": "2026-08-27",
+   "amount": -43.95,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00580",
+   "date": "2026-08-28",
+   "amount": -103.18,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00581",
+   "date": "2026-08-28",
+   "amount": -69.02,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00582",
+   "date": "2026-08-29",
+   "amount": -126.01,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00583",
+   "date": "2026-08-29",
+   "amount": -182.72,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00584",
+   "date": "2026-08-31",
+   "amount": -57.16,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00585",
+   "date": "2026-09-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00586",
+   "date": "2026-09-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00587",
+   "date": "2026-09-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00588",
+   "date": "2026-09-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00589",
+   "date": "2026-09-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00590",
+   "date": "2026-09-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00591",
+   "date": "2026-09-02",
+   "amount": -164.9,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00592",
+   "date": "2026-09-03",
+   "amount": -104.28,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00593",
+   "date": "2026-09-05",
+   "amount": -157.53,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00594",
+   "date": "2026-09-05",
+   "amount": -34.2,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00595",
+   "date": "2026-09-07",
+   "amount": -124.09,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00596",
+   "date": "2026-09-07",
+   "amount": -197.98,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00597",
+   "date": "2026-09-07",
+   "amount": -187.98,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00598",
+   "date": "2026-09-08",
+   "amount": -97.09,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00599",
+   "date": "2026-09-09",
+   "amount": -158.23,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00600",
+   "date": "2026-09-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00601",
+   "date": "2026-09-10",
+   "amount": -103.2,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00602",
+   "date": "2026-09-10",
+   "amount": -52.39,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00603",
+   "date": "2026-09-11",
+   "amount": -164.68,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00604",
+   "date": "2026-09-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00605",
+   "date": "2026-09-12",
+   "amount": -240.29,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00606",
+   "date": "2026-09-13",
+   "amount": -92.98,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00607",
+   "date": "2026-09-13",
+   "amount": -69.04,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00608",
+   "date": "2026-09-13",
+   "amount": -237.57,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00609",
+   "date": "2026-09-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00610",
+   "date": "2026-09-14",
+   "amount": -237.55,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00611",
+   "date": "2026-09-14",
+   "amount": -92.32,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00612",
+   "date": "2026-09-14",
+   "amount": -254.52,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00613",
+   "date": "2026-09-14",
+   "amount": -6.14,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00614",
+   "date": "2026-09-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00615",
+   "date": "2026-09-17",
+   "amount": -220.06,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00616",
+   "date": "2026-09-17",
+   "amount": -128.67,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00617",
+   "date": "2026-09-18",
+   "amount": -284.59,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00618",
+   "date": "2026-09-18",
+   "amount": -21.18,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00619",
+   "date": "2026-09-18",
+   "amount": -119.7,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00620",
+   "date": "2026-09-18",
+   "amount": -153.05,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00621",
+   "date": "2026-09-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00622",
+   "date": "2026-09-20",
+   "amount": -124.74,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00623",
+   "date": "2026-09-21",
+   "amount": -164.94,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00624",
+   "date": "2026-09-22",
+   "amount": -178.63,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00625",
+   "date": "2026-09-22",
+   "amount": -114.01,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00626",
+   "date": "2026-09-23",
+   "amount": -86.24,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00627",
+   "date": "2026-09-23",
+   "amount": -63.49,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00628",
+   "date": "2026-09-24",
+   "amount": -66.33,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00629",
+   "date": "2026-09-24",
+   "amount": -75.43,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00630",
+   "date": "2026-09-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00631",
+   "date": "2026-09-25",
+   "amount": -1506.7,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00632",
+   "date": "2026-09-25",
+   "amount": 1506.7,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00633",
+   "date": "2026-09-26",
+   "amount": -206.27,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00634",
+   "date": "2026-09-26",
+   "amount": -51.57,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00635",
+   "date": "2026-09-26",
+   "amount": -43.97,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00636",
+   "date": "2026-09-27",
+   "amount": -134.25,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00637",
+   "date": "2026-09-27",
+   "amount": -60.07,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00638",
+   "date": "2026-09-27",
+   "amount": -66.76,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00639",
+   "date": "2026-09-28",
+   "amount": -105.78,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00640",
+   "date": "2026-09-28",
+   "amount": -97.61,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00641",
+   "date": "2026-09-28",
+   "amount": -43.13,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00642",
+   "date": "2026-10-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00643",
+   "date": "2026-10-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00644",
+   "date": "2026-10-01",
+   "amount": -202.07,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00645",
+   "date": "2026-10-01",
+   "amount": -198.29,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00646",
+   "date": "2026-10-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00647",
+   "date": "2026-10-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00648",
+   "date": "2026-10-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00649",
+   "date": "2026-10-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00650",
+   "date": "2026-10-03",
+   "amount": -301.77,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00651",
+   "date": "2026-10-03",
+   "amount": -77.97,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00652",
+   "date": "2026-10-05",
+   "amount": -149.99,
+   "merchant": "Texas Health OB-GYN",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00653",
+   "date": "2026-10-06",
+   "amount": -73.56,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00654",
+   "date": "2026-10-06",
+   "amount": -6.14,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00655",
+   "date": "2026-10-08",
+   "amount": -89.74,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00656",
+   "date": "2026-10-08",
+   "amount": -164.47,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00657",
+   "date": "2026-10-10",
+   "amount": -520.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00658",
+   "date": "2026-10-10",
+   "amount": -33.07,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00659",
+   "date": "2026-10-11",
+   "amount": -36.78,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00660",
+   "date": "2026-10-12",
+   "amount": -260.0,
+   "merchant": "PNC personal loan",
+   "category": "personal_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00661",
+   "date": "2026-10-13",
+   "amount": -52.02,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00662",
+   "date": "2026-10-14",
+   "amount": -238.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00663",
+   "date": "2026-10-14",
+   "amount": -123.06,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00664",
+   "date": "2026-10-14",
+   "amount": -89.05,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00665",
+   "date": "2026-10-15",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00666",
+   "date": "2026-10-15",
+   "amount": -91.57,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00667",
+   "date": "2026-10-16",
+   "amount": -274.16,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00668",
+   "date": "2026-10-16",
+   "amount": -120.93,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00669",
+   "date": "2026-10-18",
+   "amount": -279.62,
+   "merchant": "Plano Utilities",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00670",
+   "date": "2026-10-18",
+   "amount": -271.75,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00671",
+   "date": "2026-10-18",
+   "amount": -188.23,
+   "merchant": "Buy Buy Baby",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00672",
+   "date": "2026-10-19",
+   "amount": -122.24,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00673",
+   "date": "2026-10-19",
+   "amount": -350.0,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00674",
+   "date": "2026-10-20",
+   "amount": -280.0,
+   "merchant": "PNC auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00675",
+   "date": "2026-10-21",
+   "amount": -243.51,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00676",
+   "date": "2026-10-22",
+   "amount": -206.5,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00677",
+   "date": "2026-10-23",
+   "amount": -125.71,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00678",
+   "date": "2026-10-23",
+   "amount": -98.14,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00679",
+   "date": "2026-10-24",
+   "amount": -99.53,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00680",
+   "date": "2026-10-24",
+   "amount": -44.83,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00681",
+   "date": "2026-10-24",
+   "amount": -141.11,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00682",
+   "date": "2026-10-25",
+   "amount": -36.4,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00683",
+   "date": "2026-10-25",
+   "amount": -248.75,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00684",
+   "date": "2026-10-25",
+   "amount": -167.22,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00685",
+   "date": "2026-10-25",
+   "amount": -2125.19,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00686",
+   "date": "2026-10-25",
+   "amount": 2125.19,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00687",
+   "date": "2026-10-26",
+   "amount": -73.75,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00688",
+   "date": "2026-10-26",
+   "amount": -126.48,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00689",
+   "date": "2026-10-26",
+   "amount": -131.54,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00690",
+   "date": "2026-10-27",
+   "amount": -54.99,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00691",
+   "date": "2026-10-27",
+   "amount": -228.9,
+   "merchant": "Home Depot",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00692",
+   "date": "2026-10-29",
+   "amount": -91.01,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00693",
+   "date": "2026-10-30",
+   "amount": -105.59,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00694",
+   "date": "2026-10-30",
+   "amount": -49.17,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00695",
+   "date": "2026-10-31",
+   "amount": -231.83,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00696",
+   "date": "2026-11-01",
+   "amount": 5400.0,
+   "merchant": "Plano ISD / Ridgeline Labs payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00697",
+   "date": "2026-11-01",
+   "amount": -1950.0,
+   "merchant": "PNC Mortgage",
+   "category": "mortgage",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00698",
+   "date": "2026-11-01",
+   "amount": -193.43,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00699",
+   "date": "2026-11-01",
+   "amount": -100.99,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00700",
+   "date": "2026-11-02",
+   "amount": -400.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00701",
+   "date": "2026-11-02",
+   "amount": 400.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00702",
+   "date": "2026-11-02",
+   "amount": -500.0,
+   "merchant": "Transfer to IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00703",
+   "date": "2026-11-02",
+   "amount": 500.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00704",
+   "date": "2026-11-03",
+   "amount": -223.52,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00705",
+   "date": "2026-11-03",
+   "amount": -75.22,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00706",
+   "date": "2026-11-03",
+   "amount": -96.81,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00707",
+   "date": "2026-11-03",
+   "amount": -139.18,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00708",
+   "date": "2026-11-04",
+   "amount": -197.47,
+   "merchant": "Costco",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00709",
+   "date": "2026-11-04",
+   "amount": -40.32,
+   "merchant": "Chuy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00710",
+   "date": "2026-11-05",
+   "amount": -269.27,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00711",
+   "date": "2026-11-05",
+   "amount": -28.18,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00712",
+   "date": "2026-11-06",
+   "amount": -122.47,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00713",
+   "date": "2026-11-06",
+   "amount": -49.87,
+   "merchant": "Torchy's",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  }
+ ]
+}

@@ -38,7 +38,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M2: Demo customers and data generator
+## M2: Demo customers and data generator ✅ done
 **Depends on:** M1
 **Goal:** realistic, made-up data that every later number comes from.
 
@@ -51,7 +51,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M3: Health score engine (F2 backend)
+## M3: Health score engine (F2 backend) ✅ done
 **Depends on:** M2
 **Goal:** the 0–100 Financial Health Score from 8 indicators, aligned with the FinHealth framework.
 

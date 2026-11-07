@@ -1,0 +1,6225 @@
+{
+ "customer": {
+  "id": "maya",
+  "name": "Maya",
+  "age": 27,
+  "city": "Dallas",
+  "state": "TX",
+  "occupation": "Nurse",
+  "pay_schedule": "biweekly",
+  "take_home_per_paycheck": 1938.46,
+  "next_payday": "2026-11-13",
+  "setup": {
+   "insurance": {
+    "health": true,
+    "auto": true,
+    "renters_or_home": true,
+    "disability": false
+   },
+   "planning_ahead": "sometimes"
+  }
+ },
+ "accounts": [
+  {
+   "id": "spend",
+   "type": "checking",
+   "name": "Spend",
+   "institution": "PNC",
+   "balance": 1556.0,
+   "rate": 0.01,
+   "group": "cash"
+  },
+  {
+   "id": "reserve",
+   "type": "savings",
+   "name": "Reserve",
+   "institution": "PNC",
+   "balance": 2350.0,
+   "rate": 0.03,
+   "monthly_contribution": 200.0,
+   "group": "savings_cds"
+  },
+  {
+   "id": "cd",
+   "type": "cd",
+   "name": "12-month CD",
+   "institution": "PNC",
+   "balance": 2000.0,
+   "rate": 4.0,
+   "maturity_date": "2027-04-15",
+   "term_months": 12,
+   "original_amount": 2000.0,
+   "group": "savings_cds"
+  },
+  {
+   "id": "ira",
+   "type": "ira",
+   "name": "Roth IRA",
+   "institution": "Bluebonnet Investments",
+   "balance": 6800.0,
+   "monthly_contribution": 100.0,
+   "group": "retirement"
+  },
+  {
+   "id": "auto",
+   "type": "auto_loan",
+   "name": "Auto loan",
+   "institution": "Lone Star Credit Union",
+   "balance": 14000.0,
+   "rate": 6.9,
+   "min_payment": 387.0,
+   "due_day": 5,
+   "original_amount": 22000.0,
+   "term_months": 60,
+   "group": "debt"
+  },
+  {
+   "id": "card",
+   "type": "credit_card",
+   "name": "Cash Rewards Visa",
+   "institution": "PNC",
+   "balance": 3900.0,
+   "rate": 24.99,
+   "limit": 5000.0,
+   "min_payment": 117.0,
+   "due_day": 22,
+   "group": "debt"
+  }
+ ],
+ "bills": [
+  {
+   "id": "rent",
+   "name": "Rent",
+   "amount": 1450.0,
+   "category": "housing",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 1,
+    "date": null
+   }
+  },
+  {
+   "id": "gym",
+   "name": "Gym membership",
+   "amount": 40.0,
+   "category": "subscription",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 3,
+    "date": null
+   }
+  },
+  {
+   "id": "car",
+   "name": "Car payment",
+   "amount": 387.0,
+   "category": "auto_loan",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 5,
+    "date": null
+   }
+  },
+  {
+   "id": "stream1",
+   "name": "Streaming (video)",
+   "amount": 15.99,
+   "category": "subscription",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 9,
+    "date": null
+   }
+  },
+  {
+   "id": "insurance",
+   "name": "Car insurance",
+   "amount": 142.0,
+   "category": "insurance",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 15,
+    "date": null
+   }
+  },
+  {
+   "id": "phone",
+   "name": "Phone",
+   "amount": 65.0,
+   "category": "utilities",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 18,
+    "date": null
+   }
+  },
+  {
+   "id": "card_pay",
+   "name": "Credit card payment",
+   "amount": 117.0,
+   "category": "card_payment",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 22,
+    "date": null
+   }
+  },
+  {
+   "id": "stream2",
+   "name": "Streaming (music)",
+   "amount": 11.99,
+   "category": "subscription",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "monthly",
+    "day": 27,
+    "date": null
+   }
+  },
+  {
+   "id": "renters",
+   "name": "Renters insurance",
+   "amount": 168.0,
+   "category": "insurance",
+   "account_id": "spend",
+   "due_rule": {
+    "kind": "yearly",
+    "day": null,
+    "date": "2027-01-12"
+   }
+  },
+  {
+   "id": "cd_maturity",
+   "name": "CD matures",
+   "amount": 2080.0,
+   "category": "cd_maturity",
+   "account_id": "cd",
+   "due_rule": {
+    "kind": "once",
+    "day": null,
+    "date": "2027-04-15"
+   }
+  }
+ ],
+ "transactions": [
+  {
+   "id": "t00001",
+   "date": "2025-11-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00002",
+   "date": "2025-11-09",
+   "amount": -37.64,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00003",
+   "date": "2025-11-09",
+   "amount": -51.11,
+   "merchant": "Great Clips",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00004",
+   "date": "2025-11-10",
+   "amount": -42.2,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00005",
+   "date": "2025-11-11",
+   "amount": -22.77,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00006",
+   "date": "2025-11-13",
+   "amount": -64.44,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00007",
+   "date": "2025-11-13",
+   "amount": -4.9,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00008",
+   "date": "2025-11-14",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00009",
+   "date": "2025-11-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00010",
+   "date": "2025-11-16",
+   "amount": -35.29,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00011",
+   "date": "2025-11-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00012",
+   "date": "2025-11-18",
+   "amount": -27.7,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00013",
+   "date": "2025-11-19",
+   "amount": -65.45,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00014",
+   "date": "2025-11-19",
+   "amount": -55.77,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00015",
+   "date": "2025-11-20",
+   "amount": -142.6,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00016",
+   "date": "2025-11-20",
+   "amount": -47.41,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00017",
+   "date": "2025-11-20",
+   "amount": -40.5,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00018",
+   "date": "2025-11-21",
+   "amount": -41.79,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00019",
+   "date": "2025-11-21",
+   "amount": -27.68,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00020",
+   "date": "2025-11-21",
+   "amount": -72.16,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00021",
+   "date": "2025-11-22",
+   "amount": -35.84,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00022",
+   "date": "2025-11-22",
+   "amount": -566.66,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00023",
+   "date": "2025-11-22",
+   "amount": 566.66,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00024",
+   "date": "2025-11-23",
+   "amount": -40.09,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00025",
+   "date": "2025-11-24",
+   "amount": -46.87,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00026",
+   "date": "2025-11-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00027",
+   "date": "2025-11-25",
+   "amount": -33.67,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00028",
+   "date": "2025-11-25",
+   "amount": -21.37,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00029",
+   "date": "2025-11-25",
+   "amount": -109.34,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00030",
+   "date": "2025-11-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00031",
+   "date": "2025-11-27",
+   "amount": -36.0,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00032",
+   "date": "2025-11-28",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00033",
+   "date": "2025-11-28",
+   "amount": -21.99,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00034",
+   "date": "2025-11-29",
+   "amount": -27.91,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00035",
+   "date": "2025-11-30",
+   "amount": -22.53,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00036",
+   "date": "2025-11-30",
+   "amount": -52.18,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00037",
+   "date": "2025-12-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00038",
+   "date": "2025-12-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00039",
+   "date": "2025-12-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00040",
+   "date": "2025-12-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00041",
+   "date": "2025-12-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00042",
+   "date": "2025-12-02",
+   "amount": -15.35,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00043",
+   "date": "2025-12-02",
+   "amount": -35.27,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00044",
+   "date": "2025-12-02",
+   "amount": -60.06,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00045",
+   "date": "2025-12-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00046",
+   "date": "2025-12-03",
+   "amount": -18.72,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00047",
+   "date": "2025-12-03",
+   "amount": -46.42,
+   "merchant": "Walgreens",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00048",
+   "date": "2025-12-04",
+   "amount": -62.49,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00049",
+   "date": "2025-12-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00050",
+   "date": "2025-12-05",
+   "amount": -63.61,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00051",
+   "date": "2025-12-05",
+   "amount": -40.75,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00052",
+   "date": "2025-12-06",
+   "amount": -49.75,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00053",
+   "date": "2025-12-06",
+   "amount": -25.48,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00054",
+   "date": "2025-12-07",
+   "amount": -38.67,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00055",
+   "date": "2025-12-07",
+   "amount": -27.01,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00056",
+   "date": "2025-12-08",
+   "amount": -76.37,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00057",
+   "date": "2025-12-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00058",
+   "date": "2025-12-09",
+   "amount": -53.03,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00059",
+   "date": "2025-12-09",
+   "amount": -62.97,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00060",
+   "date": "2025-12-09",
+   "amount": -77.16,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00061",
+   "date": "2025-12-10",
+   "amount": -45.49,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00062",
+   "date": "2025-12-10",
+   "amount": -11.41,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00063",
+   "date": "2025-12-10",
+   "amount": -103.77,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00064",
+   "date": "2025-12-11",
+   "amount": -58.82,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00065",
+   "date": "2025-12-12",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00066",
+   "date": "2025-12-13",
+   "amount": -12.1,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00067",
+   "date": "2025-12-13",
+   "amount": -53.23,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00068",
+   "date": "2025-12-14",
+   "amount": -23.3,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00069",
+   "date": "2025-12-14",
+   "amount": -28.14,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00070",
+   "date": "2025-12-14",
+   "amount": -28.71,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00071",
+   "date": "2025-12-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00072",
+   "date": "2025-12-15",
+   "amount": -46.92,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00073",
+   "date": "2025-12-16",
+   "amount": -29.48,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00074",
+   "date": "2025-12-17",
+   "amount": -29.35,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00075",
+   "date": "2025-12-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00076",
+   "date": "2025-12-18",
+   "amount": -85.17,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00077",
+   "date": "2025-12-19",
+   "amount": -89.47,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00078",
+   "date": "2025-12-20",
+   "amount": -132.09,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00079",
+   "date": "2025-12-20",
+   "amount": -60.53,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00080",
+   "date": "2025-12-21",
+   "amount": -72.27,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00081",
+   "date": "2025-12-21",
+   "amount": -28.13,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00082",
+   "date": "2025-12-22",
+   "amount": -741.75,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00083",
+   "date": "2025-12-22",
+   "amount": 741.75,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00084",
+   "date": "2025-12-24",
+   "amount": -33.75,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00085",
+   "date": "2025-12-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00086",
+   "date": "2025-12-25",
+   "amount": -69.13,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00087",
+   "date": "2025-12-26",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00088",
+   "date": "2025-12-26",
+   "amount": -71.97,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00089",
+   "date": "2025-12-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00090",
+   "date": "2025-12-27",
+   "amount": -63.1,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00091",
+   "date": "2025-12-28",
+   "amount": -47.09,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00092",
+   "date": "2025-12-29",
+   "amount": -87.92,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00093",
+   "date": "2025-12-30",
+   "amount": -50.8,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00094",
+   "date": "2025-12-30",
+   "amount": -56.04,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00095",
+   "date": "2025-12-31",
+   "amount": -27.86,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00096",
+   "date": "2025-12-31",
+   "amount": -34.35,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00097",
+   "date": "2026-01-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00098",
+   "date": "2026-01-01",
+   "amount": -58.55,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00099",
+   "date": "2026-01-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00100",
+   "date": "2026-01-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00101",
+   "date": "2026-01-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00102",
+   "date": "2026-01-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00103",
+   "date": "2026-01-02",
+   "amount": -94.66,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00104",
+   "date": "2026-01-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00105",
+   "date": "2026-01-03",
+   "amount": -5.65,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00106",
+   "date": "2026-01-03",
+   "amount": -67.44,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00107",
+   "date": "2026-01-04",
+   "amount": -42.2,
+   "merchant": "Great Clips",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00108",
+   "date": "2026-01-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00109",
+   "date": "2026-01-05",
+   "amount": -43.22,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00110",
+   "date": "2026-01-06",
+   "amount": -63.38,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00111",
+   "date": "2026-01-06",
+   "amount": -41.29,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00112",
+   "date": "2026-01-06",
+   "amount": -36.66,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00113",
+   "date": "2026-01-07",
+   "amount": -44.94,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00114",
+   "date": "2026-01-07",
+   "amount": -9.82,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00115",
+   "date": "2026-01-08",
+   "amount": -90.6,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00116",
+   "date": "2026-01-09",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00117",
+   "date": "2026-01-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00118",
+   "date": "2026-01-09",
+   "amount": -7.13,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00119",
+   "date": "2026-01-09",
+   "amount": -28.24,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00120",
+   "date": "2026-01-10",
+   "amount": -35.23,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00121",
+   "date": "2026-01-11",
+   "amount": -12.77,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00122",
+   "date": "2026-01-11",
+   "amount": -31.51,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00123",
+   "date": "2026-01-12",
+   "amount": -168.0,
+   "merchant": "Lone Star Renters Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00124",
+   "date": "2026-01-12",
+   "amount": -22.71,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00125",
+   "date": "2026-01-13",
+   "amount": -34.59,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00126",
+   "date": "2026-01-13",
+   "amount": -14.31,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00127",
+   "date": "2026-01-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00128",
+   "date": "2026-01-15",
+   "amount": -14.77,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00129",
+   "date": "2026-01-16",
+   "amount": -87.38,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00130",
+   "date": "2026-01-17",
+   "amount": -72.8,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00131",
+   "date": "2026-01-17",
+   "amount": -17.92,
+   "merchant": "AMC",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00132",
+   "date": "2026-01-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00133",
+   "date": "2026-01-18",
+   "amount": -52.3,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00134",
+   "date": "2026-01-18",
+   "amount": -20.06,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00135",
+   "date": "2026-01-19",
+   "amount": -83.49,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00136",
+   "date": "2026-01-20",
+   "amount": -136.23,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00137",
+   "date": "2026-01-20",
+   "amount": -16.09,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00138",
+   "date": "2026-01-20",
+   "amount": -24.36,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00139",
+   "date": "2026-01-20",
+   "amount": -27.36,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00140",
+   "date": "2026-01-22",
+   "amount": -44.02,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00141",
+   "date": "2026-01-22",
+   "amount": -11.59,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00142",
+   "date": "2026-01-22",
+   "amount": -32.41,
+   "merchant": "AMC",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00143",
+   "date": "2026-01-22",
+   "amount": -764.76,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00144",
+   "date": "2026-01-22",
+   "amount": 764.76,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00145",
+   "date": "2026-01-23",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00146",
+   "date": "2026-01-24",
+   "amount": -95.87,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00147",
+   "date": "2026-01-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00148",
+   "date": "2026-01-26",
+   "amount": -64.32,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00149",
+   "date": "2026-01-26",
+   "amount": -38.18,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00150",
+   "date": "2026-01-26",
+   "amount": -20.69,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00151",
+   "date": "2026-01-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00152",
+   "date": "2026-01-27",
+   "amount": -45.11,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00153",
+   "date": "2026-01-27",
+   "amount": -19.68,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00154",
+   "date": "2026-01-28",
+   "amount": -69.76,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00155",
+   "date": "2026-01-29",
+   "amount": -37.3,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00156",
+   "date": "2026-01-29",
+   "amount": -44.23,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00157",
+   "date": "2026-01-29",
+   "amount": -13.24,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00158",
+   "date": "2026-01-31",
+   "amount": -49.65,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00159",
+   "date": "2026-01-31",
+   "amount": -12.23,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00160",
+   "date": "2026-02-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00161",
+   "date": "2026-02-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00162",
+   "date": "2026-02-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00163",
+   "date": "2026-02-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00164",
+   "date": "2026-02-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00165",
+   "date": "2026-02-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00166",
+   "date": "2026-02-03",
+   "amount": -77.99,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00167",
+   "date": "2026-02-04",
+   "amount": -23.68,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00168",
+   "date": "2026-02-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00169",
+   "date": "2026-02-05",
+   "amount": -78.14,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00170",
+   "date": "2026-02-06",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00171",
+   "date": "2026-02-06",
+   "amount": -11.71,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00172",
+   "date": "2026-02-07",
+   "amount": -74.62,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00173",
+   "date": "2026-02-07",
+   "amount": -57.45,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00174",
+   "date": "2026-02-07",
+   "amount": -26.32,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00175",
+   "date": "2026-02-08",
+   "amount": -24.17,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00176",
+   "date": "2026-02-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00177",
+   "date": "2026-02-09",
+   "amount": -59.13,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00178",
+   "date": "2026-02-09",
+   "amount": -41.22,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00179",
+   "date": "2026-02-10",
+   "amount": -45.02,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00180",
+   "date": "2026-02-11",
+   "amount": -20.08,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00181",
+   "date": "2026-02-12",
+   "amount": -19.66,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00182",
+   "date": "2026-02-13",
+   "amount": -63.31,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00183",
+   "date": "2026-02-13",
+   "amount": -17.13,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00184",
+   "date": "2026-02-13",
+   "amount": -55.56,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00185",
+   "date": "2026-02-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00186",
+   "date": "2026-02-15",
+   "amount": -16.72,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00187",
+   "date": "2026-02-16",
+   "amount": -27.75,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00188",
+   "date": "2026-02-16",
+   "amount": -22.32,
+   "merchant": "Walgreens",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00189",
+   "date": "2026-02-16",
+   "amount": -46.54,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00190",
+   "date": "2026-02-16",
+   "amount": -41.03,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00191",
+   "date": "2026-02-17",
+   "amount": -13.42,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00192",
+   "date": "2026-02-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00193",
+   "date": "2026-02-18",
+   "amount": -59.83,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00194",
+   "date": "2026-02-19",
+   "amount": -25.81,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00195",
+   "date": "2026-02-19",
+   "amount": -18.58,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00196",
+   "date": "2026-02-20",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00197",
+   "date": "2026-02-20",
+   "amount": -91.19,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00198",
+   "date": "2026-02-20",
+   "amount": -80.07,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00199",
+   "date": "2026-02-20",
+   "amount": -44.13,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00200",
+   "date": "2026-02-22",
+   "amount": -21.19,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00201",
+   "date": "2026-02-22",
+   "amount": -463.87,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00202",
+   "date": "2026-02-22",
+   "amount": 463.87,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00203",
+   "date": "2026-02-24",
+   "amount": -39.64,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00204",
+   "date": "2026-02-24",
+   "amount": -10.54,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00205",
+   "date": "2026-02-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00206",
+   "date": "2026-02-26",
+   "amount": -25.76,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00207",
+   "date": "2026-02-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00208",
+   "date": "2026-03-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00209",
+   "date": "2026-03-01",
+   "amount": -45.69,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00210",
+   "date": "2026-03-01",
+   "amount": -40.77,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00211",
+   "date": "2026-03-01",
+   "amount": -8.99,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00212",
+   "date": "2026-03-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00213",
+   "date": "2026-03-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00214",
+   "date": "2026-03-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00215",
+   "date": "2026-03-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00216",
+   "date": "2026-03-02",
+   "amount": -55.41,
+   "merchant": "Great Clips",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00217",
+   "date": "2026-03-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00218",
+   "date": "2026-03-04",
+   "amount": -22.83,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00219",
+   "date": "2026-03-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00220",
+   "date": "2026-03-05",
+   "amount": -35.37,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00221",
+   "date": "2026-03-05",
+   "amount": -18.54,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00222",
+   "date": "2026-03-06",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00223",
+   "date": "2026-03-06",
+   "amount": -31.02,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00224",
+   "date": "2026-03-07",
+   "amount": -79.33,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00225",
+   "date": "2026-03-07",
+   "amount": -29.04,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00226",
+   "date": "2026-03-08",
+   "amount": -65.62,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00227",
+   "date": "2026-03-08",
+   "amount": -81.25,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00228",
+   "date": "2026-03-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00229",
+   "date": "2026-03-11",
+   "amount": -37.24,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00230",
+   "date": "2026-03-11",
+   "amount": -3.33,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00231",
+   "date": "2026-03-12",
+   "amount": -54.51,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00232",
+   "date": "2026-03-12",
+   "amount": -19.09,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00233",
+   "date": "2026-03-12",
+   "amount": -37.74,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00234",
+   "date": "2026-03-13",
+   "amount": -57.29,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00235",
+   "date": "2026-03-14",
+   "amount": -41.93,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00236",
+   "date": "2026-03-14",
+   "amount": -25.97,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00237",
+   "date": "2026-03-14",
+   "amount": -79.15,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00238",
+   "date": "2026-03-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00239",
+   "date": "2026-03-15",
+   "amount": -52.08,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00240",
+   "date": "2026-03-15",
+   "amount": -18.96,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00241",
+   "date": "2026-03-15",
+   "amount": -30.99,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00242",
+   "date": "2026-03-15",
+   "amount": -104.8,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00243",
+   "date": "2026-03-16",
+   "amount": -31.83,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00244",
+   "date": "2026-03-16",
+   "amount": -16.11,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00245",
+   "date": "2026-03-17",
+   "amount": -70.16,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00246",
+   "date": "2026-03-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00247",
+   "date": "2026-03-18",
+   "amount": -20.24,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00248",
+   "date": "2026-03-19",
+   "amount": -79.89,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00249",
+   "date": "2026-03-19",
+   "amount": -22.92,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00250",
+   "date": "2026-03-20",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00251",
+   "date": "2026-03-20",
+   "amount": -134.07,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00252",
+   "date": "2026-03-20",
+   "amount": -23.22,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00253",
+   "date": "2026-03-20",
+   "amount": -25.19,
+   "merchant": "Walgreens",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00254",
+   "date": "2026-03-21",
+   "amount": -42.93,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00255",
+   "date": "2026-03-21",
+   "amount": -47.68,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00256",
+   "date": "2026-03-21",
+   "amount": -79.61,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00257",
+   "date": "2026-03-22",
+   "amount": -18.34,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00258",
+   "date": "2026-03-22",
+   "amount": -23.18,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00259",
+   "date": "2026-03-22",
+   "amount": -813.93,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00260",
+   "date": "2026-03-22",
+   "amount": 813.93,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00261",
+   "date": "2026-03-23",
+   "amount": -57.86,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00262",
+   "date": "2026-03-23",
+   "amount": -3.33,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00263",
+   "date": "2026-03-24",
+   "amount": -48.65,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00264",
+   "date": "2026-03-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00265",
+   "date": "2026-03-26",
+   "amount": -35.0,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00266",
+   "date": "2026-03-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00267",
+   "date": "2026-03-27",
+   "amount": -74.2,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00268",
+   "date": "2026-03-28",
+   "amount": -46.01,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00269",
+   "date": "2026-03-28",
+   "amount": -36.59,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00270",
+   "date": "2026-03-29",
+   "amount": -57.58,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00271",
+   "date": "2026-03-29",
+   "amount": -13.93,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00272",
+   "date": "2026-03-30",
+   "amount": -98.75,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00273",
+   "date": "2026-03-31",
+   "amount": -62.78,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00274",
+   "date": "2026-03-31",
+   "amount": -22.05,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00275",
+   "date": "2026-04-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00276",
+   "date": "2026-04-01",
+   "amount": -10.08,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00277",
+   "date": "2026-04-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00278",
+   "date": "2026-04-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00279",
+   "date": "2026-04-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00280",
+   "date": "2026-04-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00281",
+   "date": "2026-04-02",
+   "amount": -31.94,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00282",
+   "date": "2026-04-03",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00283",
+   "date": "2026-04-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00284",
+   "date": "2026-04-04",
+   "amount": -53.88,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00285",
+   "date": "2026-04-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00286",
+   "date": "2026-04-06",
+   "amount": -105.36,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00287",
+   "date": "2026-04-06",
+   "amount": -63.47,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00288",
+   "date": "2026-04-06",
+   "amount": -13.36,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00289",
+   "date": "2026-04-08",
+   "amount": -34.54,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00290",
+   "date": "2026-04-08",
+   "amount": -48.44,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00291",
+   "date": "2026-04-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00292",
+   "date": "2026-04-09",
+   "amount": -22.81,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00293",
+   "date": "2026-04-12",
+   "amount": -54.66,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00294",
+   "date": "2026-04-13",
+   "amount": -34.24,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00295",
+   "date": "2026-04-14",
+   "amount": -17.57,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00296",
+   "date": "2026-04-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00297",
+   "date": "2026-04-15",
+   "amount": -28.77,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00298",
+   "date": "2026-04-16",
+   "amount": -20.69,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00299",
+   "date": "2026-04-17",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00300",
+   "date": "2026-04-17",
+   "amount": -31.45,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00301",
+   "date": "2026-04-17",
+   "amount": -66.64,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00302",
+   "date": "2026-04-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00303",
+   "date": "2026-04-18",
+   "amount": -32.35,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00304",
+   "date": "2026-04-20",
+   "amount": -111.3,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00305",
+   "date": "2026-04-20",
+   "amount": -87.56,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00306",
+   "date": "2026-04-20",
+   "amount": -51.48,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00307",
+   "date": "2026-04-20",
+   "amount": -14.87,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00308",
+   "date": "2026-04-21",
+   "amount": -87.92,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00309",
+   "date": "2026-04-22",
+   "amount": -71.65,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00310",
+   "date": "2026-04-22",
+   "amount": -411.9,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00311",
+   "date": "2026-04-22",
+   "amount": 411.9,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00312",
+   "date": "2026-04-23",
+   "amount": -27.22,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00313",
+   "date": "2026-04-24",
+   "amount": -63.82,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00314",
+   "date": "2026-04-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00315",
+   "date": "2026-04-25",
+   "amount": -8.95,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00316",
+   "date": "2026-04-25",
+   "amount": -29.82,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00317",
+   "date": "2026-04-25",
+   "amount": -64.99,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00318",
+   "date": "2026-04-26",
+   "amount": -27.17,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00319",
+   "date": "2026-04-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00320",
+   "date": "2026-04-27",
+   "amount": -41.03,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00321",
+   "date": "2026-04-27",
+   "amount": -9.1,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00322",
+   "date": "2026-04-29",
+   "amount": -3.33,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00323",
+   "date": "2026-04-30",
+   "amount": -74.08,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00324",
+   "date": "2026-05-01",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00325",
+   "date": "2026-05-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00326",
+   "date": "2026-05-01",
+   "amount": -71.78,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00327",
+   "date": "2026-05-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00328",
+   "date": "2026-05-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00329",
+   "date": "2026-05-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00330",
+   "date": "2026-05-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00331",
+   "date": "2026-05-02",
+   "amount": -10.31,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00332",
+   "date": "2026-05-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00333",
+   "date": "2026-05-03",
+   "amount": -21.55,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00334",
+   "date": "2026-05-03",
+   "amount": -90.81,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00335",
+   "date": "2026-05-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00336",
+   "date": "2026-05-05",
+   "amount": -34.23,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00337",
+   "date": "2026-05-05",
+   "amount": -104.43,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00338",
+   "date": "2026-05-06",
+   "amount": -25.89,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00339",
+   "date": "2026-05-06",
+   "amount": -33.55,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00340",
+   "date": "2026-05-08",
+   "amount": -42.56,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00341",
+   "date": "2026-05-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00342",
+   "date": "2026-05-09",
+   "amount": -36.72,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00343",
+   "date": "2026-05-10",
+   "amount": -47.91,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00344",
+   "date": "2026-05-13",
+   "amount": -26.43,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00345",
+   "date": "2026-05-14",
+   "amount": -50.23,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00346",
+   "date": "2026-05-15",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00347",
+   "date": "2026-05-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00348",
+   "date": "2026-05-16",
+   "amount": -80.55,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00349",
+   "date": "2026-05-17",
+   "amount": -17.16,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00350",
+   "date": "2026-05-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00351",
+   "date": "2026-05-18",
+   "amount": -54.77,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00352",
+   "date": "2026-05-19",
+   "amount": -19.02,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00353",
+   "date": "2026-05-20",
+   "amount": -110.83,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00354",
+   "date": "2026-05-20",
+   "amount": -10.11,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00355",
+   "date": "2026-05-21",
+   "amount": -22.35,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00356",
+   "date": "2026-05-22",
+   "amount": -519.58,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00357",
+   "date": "2026-05-22",
+   "amount": 519.58,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00358",
+   "date": "2026-05-23",
+   "amount": -9.46,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00359",
+   "date": "2026-05-24",
+   "amount": -67.35,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00360",
+   "date": "2026-05-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00361",
+   "date": "2026-05-25",
+   "amount": -23.5,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00362",
+   "date": "2026-05-25",
+   "amount": -43.53,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00363",
+   "date": "2026-05-26",
+   "amount": -70.02,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00364",
+   "date": "2026-05-26",
+   "amount": -31.47,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00365",
+   "date": "2026-05-26",
+   "amount": -113.18,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00366",
+   "date": "2026-05-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00367",
+   "date": "2026-05-28",
+   "amount": -45.57,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00368",
+   "date": "2026-05-28",
+   "amount": -12.52,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00369",
+   "date": "2026-05-29",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00370",
+   "date": "2026-05-30",
+   "amount": -19.45,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00371",
+   "date": "2026-05-31",
+   "amount": -39.36,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00372",
+   "date": "2026-06-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00373",
+   "date": "2026-06-01",
+   "amount": -53.93,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00374",
+   "date": "2026-06-01",
+   "amount": -41.14,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00375",
+   "date": "2026-06-01",
+   "amount": -73.91,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00376",
+   "date": "2026-06-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00377",
+   "date": "2026-06-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00378",
+   "date": "2026-06-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00379",
+   "date": "2026-06-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00380",
+   "date": "2026-06-02",
+   "amount": -36.73,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00381",
+   "date": "2026-06-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00382",
+   "date": "2026-06-03",
+   "amount": -10.11,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00383",
+   "date": "2026-06-03",
+   "amount": -12.29,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00384",
+   "date": "2026-06-03",
+   "amount": -29.66,
+   "merchant": "AMC",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00385",
+   "date": "2026-06-04",
+   "amount": -53.93,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00386",
+   "date": "2026-06-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00387",
+   "date": "2026-06-06",
+   "amount": -55.45,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00388",
+   "date": "2026-06-06",
+   "amount": -23.93,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00389",
+   "date": "2026-06-07",
+   "amount": -47.64,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00390",
+   "date": "2026-06-07",
+   "amount": -20.31,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00391",
+   "date": "2026-06-08",
+   "amount": -3.33,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00392",
+   "date": "2026-06-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00393",
+   "date": "2026-06-09",
+   "amount": -3.33,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00394",
+   "date": "2026-06-11",
+   "amount": -3.33,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00395",
+   "date": "2026-06-12",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00396",
+   "date": "2026-06-12",
+   "amount": -52.72,
+   "merchant": "Walgreens",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00397",
+   "date": "2026-06-13",
+   "amount": -16.14,
+   "merchant": "Walgreens",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00398",
+   "date": "2026-06-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00399",
+   "date": "2026-06-15",
+   "amount": -32.48,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00400",
+   "date": "2026-06-15",
+   "amount": -3.33,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00401",
+   "date": "2026-06-15",
+   "amount": -19.81,
+   "merchant": "AMC",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00402",
+   "date": "2026-06-16",
+   "amount": -22.25,
+   "merchant": "Walgreens",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00403",
+   "date": "2026-06-16",
+   "amount": -44.89,
+   "merchant": "AMC",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00404",
+   "date": "2026-06-17",
+   "amount": -80.52,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00405",
+   "date": "2026-06-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00406",
+   "date": "2026-06-18",
+   "amount": -79.69,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00407",
+   "date": "2026-06-19",
+   "amount": -53.7,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00408",
+   "date": "2026-06-19",
+   "amount": -16.78,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00409",
+   "date": "2026-06-19",
+   "amount": -26.85,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00410",
+   "date": "2026-06-19",
+   "amount": -28.89,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00411",
+   "date": "2026-06-20",
+   "amount": -139.65,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00412",
+   "date": "2026-06-21",
+   "amount": -22.0,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00413",
+   "date": "2026-06-22",
+   "amount": -25.24,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00414",
+   "date": "2026-06-22",
+   "amount": -26.09,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00415",
+   "date": "2026-06-22",
+   "amount": -598.88,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00416",
+   "date": "2026-06-22",
+   "amount": 598.88,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00417",
+   "date": "2026-06-23",
+   "amount": -25.3,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00418",
+   "date": "2026-06-24",
+   "amount": -43.48,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00419",
+   "date": "2026-06-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00420",
+   "date": "2026-06-26",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00421",
+   "date": "2026-06-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00422",
+   "date": "2026-06-27",
+   "amount": -23.23,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00423",
+   "date": "2026-06-27",
+   "amount": -3.33,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00424",
+   "date": "2026-06-28",
+   "amount": -18.49,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00425",
+   "date": "2026-06-29",
+   "amount": -38.96,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00426",
+   "date": "2026-06-30",
+   "amount": -45.06,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00427",
+   "date": "2026-06-30",
+   "amount": -9.07,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00428",
+   "date": "2026-07-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00429",
+   "date": "2026-07-01",
+   "amount": -20.26,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00430",
+   "date": "2026-07-01",
+   "amount": -40.74,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00431",
+   "date": "2026-07-01",
+   "amount": -39.94,
+   "merchant": "Walgreens",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00432",
+   "date": "2026-07-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00433",
+   "date": "2026-07-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00434",
+   "date": "2026-07-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00435",
+   "date": "2026-07-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00436",
+   "date": "2026-07-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00437",
+   "date": "2026-07-03",
+   "amount": -106.71,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00438",
+   "date": "2026-07-04",
+   "amount": -18.31,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00439",
+   "date": "2026-07-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00440",
+   "date": "2026-07-05",
+   "amount": -62.17,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00441",
+   "date": "2026-07-05",
+   "amount": -20.69,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00442",
+   "date": "2026-07-05",
+   "amount": -21.69,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00443",
+   "date": "2026-07-06",
+   "amount": -21.06,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00444",
+   "date": "2026-07-08",
+   "amount": -78.22,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00445",
+   "date": "2026-07-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00446",
+   "date": "2026-07-09",
+   "amount": -26.28,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00447",
+   "date": "2026-07-10",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00448",
+   "date": "2026-07-10",
+   "amount": -15.36,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00449",
+   "date": "2026-07-10",
+   "amount": -32.7,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00450",
+   "date": "2026-07-11",
+   "amount": -83.24,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00451",
+   "date": "2026-07-11",
+   "amount": -20.38,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00452",
+   "date": "2026-07-11",
+   "amount": -3.33,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00453",
+   "date": "2026-07-12",
+   "amount": -27.14,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00454",
+   "date": "2026-07-13",
+   "amount": -44.38,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00455",
+   "date": "2026-07-13",
+   "amount": -18.46,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00456",
+   "date": "2026-07-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00457",
+   "date": "2026-07-15",
+   "amount": -41.49,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00458",
+   "date": "2026-07-15",
+   "amount": -23.05,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00459",
+   "date": "2026-07-16",
+   "amount": -31.51,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00460",
+   "date": "2026-07-17",
+   "amount": -47.09,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00461",
+   "date": "2026-07-17",
+   "amount": -57.16,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00462",
+   "date": "2026-07-17",
+   "amount": -57.14,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00463",
+   "date": "2026-07-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00464",
+   "date": "2026-07-18",
+   "amount": -21.62,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00465",
+   "date": "2026-07-20",
+   "amount": -105.39,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00466",
+   "date": "2026-07-20",
+   "amount": -62.18,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00467",
+   "date": "2026-07-22",
+   "amount": -44.76,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00468",
+   "date": "2026-07-22",
+   "amount": -14.58,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00469",
+   "date": "2026-07-22",
+   "amount": -615.15,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00470",
+   "date": "2026-07-22",
+   "amount": 615.15,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00471",
+   "date": "2026-07-23",
+   "amount": -53.79,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00472",
+   "date": "2026-07-23",
+   "amount": -20.27,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00473",
+   "date": "2026-07-23",
+   "amount": -34.21,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00474",
+   "date": "2026-07-24",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00475",
+   "date": "2026-07-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00476",
+   "date": "2026-07-25",
+   "amount": -47.47,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00477",
+   "date": "2026-07-26",
+   "amount": -19.53,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00478",
+   "date": "2026-07-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00479",
+   "date": "2026-07-28",
+   "amount": -27.08,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00480",
+   "date": "2026-07-29",
+   "amount": -25.71,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00481",
+   "date": "2026-07-29",
+   "amount": -46.39,
+   "merchant": "Great Clips",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00482",
+   "date": "2026-07-30",
+   "amount": -58.52,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00483",
+   "date": "2026-07-30",
+   "amount": -28.85,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00484",
+   "date": "2026-07-31",
+   "amount": -60.71,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00485",
+   "date": "2026-08-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00486",
+   "date": "2026-08-01",
+   "amount": -24.6,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00487",
+   "date": "2026-08-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00488",
+   "date": "2026-08-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00489",
+   "date": "2026-08-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00490",
+   "date": "2026-08-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00491",
+   "date": "2026-08-02",
+   "amount": -51.27,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00492",
+   "date": "2026-08-02",
+   "amount": -3.33,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00493",
+   "date": "2026-08-02",
+   "amount": -66.66,
+   "merchant": "Great Clips",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00494",
+   "date": "2026-08-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00495",
+   "date": "2026-08-03",
+   "amount": -54.44,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00496",
+   "date": "2026-08-03",
+   "amount": -79.24,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00497",
+   "date": "2026-08-04",
+   "amount": -31.3,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00498",
+   "date": "2026-08-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00499",
+   "date": "2026-08-05",
+   "amount": -14.53,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00500",
+   "date": "2026-08-05",
+   "amount": -42.31,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00501",
+   "date": "2026-08-06",
+   "amount": -21.74,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00502",
+   "date": "2026-08-06",
+   "amount": -41.77,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00503",
+   "date": "2026-08-06",
+   "amount": -27.04,
+   "merchant": "Great Clips",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00504",
+   "date": "2026-08-07",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00505",
+   "date": "2026-08-07",
+   "amount": -24.19,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00506",
+   "date": "2026-08-08",
+   "amount": -32.22,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00507",
+   "date": "2026-08-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00508",
+   "date": "2026-08-09",
+   "amount": -31.27,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00509",
+   "date": "2026-08-10",
+   "amount": -14.62,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00510",
+   "date": "2026-08-10",
+   "amount": -65.78,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00511",
+   "date": "2026-08-14",
+   "amount": -22.96,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00512",
+   "date": "2026-08-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00513",
+   "date": "2026-08-15",
+   "amount": -38.65,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00514",
+   "date": "2026-08-15",
+   "amount": -28.71,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00515",
+   "date": "2026-08-16",
+   "amount": -69.51,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00516",
+   "date": "2026-08-17",
+   "amount": -53.73,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00517",
+   "date": "2026-08-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00518",
+   "date": "2026-08-18",
+   "amount": -33.8,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00519",
+   "date": "2026-08-18",
+   "amount": -32.23,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00520",
+   "date": "2026-08-19",
+   "amount": -41.68,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00521",
+   "date": "2026-08-20",
+   "amount": -86.85,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00522",
+   "date": "2026-08-20",
+   "amount": -51.89,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00523",
+   "date": "2026-08-21",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00524",
+   "date": "2026-08-21",
+   "amount": -4.24,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00525",
+   "date": "2026-08-22",
+   "amount": -79.09,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00526",
+   "date": "2026-08-22",
+   "amount": -652.25,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00527",
+   "date": "2026-08-22",
+   "amount": 652.25,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00528",
+   "date": "2026-08-23",
+   "amount": -63.59,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00529",
+   "date": "2026-08-24",
+   "amount": -77.6,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00530",
+   "date": "2026-08-24",
+   "amount": -52.62,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00531",
+   "date": "2026-08-24",
+   "amount": -17.57,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00532",
+   "date": "2026-08-24",
+   "amount": -31.59,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00533",
+   "date": "2026-08-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00534",
+   "date": "2026-08-25",
+   "amount": -24.65,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00535",
+   "date": "2026-08-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00536",
+   "date": "2026-08-27",
+   "amount": -57.93,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00537",
+   "date": "2026-08-28",
+   "amount": -51.69,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00538",
+   "date": "2026-08-29",
+   "amount": -94.46,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00539",
+   "date": "2026-08-31",
+   "amount": -14.49,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00540",
+   "date": "2026-09-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00541",
+   "date": "2026-09-01",
+   "amount": -34.61,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00542",
+   "date": "2026-09-01",
+   "amount": -22.06,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00543",
+   "date": "2026-09-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00544",
+   "date": "2026-09-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00545",
+   "date": "2026-09-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00546",
+   "date": "2026-09-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00547",
+   "date": "2026-09-02",
+   "amount": -26.3,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00548",
+   "date": "2026-09-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00549",
+   "date": "2026-09-03",
+   "amount": -56.57,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00550",
+   "date": "2026-09-04",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00551",
+   "date": "2026-09-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00552",
+   "date": "2026-09-06",
+   "amount": -6.49,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00553",
+   "date": "2026-09-08",
+   "amount": -16.94,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00554",
+   "date": "2026-09-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00555",
+   "date": "2026-09-09",
+   "amount": -10.39,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00556",
+   "date": "2026-09-09",
+   "amount": -40.03,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00557",
+   "date": "2026-09-09",
+   "amount": -27.54,
+   "merchant": "Walgreens",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00558",
+   "date": "2026-09-11",
+   "amount": -67.61,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00559",
+   "date": "2026-09-11",
+   "amount": -58.28,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00560",
+   "date": "2026-09-12",
+   "amount": -38.73,
+   "merchant": "AMC",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00561",
+   "date": "2026-09-13",
+   "amount": -67.59,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00562",
+   "date": "2026-09-13",
+   "amount": -20.9,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00563",
+   "date": "2026-09-14",
+   "amount": -52.6,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00564",
+   "date": "2026-09-14",
+   "amount": -23.78,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00565",
+   "date": "2026-09-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00566",
+   "date": "2026-09-15",
+   "amount": -3.33,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00567",
+   "date": "2026-09-16",
+   "amount": -20.86,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00568",
+   "date": "2026-09-16",
+   "amount": -13.44,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00569",
+   "date": "2026-09-18",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00570",
+   "date": "2026-09-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00571",
+   "date": "2026-09-18",
+   "amount": -83.86,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00572",
+   "date": "2026-09-19",
+   "amount": -40.91,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00573",
+   "date": "2026-09-19",
+   "amount": -63.52,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00574",
+   "date": "2026-09-19",
+   "amount": -21.34,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00575",
+   "date": "2026-09-20",
+   "amount": -104.67,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00576",
+   "date": "2026-09-21",
+   "amount": -61.11,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00577",
+   "date": "2026-09-21",
+   "amount": -11.03,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00578",
+   "date": "2026-09-22",
+   "amount": -525.15,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00579",
+   "date": "2026-09-22",
+   "amount": 525.15,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00580",
+   "date": "2026-09-23",
+   "amount": -51.74,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00581",
+   "date": "2026-09-24",
+   "amount": -96.77,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00582",
+   "date": "2026-09-24",
+   "amount": -32.81,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00583",
+   "date": "2026-09-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00584",
+   "date": "2026-09-26",
+   "amount": -65.99,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00585",
+   "date": "2026-09-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00586",
+   "date": "2026-09-27",
+   "amount": -43.84,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00587",
+   "date": "2026-09-28",
+   "amount": -48.12,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00588",
+   "date": "2026-09-29",
+   "amount": -101.0,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00589",
+   "date": "2026-09-30",
+   "amount": -70.9,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00590",
+   "date": "2026-09-30",
+   "amount": -22.7,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00591",
+   "date": "2026-09-30",
+   "amount": -42.22,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00592",
+   "date": "2026-10-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00593",
+   "date": "2026-10-01",
+   "amount": -62.99,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00594",
+   "date": "2026-10-02",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00595",
+   "date": "2026-10-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00596",
+   "date": "2026-10-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00597",
+   "date": "2026-10-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00598",
+   "date": "2026-10-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00599",
+   "date": "2026-10-02",
+   "amount": -31.86,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00600",
+   "date": "2026-10-02",
+   "amount": -79.61,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00601",
+   "date": "2026-10-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00602",
+   "date": "2026-10-03",
+   "amount": -58.92,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00603",
+   "date": "2026-10-04",
+   "amount": -71.02,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00604",
+   "date": "2026-10-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00605",
+   "date": "2026-10-06",
+   "amount": -21.85,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00606",
+   "date": "2026-10-06",
+   "amount": -43.61,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00607",
+   "date": "2026-10-07",
+   "amount": -4.3,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00608",
+   "date": "2026-10-08",
+   "amount": -30.61,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00609",
+   "date": "2026-10-08",
+   "amount": -90.98,
+   "merchant": "Petco",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00610",
+   "date": "2026-10-09",
+   "amount": -15.99,
+   "merchant": "Streamly",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00611",
+   "date": "2026-10-10",
+   "amount": -35.92,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00612",
+   "date": "2026-10-10",
+   "amount": -18.26,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00613",
+   "date": "2026-10-11",
+   "amount": -44.15,
+   "merchant": "QuikTrip",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00614",
+   "date": "2026-10-11",
+   "amount": -21.44,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00615",
+   "date": "2026-10-13",
+   "amount": -54.29,
+   "merchant": "Old Navy",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00616",
+   "date": "2026-10-13",
+   "amount": -47.79,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00617",
+   "date": "2026-10-14",
+   "amount": -3.33,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00618",
+   "date": "2026-10-15",
+   "amount": -142.0,
+   "merchant": "Lone Star Auto Insurance",
+   "category": "insurance",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00619",
+   "date": "2026-10-15",
+   "amount": -60.28,
+   "merchant": "Kroger",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00620",
+   "date": "2026-10-16",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00621",
+   "date": "2026-10-16",
+   "amount": -35.82,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00622",
+   "date": "2026-10-16",
+   "amount": -58.91,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00623",
+   "date": "2026-10-17",
+   "amount": -3.81,
+   "merchant": "Pho Is For Lovers",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00624",
+   "date": "2026-10-18",
+   "amount": -65.0,
+   "merchant": "Metro Mobile",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00625",
+   "date": "2026-10-19",
+   "amount": -47.78,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00626",
+   "date": "2026-10-20",
+   "amount": -88.67,
+   "merchant": "Dallas Power & Light",
+   "category": "utilities",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00627",
+   "date": "2026-10-20",
+   "amount": -56.1,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00628",
+   "date": "2026-10-20",
+   "amount": -43.4,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00629",
+   "date": "2026-10-20",
+   "amount": -19.23,
+   "merchant": "Topgolf",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00630",
+   "date": "2026-10-21",
+   "amount": -17.21,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00631",
+   "date": "2026-10-22",
+   "amount": -719.2,
+   "merchant": "Payment to Cash Rewards Visa",
+   "category": "card_payment",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00632",
+   "date": "2026-10-22",
+   "amount": 719.2,
+   "merchant": "Payment from Spend",
+   "category": "card_payment",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00633",
+   "date": "2026-10-23",
+   "amount": -27.28,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00634",
+   "date": "2026-10-23",
+   "amount": -36.86,
+   "merchant": "Ulta",
+   "category": "personal_care",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00635",
+   "date": "2026-10-25",
+   "amount": -81.22,
+   "merchant": "Interest charge",
+   "category": "interest",
+   "account_id": "card",
+   "recurring": true
+  },
+  {
+   "id": "t00636",
+   "date": "2026-10-26",
+   "amount": -28.03,
+   "merchant": "CVS Pharmacy",
+   "category": "health",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00637",
+   "date": "2026-10-27",
+   "amount": -11.99,
+   "merchant": "Tunewave",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00638",
+   "date": "2026-10-27",
+   "amount": -18.08,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00639",
+   "date": "2026-10-27",
+   "amount": -121.96,
+   "merchant": "Venmo",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00640",
+   "date": "2026-10-28",
+   "amount": -61.18,
+   "merchant": "H-E-B",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00641",
+   "date": "2026-10-28",
+   "amount": -86.06,
+   "merchant": "Target",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00642",
+   "date": "2026-10-28",
+   "amount": -41.2,
+   "merchant": "Ticketmaster",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00643",
+   "date": "2026-10-29",
+   "amount": -71.53,
+   "merchant": "Trader Joe's",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00644",
+   "date": "2026-10-29",
+   "amount": -45.11,
+   "merchant": "Exxon",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00645",
+   "date": "2026-10-30",
+   "amount": 1938.46,
+   "merchant": "Baylor Scott & White payroll",
+   "category": "paycheck",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00646",
+   "date": "2026-10-30",
+   "amount": -52.67,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00647",
+   "date": "2026-10-31",
+   "amount": -64.78,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00648",
+   "date": "2026-10-31",
+   "amount": -32.85,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00649",
+   "date": "2026-11-01",
+   "amount": -1450.0,
+   "merchant": "Oak Lawn Apartments",
+   "category": "housing",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00650",
+   "date": "2026-11-02",
+   "amount": -200.0,
+   "merchant": "Transfer to Reserve",
+   "category": "savings_transfer",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00651",
+   "date": "2026-11-02",
+   "amount": 200.0,
+   "merchant": "Transfer from Spend",
+   "category": "savings_transfer",
+   "account_id": "reserve",
+   "recurring": true
+  },
+  {
+   "id": "t00652",
+   "date": "2026-11-02",
+   "amount": -100.0,
+   "merchant": "Transfer to Roth IRA",
+   "category": "retirement_contribution",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00653",
+   "date": "2026-11-02",
+   "amount": 100.0,
+   "merchant": "Contribution from PNC",
+   "category": "retirement_contribution",
+   "account_id": "ira",
+   "recurring": true
+  },
+  {
+   "id": "t00654",
+   "date": "2026-11-02",
+   "amount": -14.09,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00655",
+   "date": "2026-11-02",
+   "amount": -26.7,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00656",
+   "date": "2026-11-03",
+   "amount": -40.0,
+   "merchant": "Iron Gym",
+   "category": "subscription",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00657",
+   "date": "2026-11-03",
+   "amount": -15.0,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00658",
+   "date": "2026-11-03",
+   "amount": -67.51,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00659",
+   "date": "2026-11-03",
+   "amount": -36.79,
+   "merchant": "Etsy",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00660",
+   "date": "2026-11-04",
+   "amount": -40.44,
+   "merchant": "Shell",
+   "category": "gas",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00661",
+   "date": "2026-11-04",
+   "amount": -24.89,
+   "merchant": "Starbucks",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00662",
+   "date": "2026-11-05",
+   "amount": -387.0,
+   "merchant": "Lone Star CU auto payment",
+   "category": "auto_loan",
+   "account_id": "spend",
+   "recurring": true
+  },
+  {
+   "id": "t00663",
+   "date": "2026-11-05",
+   "amount": -63.85,
+   "merchant": "Tom Thumb",
+   "category": "groceries",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00664",
+   "date": "2026-11-05",
+   "amount": -62.85,
+   "merchant": "USPS",
+   "category": "misc",
+   "account_id": "spend",
+   "recurring": false
+  },
+  {
+   "id": "t00665",
+   "date": "2026-11-06",
+   "amount": -110.5,
+   "merchant": "Amazon",
+   "category": "shopping",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00666",
+   "date": "2026-11-07",
+   "amount": -11.08,
+   "merchant": "Taco Joint",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00667",
+   "date": "2026-11-07",
+   "amount": -39.48,
+   "merchant": "AMC",
+   "category": "entertainment",
+   "account_id": "card",
+   "recurring": false
+  },
+  {
+   "id": "t00668",
+   "date": "2026-11-08",
+   "amount": -33.17,
+   "merchant": "Velvet Taco",
+   "category": "dining",
+   "account_id": "card",
+   "recurring": false
+  }
+ ]
+}

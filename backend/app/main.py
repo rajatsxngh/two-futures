@@ -1,14 +1,16 @@
 """Future You API.
 
-M1: every endpoint is a stub that serves fixture JSON with the final response
-shape. Later milestones swap each body for the real engine without changing
-the route or its response model.
+Each route serves the real engine once its milestone lands and falls back to
+fixture JSON (same shape) until then, or always when USE_FIXTURES=1.
 """
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import config
+from .engine import data as customer_data
+from .engine.health import health_for
+from .engine.profile import profile_for
 from .fixtures import load
 from .models import (
     ForecastResponse,
@@ -51,12 +53,19 @@ def ping() -> dict:
 
 @app.get("/api/profile", response_model=ProfileResponse)
 def get_profile(customer: str = CustomerParam):
-    return load(check_customer(customer), "profile")
+    check_customer(customer)
+    if config.USE_FIXTURES:
+        return load(customer, "profile")
+    data = customer_data.load(customer)
+    return profile_for(data, health_for(data, config.DEMO_TODAY), config.DEMO_TODAY)
 
 
 @app.get("/api/health", response_model=HealthResponse)
 def get_health(customer: str = CustomerParam):
-    return load(check_customer(customer), "health")
+    check_customer(customer)
+    if config.USE_FIXTURES:
+        return load(customer, "health")
+    return health_for(customer_data.load(customer), config.DEMO_TODAY)
 
 
 @app.get("/api/forecast", response_model=ForecastResponse)
