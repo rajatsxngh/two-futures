@@ -1,0 +1,325 @@
+{
+  "path": "plan",
+  "result": {
+    "path": "plan",
+    "label": "With a plan",
+    "key_numbers": [
+      {
+        "id": "plan.2031.cushion_months",
+        "label": "Savings cushion",
+        "value": 7.8,
+        "unit": "months",
+        "display": "7.8 months",
+        "math": {
+          "formula": "(Checking + savings) \u00f7 monthly spending, in 2031",
+          "inputs": [],
+          "assumptions": [
+            "Placeholder data from fixtures (M1). The real engine replaces this in M2-M5.",
+            "All numbers in today's dollars."
+          ],
+          "thresholds": null
+        }
+      },
+      {
+        "id": "plan.2031.card_debt",
+        "label": "Card debt",
+        "value": 0.0,
+        "unit": "usd",
+        "display": "$0",
+        "math": {
+          "formula": "Credit card balance at the end of 2031",
+          "inputs": [],
+          "assumptions": [
+            "Placeholder data from fixtures (M1). The real engine replaces this in M2-M5.",
+            "All numbers in today's dollars."
+          ],
+          "thresholds": null
+        }
+      },
+      {
+        "id": "plan.2031.car_paid_off",
+        "label": "Car paid off",
+        "value": "2028-06-05",
+        "unit": "date",
+        "display": "Jun 2028",
+        "math": {
+          "formula": "Month the auto loan balance reaches $0",
+          "inputs": [],
+          "assumptions": [
+            "Placeholder data from fixtures (M1). The real engine replaces this in M2-M5.",
+            "All numbers in today's dollars."
+          ],
+          "thresholds": null
+        }
+      },
+      {
+        "id": "plan.2031.ira",
+        "label": "IRA",
+        "value": 23900.0,
+        "unit": "usd",
+        "display": "$23,900",
+        "math": {
+          "formula": "IRA balance at the end of 2031",
+          "inputs": [],
+          "assumptions": [
+            "Placeholder data from fixtures (M1). The real engine replaces this in M2-M5.",
+            "All numbers in today's dollars.",
+            "IRA growth 5% a year (typical case)."
+          ],
+          "thresholds": null
+        }
+      }
+    ],
+    "snapshots": [
+      {
+        "year": 2026,
+        "age": 27,
+        "balances": {
+          "spend": 1562.0,
+          "reserve": 2344.0,
+          "ira": 6800.0,
+          "auto": 14000.0,
+          "card": 3900.0
+        },
+        "cushion_months": 1.0,
+        "card_debt": 3900.0,
+        "ira_balance": 6800.0,
+        "net_worth": -7194.0,
+        "score": 55,
+        "band": "coping",
+        "indicator_scores": {}
+      },
+      {
+        "year": 2027,
+        "age": 28,
+        "balances": {
+          "spend": 3750.0,
+          "reserve": 5624.0,
+          "ira": 8100.0,
+          "auto": 9100.0,
+          "card": 0.0
+        },
+        "cushion_months": 2.4,
+        "card_debt": 0.0,
+        "ira_balance": 8100.0,
+        "net_worth": 8374.0,
+        "score": 70,
+        "band": "coping",
+        "indicator_scores": {}
+      },
+      {
+        "year": 2028,
+        "age": 29,
+        "balances": {
+          "spend": 4531.0,
+          "reserve": 6796.0,
+          "ira": 9500.0,
+          "auto": 0.0,
+          "card": 0.0
+        },
+        "cushion_months": 2.9,
+        "card_debt": 0.0,
+        "ira_balance": 9500.0,
+        "net_worth": 20827.0,
+        "score": 76,
+        "band": "coping",
+        "indicator_scores": {}
+      },
+      {
+        "year": 2029,
+        "age": 30,
+        "balances": {
+          "spend": 6718.0,
+          "reserve": 10078.0,
+          "ira": 12300.0,
+          "auto": 0.0,
+          "card": 0.0
+        },
+        "cushion_months": 4.3,
+        "card_debt": 0.0,
+        "ira_balance": 12300.0,
+        "net_worth": 29096.0,
+        "score": 80,
+        "band": "healthy",
+        "indicator_scores": {}
+      },
+      {
+        "year": 2030,
+        "age": 31,
+        "balances": {
+          "spend": 8750.0,
+          "reserve": 13124.0,
+          "ira": 16800.0,
+          "auto": 0.0,
+          "card": 0.0
+        },
+        "cushion_months": 5.6,
+        "card_debt": 0.0,
+        "ira_balance": 16800.0,
+        "net_worth": 38674.0,
+        "score": 82,
+        "band": "healthy",
+        "indicator_scores": {}
+      },
+      {
+        "year": 2031,
+        "age": 32,
+        "balances": {
+          "spend": 9374.0,
+          "reserve": 14062.0,
+          "ira": 22400.0,
+          "auto": 0.0,
+          "card": 0.0
+        },
+        "cushion_months": 6.0,
+        "card_debt": 0.0,
+        "ira_balance": 22400.0,
+        "net_worth": 45836.0,
+        "score": 84,
+        "band": "healthy",
+        "indicator_scores": {}
+      }
+    ],
+    "payoff_dates": {
+      "auto": "2028-09-05",
+      "card": "2027-10-22"
+    },
+    "events": [
+      {
+        "date": "2028-03-14",
+        "title": "Car repair",
+        "description": "The transmission needs work: $2,000.",
+        "amount": 2000.0,
+        "shared": true
+      },
+      {
+        "date": "2027-04-15",
+        "title": "CD matures",
+        "description": "Half goes to the card, half to savings.",
+        "amount": 2080.0,
+        "shared": false
+      },
+      {
+        "date": "2027-10-22",
+        "title": "Card paid off",
+        "description": "The card balance hits $0.",
+        "amount": null,
+        "shared": false
+      },
+      {
+        "date": "2028-03-14",
+        "title": "Repair paid from savings",
+        "description": "The cushion covers it, and the card stays at $0.",
+        "amount": 2000.0,
+        "shared": false
+      },
+      {
+        "date": "2028-09-05",
+        "title": "Car paid off early",
+        "description": "Paid off 21 months early. That payment becomes savings.",
+        "amount": null,
+        "shared": false
+      }
+    ]
+  },
+  "deltas": [
+    {
+      "id": "whatif.monthly_change",
+      "label": "Monthly change",
+      "value": 169.0,
+      "unit": "usd_per_month",
+      "display": "+$169/mo",
+      "math": {
+        "formula": "Yearly raise \u00d7 (1 \u2212 22% federal \u2212 7.65% payroll) \u00f7 12, minus the extra rent",
+        "inputs": [
+          {
+            "label": "Yearly raise",
+            "value": 8000.0,
+            "unit": "usd",
+            "source": null
+          },
+          {
+            "label": "Take-home share",
+            "value": 70.35,
+            "unit": "pct",
+            "source": null
+          },
+          {
+            "label": "Extra rent",
+            "value": 300.0,
+            "unit": "usd_per_month",
+            "source": null
+          }
+        ],
+        "assumptions": [
+          "No state income tax (Texas)."
+        ],
+        "thresholds": null
+      }
+    },
+    {
+      "id": "whatif.cushion_2031",
+      "label": "Cushion in 2031",
+      "value": 1.8,
+      "unit": "months",
+      "display": "+1.8 months",
+      "math": {
+        "formula": "Change in the plan path's 2031 cushion",
+        "inputs": [],
+        "assumptions": [
+          "Placeholder data from fixtures (M1). The real engine replaces this in M2-M5."
+        ],
+        "thresholds": null
+      }
+    },
+    {
+      "id": "whatif.net_worth_2031",
+      "label": "Net worth in 2031",
+      "value": 8400.0,
+      "unit": "usd",
+      "display": "+$8.4k by 2031",
+      "math": {
+        "formula": "Change in the plan path's 2031 net worth",
+        "inputs": [],
+        "assumptions": [
+          "Placeholder data from fixtures (M1). The real engine replaces this in M2-M5."
+        ],
+        "thresholds": null
+      }
+    }
+  ],
+  "sentence": "Taking the Austin job leaves about $170 more a month after taxes and the higher rent.",
+  "applied": [
+    {
+      "customer": "maya",
+      "description": "What if I take the Austin job? $8,000 more a year, but rent is $300 higher.",
+      "preset": "new_job",
+      "income_change_yearly": 8000.0,
+      "spending_change_monthly": 300.0,
+      "savings_change_monthly": null,
+      "one_time_cost": null,
+      "job_loss_months": null,
+      "home": null,
+      "start_month": "2027-01"
+    }
+  ],
+  "fact_sheet": {
+    "path": "plan",
+    "today_facts": [
+      "Today is November 2026. You are Maya, 27, a nurse in Dallas.",
+      "Take-home pay: $4,200 a month. Rent: $1,450. Car loan: $14,000 left. Credit card: $3,900 of $5,000 (78%).",
+      "Savings cushion: about 1 month. Financial Health Score: 55 (coping)."
+    ],
+    "future_facts": [
+      "It's 2031. You're 32. In 2026 you started moving $150 to savings every payday.",
+      "Card paid off October 2027. The same $2,000 repair in March 2028 came out of savings.",
+      "Car paid off September 2028, 21 months early, and that payment became savings.",
+      "Cushion in 2031: about 6 months. Card debt: $0. IRA: about $22,400. Score in 2031: 84.",
+      "What-if applied: What if I take the Austin job? $8,000 more a year, but rent is $300 higher. Result: Taking the Austin job leaves about $170 more a month after taxes and the higher rent."
+    ],
+    "plan_summary": "Move $150 from Spend to savings every payday; split the CD between card and savings; cancel the unused gym; then snowball the card payment into the car loan.",
+    "next_step": "Move $150 from Spend to savings every payday, starting November 13, 2026.",
+    "opening_line": "Hey... it's me. Well, it's you, five years from now. That little $150 habit? It changed more than I expected.",
+    "text": "TODAY (2026):\nToday is November 2026. You are Maya, 27, a nurse in Dallas.\nTake-home pay: $4,200 a month. Rent: $1,450. Car loan: $14,000 left. Credit card: $3,900 of $5,000 (78%).\nSavings cushion: about 1 month. Financial Health Score: 55 (coping).\n\nYOUR LIFE IN 2031 (plan):\nIt's 2031. You're 32. In 2026 you started moving $150 to savings every payday.\nCard paid off October 2027. The same $2,000 repair in March 2028 came out of savings.\nCar paid off September 2028, 21 months early, and that payment became savings.\nCushion in 2031: about 6 months. Card debt: $0. IRA: about $22,400. Score in 2031: 84.\n\nPLAN: Move $150 from Spend to savings every payday; split the CD between card and savings; cancel the unused gym; then snowball the card payment into the car loan.\nNEXT STEP: Move $150 from Spend to savings every payday, starting November 13, 2026.\nWHAT-IF APPLIED: Taking the Austin job leaves about $170 more a month after taxes and the higher rent."
+  }
+}

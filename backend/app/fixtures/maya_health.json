@@ -1,0 +1,531 @@
+{
+  "as_of": "2026-11-08",
+  "score": {
+    "id": "health.score",
+    "label": "Financial Health Score",
+    "value": 55.0,
+    "unit": "score",
+    "display": "55",
+    "math": {
+      "formula": "Average of the four pillars (Spend, Save, Borrow, Plan), rounded half up",
+      "inputs": [
+        {
+          "label": "Spend",
+          "value": 74.0,
+          "unit": "score",
+          "source": null
+        },
+        {
+          "label": "Save",
+          "value": 22.0,
+          "unit": "score",
+          "source": null
+        },
+        {
+          "label": "Borrow",
+          "value": 55.0,
+          "unit": "score",
+          "source": null
+        },
+        {
+          "label": "Plan",
+          "value": 68.0,
+          "unit": "score",
+          "source": null
+        }
+      ],
+      "assumptions": [
+        "Aligned with the Financial Health Network's Spend, Save, Borrow, Plan framework.",
+        "Bands: 0-39 vulnerable, 40-79 coping, 80-100 healthy."
+      ],
+      "thresholds": null
+    }
+  },
+  "band": "coping",
+  "pillars": [
+    {
+      "id": "spend",
+      "label": "Spend",
+      "score": {
+        "id": "health.pillar.spend",
+        "label": "Spend",
+        "value": 74.0,
+        "unit": "score",
+        "display": "74",
+        "math": {
+          "formula": "Average of its two indicators, rounded half up",
+          "inputs": [
+            {
+              "label": "Spending vs. income",
+              "value": 47.0,
+              "unit": "score",
+              "source": null
+            },
+            {
+              "label": "Bills paid on time",
+              "value": 100.0,
+              "unit": "score",
+              "source": null
+            }
+          ],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "indicator_ids": [
+        "spending_vs_income",
+        "bills_on_time"
+      ]
+    },
+    {
+      "id": "save",
+      "label": "Save",
+      "score": {
+        "id": "health.pillar.save",
+        "label": "Save",
+        "value": 22.0,
+        "unit": "score",
+        "display": "22",
+        "math": {
+          "formula": "Average of its two indicators, rounded half up",
+          "inputs": [
+            {
+              "label": "Savings cushion",
+              "value": 20.0,
+              "unit": "score",
+              "source": null
+            },
+            {
+              "label": "Long-term saving",
+              "value": 24.0,
+              "unit": "score",
+              "source": null
+            }
+          ],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "indicator_ids": [
+        "savings_cushion",
+        "long_term_saving"
+      ]
+    },
+    {
+      "id": "borrow",
+      "label": "Borrow",
+      "score": {
+        "id": "health.pillar.borrow",
+        "label": "Borrow",
+        "value": 55.0,
+        "unit": "score",
+        "display": "55",
+        "math": {
+          "formula": "Average of its two indicators, rounded half up",
+          "inputs": [
+            {
+              "label": "Debt load",
+              "value": 90.0,
+              "unit": "score",
+              "source": null
+            },
+            {
+              "label": "Credit health",
+              "value": 20.0,
+              "unit": "score",
+              "source": null
+            }
+          ],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "indicator_ids": [
+        "debt_load",
+        "credit_health"
+      ]
+    },
+    {
+      "id": "plan",
+      "label": "Plan",
+      "score": {
+        "id": "health.pillar.plan",
+        "label": "Plan",
+        "value": 68.0,
+        "unit": "score",
+        "display": "68",
+        "math": {
+          "formula": "Average of its two indicators, rounded half up",
+          "inputs": [
+            {
+              "label": "Insurance",
+              "value": 75.0,
+              "unit": "score",
+              "source": null
+            },
+            {
+              "label": "Planning ahead",
+              "value": 60.0,
+              "unit": "score",
+              "source": null
+            }
+          ],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "indicator_ids": [
+        "insurance",
+        "planning_ahead"
+      ]
+    }
+  ],
+  "indicators": [
+    {
+      "id": "spending_vs_income",
+      "number": 1,
+      "pillar": "spend",
+      "label": "Spending vs. income",
+      "value": {
+        "id": "health.spending_vs_income",
+        "label": "Spending vs. income",
+        "value": 93.0,
+        "unit": "pct",
+        "display": "93%",
+        "math": {
+          "formula": "12-month spending \u00f7 take-home pay",
+          "inputs": [
+            {
+              "label": "Monthly spending (12-month average)",
+              "value": 3906.0,
+              "unit": "usd_per_month",
+              "source": null
+            },
+            {
+              "label": "Monthly take-home pay",
+              "value": 4200.0,
+              "unit": "usd_per_month",
+              "source": null
+            }
+          ],
+          "assumptions": [
+            "Scores move in a straight line between the two thresholds."
+          ],
+          "thresholds": {
+            "best": 85.0,
+            "worst": 100.0,
+            "unit": "pct"
+          }
+        }
+      },
+      "score": 47,
+      "status": "amber",
+      "reason": "You spend 93 cents of every dollar you bring home."
+    },
+    {
+      "id": "bills_on_time",
+      "number": 2,
+      "pillar": "spend",
+      "label": "Bills paid on time",
+      "value": {
+        "id": "health.bills_on_time",
+        "label": "Bills paid on time",
+        "value": 0.0,
+        "unit": "count",
+        "display": "0 late",
+        "math": {
+          "formula": "Late or missed payments in the last 12 months",
+          "inputs": [
+            {
+              "label": "Late or missed payments",
+              "value": 0.0,
+              "unit": "count",
+              "source": null
+            }
+          ],
+          "assumptions": [
+            "Scores move in a straight line between the two thresholds."
+          ],
+          "thresholds": {
+            "best": 0.0,
+            "worst": 2.0,
+            "unit": "count"
+          }
+        }
+      },
+      "score": 100,
+      "status": "green",
+      "reason": "No late or missed payments in the last 12 months."
+    },
+    {
+      "id": "savings_cushion",
+      "number": 3,
+      "pillar": "save",
+      "label": "Savings cushion",
+      "value": {
+        "id": "health.savings_cushion",
+        "label": "Savings cushion",
+        "value": 1.0,
+        "unit": "months",
+        "display": "1.0 months",
+        "math": {
+          "formula": "(Checking + savings) \u00f7 monthly spending",
+          "inputs": [
+            {
+              "label": "Spend (checking)",
+              "value": 1556.0,
+              "unit": "usd",
+              "source": null
+            },
+            {
+              "label": "Reserve (savings)",
+              "value": 2350.0,
+              "unit": "usd",
+              "source": null
+            },
+            {
+              "label": "Monthly spending",
+              "value": 3906.0,
+              "unit": "usd_per_month",
+              "source": null
+            }
+          ],
+          "assumptions": [
+            "Scores move in a straight line between the two thresholds."
+          ],
+          "thresholds": {
+            "best": 3.0,
+            "worst": 0.5,
+            "unit": "months"
+          }
+        }
+      },
+      "score": 20,
+      "status": "red",
+      "reason": "Your checking and savings would cover about one month of spending."
+    },
+    {
+      "id": "long_term_saving",
+      "number": 4,
+      "pillar": "save",
+      "label": "Long-term saving",
+      "value": {
+        "id": "health.long_term_saving",
+        "label": "Long-term saving",
+        "value": 2.4,
+        "unit": "pct",
+        "display": "2.4%",
+        "math": {
+          "formula": "Monthly retirement contributions \u00f7 take-home pay",
+          "inputs": [
+            {
+              "label": "IRA contribution",
+              "value": 100.0,
+              "unit": "usd_per_month",
+              "source": null
+            },
+            {
+              "label": "Monthly take-home pay",
+              "value": 4200.0,
+              "unit": "usd_per_month",
+              "source": null
+            }
+          ],
+          "assumptions": [
+            "Scores move in a straight line between the two thresholds."
+          ],
+          "thresholds": {
+            "best": 10.0,
+            "worst": 0.0,
+            "unit": "pct"
+          }
+        }
+      },
+      "score": 24,
+      "status": "red",
+      "reason": "About 2% of your pay goes to retirement. 10% is the healthy mark."
+    },
+    {
+      "id": "debt_load",
+      "number": 5,
+      "pillar": "borrow",
+      "label": "Debt load",
+      "value": {
+        "id": "health.debt_load",
+        "label": "Debt load",
+        "value": 12.0,
+        "unit": "pct",
+        "display": "12%",
+        "math": {
+          "formula": "Monthly debt payments \u00f7 take-home pay",
+          "inputs": [
+            {
+              "label": "Car payment",
+              "value": 387.0,
+              "unit": "usd_per_month",
+              "source": null
+            },
+            {
+              "label": "Card minimum",
+              "value": 117.0,
+              "unit": "usd_per_month",
+              "source": null
+            },
+            {
+              "label": "Monthly take-home pay",
+              "value": 4200.0,
+              "unit": "usd_per_month",
+              "source": null
+            }
+          ],
+          "assumptions": [
+            "Scores move in a straight line between the two thresholds."
+          ],
+          "thresholds": {
+            "best": 10.0,
+            "worst": 30.0,
+            "unit": "pct"
+          }
+        }
+      },
+      "score": 90,
+      "status": "green",
+      "reason": "Your debt payments take 12% of your pay, which is manageable."
+    },
+    {
+      "id": "credit_health",
+      "number": 6,
+      "pillar": "borrow",
+      "label": "Credit health",
+      "value": {
+        "id": "health.credit_health",
+        "label": "Credit health",
+        "value": 78.0,
+        "unit": "pct",
+        "display": "78%",
+        "math": {
+          "formula": "Card balances \u00f7 card limits",
+          "inputs": [
+            {
+              "label": "Card balance",
+              "value": 3900.0,
+              "unit": "usd",
+              "source": null
+            },
+            {
+              "label": "Card limit",
+              "value": 5000.0,
+              "unit": "usd",
+              "source": null
+            }
+          ],
+          "assumptions": [
+            "Scores move in a straight line between the two thresholds."
+          ],
+          "thresholds": {
+            "best": 30.0,
+            "worst": 90.0,
+            "unit": "pct"
+          }
+        }
+      },
+      "score": 20,
+      "status": "red",
+      "reason": "Your card is at 78% of its limit. Under 30% is healthy."
+    },
+    {
+      "id": "insurance",
+      "number": 7,
+      "pillar": "plan",
+      "label": "Insurance",
+      "value": {
+        "id": "health.insurance",
+        "label": "Insurance",
+        "value": 3.0,
+        "unit": "count",
+        "display": "3 of 4",
+        "math": {
+          "formula": "Number of the 4 key insurance types you have (setup answers)",
+          "inputs": [
+            {
+              "label": "Health",
+              "value": "yes",
+              "unit": "count",
+              "source": null
+            },
+            {
+              "label": "Auto",
+              "value": "yes",
+              "unit": "count",
+              "source": null
+            },
+            {
+              "label": "Renters or home",
+              "value": "yes",
+              "unit": "count",
+              "source": null
+            },
+            {
+              "label": "Disability",
+              "value": "no",
+              "unit": "count",
+              "source": null
+            }
+          ],
+          "assumptions": [
+            "Scores move in a straight line between the two thresholds."
+          ],
+          "thresholds": {
+            "best": 4.0,
+            "worst": 0.0,
+            "unit": "count"
+          }
+        }
+      },
+      "score": 75,
+      "status": "amber",
+      "reason": "You have health, auto and renters insurance, but no disability cover."
+    },
+    {
+      "id": "planning_ahead",
+      "number": 8,
+      "pillar": "plan",
+      "label": "Planning ahead",
+      "value": {
+        "id": "health.planning_ahead",
+        "label": "Planning ahead",
+        "value": "sometimes",
+        "unit": "score",
+        "display": "Sometimes",
+        "math": {
+          "formula": "Setup answer about planning ahead, plus credit for any automatic saving",
+          "inputs": [
+            {
+              "label": "Setup answer",
+              "value": "sometimes",
+              "unit": "score",
+              "source": null
+            },
+            {
+              "label": "Automatic saving",
+              "value": "IRA $100/month",
+              "unit": "usd_per_month",
+              "source": null
+            }
+          ],
+          "assumptions": [
+            "Scores move in a straight line between the two thresholds."
+          ],
+          "thresholds": {
+            "best": 100.0,
+            "worst": 0.0,
+            "unit": "score"
+          }
+        }
+      },
+      "score": 60,
+      "status": "amber",
+      "reason": "You plan ahead sometimes, and your IRA deposit is automatic."
+    }
+  ]
+}

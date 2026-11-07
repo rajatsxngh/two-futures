@@ -1,0 +1,957 @@
+﻿PRD: Future You (PNC 360° Financial Health Navigator)
+Nov 7, 2026 · Rajat Singh
+TL;DR
+Future You is a 360° Financial Health Navigator for PNC. It shows your whole money picture today, then lets you talk out loud to two versions of yourself in 2031, and take the first step of a better plan in one tap.
+* The pitch: "Your bank app shows what already happened. Future You shows what happens next, and lets you hear it from yourself."
+* The product in one breath: every account in one view → a Financial Health Score built on 8 standard indicators → a forecast of every balance and bill → two futures you can talk to (same path vs. a simple plan) → a what-if simulator inside that conversation → one tap to start the plan.
+* The moment judges remember: ask both future selves the same question and hear two very different answers in the same voice. Then change one decision and hear the answer change.
+* Why it can win: it covers all 5 of PNC's bullets in one story (section 2). It is built on published research, not guesses (section 3). It is designed around what PNC cares about: trusted, transparent AI and PNC's own products (sections 3 and 11).
+* Demo customer: Maya, 27, a nurse in Dallas. Health score 55 ("coping"), about one month of savings cushion, and a credit card at 78% of its limit.
+* Prize tracks: PNC's challenge, plus MLH's Best Use of ElevenLabs, which is a separate track (MLH prize page).
+* Hard deadlines: register the team on Devpost by Nov 7, 2026 at 11:00 PM (a saved draft doesn't count). Edits close Nov 8, 2026 at 12:00 PM (HackUTD hacker guide).
+* Open question: the name. MIT's research project is also called "Future You", so consider submitting as Two Futures.
+The challenge, line by line
+PNC wants one outcome: a person sees all their money, understands it, and feels sure about their next move. Every phrase below is something a judge can check, so each one maps to a feature we will show.
+PNC's words
+	What it really asks for
+	How we answer it
+ 
+	"360° Financial Health Navigator"
+	360° means every account, even ones at other banks. Health is a condition you can measure, not a balance. Navigator means it shows the route and the next turn, not only where you are.
+	One view of all accounts, a Financial Health Score, a plan (the route) and one next step (the turn).
+	"see their whole financial picture"
+	Bring scattered accounts into one clear view. The AI has to do real work, not decorate.
+	The Today screen groups every account and sums it up in two plain sentences.
+	"make sense of it"
+	Turn numbers into meaning: what's fine, what's risky, and why.
+	8 health indicators, each with a plain "why" and a "show the math" view.
+	"feel confident about their next move"
+	The emotional part. People feel confident when they can see the outcome and have one clear step. Most teams will skip this.
+	Two future selves you can talk to, and one next step you can start with a tap.
+	"checking and savings accounts, CDs, IRAs, auto and personal loans, credit cards and mortgages"
+	8 named account types. Judges will look for each one.
+	The data model covers all 8. Maya has 6. A second demo household has a personal loan and a mortgage, and the "buy a home" what-if adds a mortgage to Maya's future.
+	"few have one clear view of how they're actually doing or what to do next"
+	Two jobs: a status (how am I doing?) and a direction (what do I do?).
+	The score answers the first. The next-step card answers the second.
+	"reimagine how people understand and manage their financial lives"
+	They want something new, not a nicer dashboard.
+	The dashboard is only the base. The new part is meeting your future selves.
+	"A conversational coach"
+	Two-way, natural and personal. Voice counts.
+	A voice agent (ElevenLabs) that plays your two future selves, using only your real numbers.
+	"3+ Health Assessment Indicators"
+	At least 3. More is better if they are standard and explained.
+	8 indicators that follow the Financial Health Network's Spend, Save, Borrow and Plan framework.
+	"Forecast balances and financial obligation"
+	Two things: future balances, and upcoming bills and payments.
+	A 12-month forecast for every account with a good, typical and bad range, a 90-day bills calendar, and 5-year paths.
+	"'What if' simulator"
+	Let people try a decision before they make it.
+	Ask by voice or move a slider (new job, move, big purchase, save more, job loss). The numbers and the future self's story both change.
+	"Something no one has thought of yet!"
+	A direct invitation to surprise them.
+	Two future selves side by side, a live view of the AI's work, and a real action at the emotional high point.
+	What's at stake
+* PNC prizes: 1st PlayStation 5 Slim, 2nd Ninja Creami, 3rd Apple AirPods Pro 3 (from the challenge page).
+* Extra prize: MLH's Best Use of ElevenLabs, wireless earbuds (MLH).
+* Track rules: a team can pick up to two sponsor challenges. General and MLH prizes are separate, and tracks can change until registration closes (HackUTD guide).
+* Competition size: the last HackUTD had over 1,000 participants and 230 projects, the second-largest 24-hour hackathon in the US (ACM UTD). Standing out matters more than being complete.
+What PNC's judges will care about
+* Trust in AI. PNC's 2025 student case competition at Carnegie Mellon was themed "Trusted AI in Banking", was judged partly by PNC staff, and focused on debt paydown, first-home savings and small-business cash flow (CMU).
+* PNC's own roadmap. PNC launched a new mobile app in July 2026 with insights based on customers' transactions. About 8 million customers use the app, and PNC plans its own digital assistant later this year (CX Dive). Pitch Future You as a feature that assistant could ship.
+* What PNC already has. Low Cash Mode helps on the day a balance runs low, with alerts, at least 24 hours of extra time, and control over which payments go through (PNC). Future You helps months earlier, across every account.
+* No published rubric. The HackUTD guide lists no judging criteria. Assume the usual ones: innovation, technical depth, design, impact, presentation and fit with the challenge. Section 12 maps each one.
+The project we have to beat
+Most teams will build a dashboard, a chatbot that answers spending questions, and a few sliders. On paper that covers the bullets, but every table looks the same. We use that as our base layer and win on the parts they skip: the feeling, the trust and the action.
+Deadlines and submission rules
+* Devpost registration closes Nov 7, 2026 at 11:00 PM. Edits close Nov 8, 2026 at 12:00 PM.
+* The demo video must be public (for example on YouTube) and about 2 minutes or less. Screenshots must show what actually works (HackUTD guide).
+* The guide doesn't say how judging runs (expo tables or stage, minutes per team). Ask an organizer early.
+What the best projects and products teach us
+The strongest work in this space does three things: it acts instead of only advising, it feels personal, and it lets people check the numbers. The newest future-self research also says which format changes minds most: two future selves, one for each choice.
+Who
+	What it is
+	Evidence
+	Lesson for us
+ 
+	MIT Media Lab "Future You" (2024)
+	Text chat with an AI version of yourself at around 60
+	Preregistered study, 344 people. Anxiety fell 18% and connection to the future self rose 15%, but agency, optimism and future thinking did not change significantly (poster).
+	Talking to a future self works on feelings. Feelings alone don't change behavior, so we attach a real action at the emotional peak.
+	MIT and UCLA "future twin" study
+	About 200 young adults video-chatted with future selves. One group met two future selves, one for each option.
+	34% of the two-futures group reconsidered their choice, against 11% in the control group. People rated realistic visuals least useful (5.16 of 7), below practical logic (5.53) and personal meaning (5.58).
+	Our core format is the one that moved people most. Spend effort on solid numbers and personal meaning, not realistic faces. The authors also warn about future selves that push products, and about deepfakes.
+	Hershfield's aged-photo studies
+	People saw an aged photo of themselves before a savings choice
+	Working-age adults were willing to put about 33% more of their pay into retirement.
+	Make the future self vivid right at the moment of decision.
+	SaverLife Financial Navigator (2025)
+	A judgment-free AI guide for lower-income savers, with tips and next steps from member data
+	44% of members used it with little promotion. A randomized test showed nearly 50% higher retention after seven weeks.
+	Members liked that it doesn't judge, and explaining what data is used built trust. People want different entry points, from quick answers to deeper help. SaverLife avoids giving its AI a human name.
+	Bank of America's Erica
+	A big bank's assistant for voice and text
+	About 3.4 billion interactions since 2018. In 2025, 20.6 million users had nearly 700 million interactions.
+	Bank assistants are already normal, and PNC competes with this. We must not be "another Erica" that answers questions about the past.
+	Cleo with ElevenLabs voice
+	An AI money coach with a strong personality and a voice mode
+	Personality lands harder in voice, which builds an emotional connection and makes money nudges more effective.
+	Voice plus one steady personality. Skip Cleo-style roasting: it fits Cleo's brand, not a bank's.
+	Origin AI Advisor
+	Hundreds of checks on your finances, turned into ranked actions and a Health Score
+	Origin argues chat alone is reactive, because most people don't know what to ask.
+	Lead with the next step instead of waiting for questions. Show one step, not a long list.
+	Kommonwealth (hackathon project)
+	An AI credit coach that made a to-do list and could mail a dispute letter in one click
+	Its builder called real-world action the key differentiator.
+	One-click action wins demos. Always ask for a clear yes first.
+	DollarPilot (won the LionHacks FinTech track)
+	A finance coach, a what-if predictor and a shareable "roast" scorecard
+	Won its track with the standard coach-plus-what-if formula and a fun hook.
+	Coach plus what-if is now the default, so a fun, shareable hook matters.
+	PNC Low Cash Mode
+	Alerts, at least 24 hours of extra time, and control over which payments go through when a balance runs low
+	PNC's own flagship tool for customer control
+	Customer control and transparency are PNC values. Build on that and don't copy it.
+	Patterns we build on
+1. Act, don't just advise. Kommonwealth, Origin and Cleo all moved from answers to actions.
+2. Personal beats generic. Future-self chats and voice personality build feelings that generic chatbots don't.
+3. Trust has to be visible. PNC's own competition theme was trusted AI, and SaverLife found that explaining data use built trust.
+4. One next step beats a list. People don't know what to ask, so the product should offer the step.
+5. Two futures side by side change minds most. In the twin study, 34% reconsidered, against 11% in the control group.
+6. Faces matter least, logic and meaning matter most. No face-aging, no voice cloning. Real numbers and a real story.
+The gap we fill
+Banks answer questions about the past (Erica). Fintechs score you and nudge you (Origin, Cleo). Research tools build the bond with your future self (MIT). None of the products or projects we reviewed combine your real accounts, two future selves you can talk to, and a one-tap action. That combination is our "something no one has thought of yet".
+The product: concept, user and the magic moment
+Future You turns bank data into a conversation with your own future. You see today, meet two versions of yourself in 2031, try a decision, and start the better path with one tap.
+The problem
+* Money is scattered. PNC's own challenge says most people keep money in many places and few have one clear view of how they're doing.
+* Cushions are thin. In the Fed's latest survey, 63% of adults said they would cover a $400 emergency with cash or its equivalent, so more than a third would not (Federal Reserve).
+* Tools explain the past. Bank assistants mostly answer questions about what already happened. Most people don't know what to ask, so a chat box alone doesn't help them (Origin).
+* The future feels like someone else's problem. People act more for their future self once that self feels real (section 3).
+Who it's for
+Persona
+	Situation
+	What they need
+	Role in the demo
+ 
+	Maya, 27, nurse in Dallas
+	Takes home $4,200 a month. Rent $1,450. Car loan $14,000. Card at 78% of its $5,000 limit. About one month of cushion. Saves about $300 a month.
+	"I make decent money but I never feel ahead." She wants a cushion, no card debt, and maybe a home one day.
+	Main demo customer
+	Jordan and Priya, 34 and 33, homeowners
+	Mortgage, a personal loan, two cars, a baby on the way
+	To see whether the baby budget works and what to cut
+	Shows all 8 account types and the "new baby" what-if
+	Andre, 24, rideshare driver
+	Income changes every week
+	A forecast that copes with uneven pay
+	Optional third persona, if there's time
+	How it works
+1. See. Every account in one view: checking, savings, CDs, IRAs, auto and personal loans, credit cards and mortgages.
+2. Understand. A Financial Health Score from 8 standard indicators, each with a plain reason and the math behind it.
+3. Forecast. A 12-month balance forecast with a good, typical and bad range, a 90-day bills calendar, and 5-year paths.
+4. Meet. Two future selves in 2031, one on the same path and one on a simple plan. Talk to either one out loud.
+5. Act. Try a what-if, then start the plan's first step with one tap.
+The magic moment
+The judge asks both futures the same question: "Was buying the car worth it?" Same voice, two lives. One says the repairs went on the card and she's still paying it off. The other says she paid it off early and that payment became her savings. Then the judge asks the plan future, "What if I take the Austin job?", and her numbers and her story change live. She ends with: "Want me to set up that $150 transfer?" One "yes" and it's done. The emotional high point leads straight into action.
+Design principles
+1. Code does the math, AI does the talking. Every number comes from the forecast engine.
+2. One next step, not a to-do list.
+3. Warm and never judgy, in both futures.
+4. Show the math everywhere. Tap any number to see where it came from.
+5. Same surprises in both futures. The same $2,000 car repair hits both paths in 2028. Only the cushion is different, so the comparison is fair and not a scare tactic.
+6. Built for PNC. PNC's account names (Spend is Virtual Wallet's checking account), a hand-off to a PNC banker, and a clear fit with PNC's coming digital assistant.
+7. Voice is optional. Text and live captions are always there.
+What it is not
+* Not investment advice, and it never pushes products.
+* Not a face-aging or voice-cloning app.
+* Not a replacement for Low Cash Mode or a human banker. It works next to both.
+Goals and how we'll know we won
+We win if, within three minutes, PNC's judges can tick all five bullets, remember one moment, and believe every number.
+Hackathon goals (this weekend)
+Goal
+	How we check it
+	Target
+ 
+	PNC challenge
+	Judging result
+	1st place
+	MLH Best Use of ElevenLabs
+	Judging result
+	Win
+	All 5 bullets covered
+	Each one is visible in the live demo and the video
+	5 of 5
+	Demo fits the time
+	Timed rehearsals
+	Under 3:00 on every run
+	Numbers are right
+	The agent test list (section 10)
+	10 of 10 pass, in a quiet room and in the hall
+	Voice feels instant
+	Time from the end of a question to her first word
+	About 2 seconds or less
+	Nothing breaks
+	Full run-throughs without a crash or a restart
+	5 clean runs before judging
+	Submission is complete
+	Devpost page, video, repo and write-up
+	Registered by Saturday 11:00 PM, final by Sunday 12:00 PM
+	Product goals (if PNC shipped it)
+* North star: the share of future-self conversations that end with the customer starting one automatic step, such as a transfer or an extra payment.
+* Financial health: the change in each customer's health score and savings cushion after 90 days.
+* Engagement: repeat conversations per month. SaverLife saw nearly 50% higher retention after seven weeks with its AI navigator, which is a useful benchmark (SaverLife).
+* Trust: how often people open "show the math", thumbs-up rate, and reported errors.
+* Safety: zero made-up numbers in audits, and zero money moved without a clear yes.
+* Business value for PNC: new deposits from started transfers. As an illustration only (not a forecast): if 1% of PNC's roughly 8 million app users (CX Dive) started a $150 transfer every two weeks, that is 80,000 × $150 × 26 = $312 million a year moving into savings.
+Not in scope this weekend
+* Real bank connections. We use realistic made-up data. Plaid's test environment is a stretch goal.
+* Real money movement. Transfers are simulated.
+* Investment advice or product recommendations.
+* A native mobile app. We build a web app shaped like a phone screen.
+Features and requirements
+Eight P0 features cover all five of PNC's bullets plus the demo safety net. P1 adds the trust and wow layer. P2 is only for spare hours. P0 means the demo fails without it, P1 means it makes us win, and P2 means nice to have.
+ID
+	Feature
+	Priority
+	PNC bullet
+	Done when
+ 
+	F1
+	360° Today view
+	P0
+	See the whole picture
+	Every account shows in groups (cash, savings and CDs, retirement, debt) with balance, rate and due date. Two plain sentences sum it up at the top. Works for Maya and for the homeowner household (all 8 types).
+	F2
+	Health score and 8 indicators
+	P0
+	3+ health indicators
+	A 0–100 score with its band (0–39 vulnerable, 40–79 coping, 80–100 healthy) and 8 tiles, each with a plain reason. Maya scores 55.
+	F3
+	Forecast
+	P0
+	Forecast balances and obligations
+	A 12-month cash chart with a good, typical and bad band. A 90-day bills calendar (rent, car, card, insurance, CD maturity). Yearly snapshots to 2031 for both paths.
+	F4
+	Two Futures view
+	P0
+	Something new
+	2031 side by side, same path vs. plan, with 4 key numbers each (cushion, card debt, car payoff date, IRA) and a short life timeline. The same 2028 car repair appears on both paths.
+	F5
+	Future You voice agent
+	P0
+	Conversational coach
+	Tapping a future starts the right persona in under 3 seconds. Answers are 1–3 sentences, use only engine numbers, and pass the test list. Live captions always show. Typing works too.
+	F6
+	What-if simulator
+	P0
+	What-if simulator
+	A spoken or typed what-if calls update_plan, and numbers and charts update in about 2 seconds. 5 presets (new job or raise, move, big purchase, save more, job loss) plus sliders for income, spending and savings.
+	F7
+	Next step and one-tap start
+	P0
+	Confident next move
+	One next-step card ("Move $150 from Spend to savings every payday") with its effect on the score. She asks a clear yes or no, then start_transfer shows a "Scheduled" badge with the first date. Nothing moves without a yes.
+	F8
+	Demo safety net
+	P0
+	(keeps the demo alive)
+	One-click reset, saved answers for the main demo path, a text-only mode, and a backup video.
+	F9
+	Show the math
+	P1
+	Trust
+	Tapping any number opens its inputs, the formula in plain words, and its assumptions. Forecast screens say "forecast, not a promise".
+	F10
+	Agent activity panel
+	P1
+	Trust, technical wow
+	A side panel lists each tool call in plain words: "Checked: Austin job, +300 → about +$170 a month".
+	F11
+	Number highlight
+	P1
+	Polish
+	When she mentions a number, its tile glows (highlight_metric).
+	F12
+	Job-loss shock
+	P1
+	What-if depth
+	"What if I lose my job for 3 months?" shows how long the cushion lasts in each future.
+	F13
+	Buy-a-home what-if
+	P1
+	Covers mortgages
+	Adds a mortgage to Maya's plan future. The payment replaces rent and the change shows in every number.
+	F14
+	Two setup questions
+	P1
+	Feeds indicators 7 and 8
+	Asks about insurance and planning ahead in 10 seconds. The demo uses pre-filled answers.
+	F15
+	Spanish
+	P2
+	Inclusion
+	Asking in Spanish switches her language, and captions follow.
+	F16
+	Plaid test connection
+	P2
+	Realism
+	"Connect accounts" runs Plaid's test flow and loads its sample accounts.
+	F17
+	Letter from 2031
+	P2
+	Shareable hook
+	A downloadable card from the plan future with 3 numbers and the next step.
+	F18
+	Uneven-income persona
+	P2
+	Wider reach
+	Andre's forecast handles weekly income swings.
+	Quality bars
+* Speed: her first word about 2 seconds or less after a question. The engine recalculates a what-if in under 1 second. Screens load in under 2 seconds.
+* Accuracy: no invented numbers in any test. Unit tests for every indicator and for the forecast totals.
+* Reliability: the main demo path works without the internet, using saved responses, and resets in one click.
+* Accessibility: live captions, readable contrast, and a full text mode.
+* Privacy: made-up data only, no real personal data, and API keys kept on the server.
+* Look: a phone-shaped PNC-style screen with one font family, generous spacing and big, clear numbers.
+The 3-minute demo, step by step
+One story, one customer, and all five PNC bullets in order, ending on the tap that starts Maya's plan. Name each bullet out loud as you hit it, so judges can tick it off.
+Stage version (3:00)
+1. Hook (0:00–0:15). Title screen only. Say: "In the Fed's latest survey, more than a third of adults said they wouldn't cover a $400 surprise with cash. Most of them have a bank app. None of them can see their future. Meet Maya."
+2. Today (0:15–0:40). Bullets: whole picture, health indicators. Maya's six accounts load into one view. The summary line reads: "You're steady month to month, but you have about one month of backup." The score is 55 (coping), and the card-usage tile is red. Say: "Every account in one place, and 8 standard health indicators, not made-up ones."
+3. Forecast (0:40–0:55). Bullet: forecast. Scroll to the 12-month chart with its good, typical and bad band, and the 90-day bills calendar. Say: "Every balance and every bill for the next year, with a range, because the future isn't one number."
+4. Two futures (0:55–1:15). Tap "Meet 2031". The screen splits: same path in gray, the plan in color, each with 4 numbers. Say: "Same Maya, same surprises, two paths."
+5. Ask both (1:15–1:45). Bullets: conversational coach, something new. Tap the left card and ask, "Was buying the car worth it?" Then tap the right card and ask again. Two answers, same voice. Point at the activity panel: "Every number she says comes from our forecast. Here's what she checked."
+6. What-if (1:45–2:15). Bullet: what-if simulator. Ask the plan future: "What if I take the Austin job? $8,000 more a year, but rent is $300 higher." The panel shows the update_plan call, the numbers move, and she answers with the new result.
+7. Next step (2:15–2:35). Bullet: confident next move. She says: "Want me to set up that $150 transfer from Spend to savings, every payday?" Say "Yes." A "Scheduled" badge appears with the first date.
+8. Close (2:35–3:00). Show the 5-bullet checklist for three seconds. Say: "In a recent MIT and UCLA study, meeting two future selves made about three times as many people rethink a choice. We built that on real accounts, every number shows its math, and it's ready for PNC's assistant. Your bank app shows what happened. Future You shows what happens next."
+Judge-table version (90 seconds)
+Time
+	Show
+	Say
+ 
+	0:00–0:15
+	Today view, score 55
+	"Maya's whole picture and her health score in one screen."
+	0:15–0:45
+	Ask both futures the car question
+	"Same voice, two lives, and real numbers from her forecast."
+	0:45–1:10
+	Austin what-if on the plan future
+	"Try any decision out loud. Watch the numbers and her story change."
+	1:10–1:20
+	"Yes" to the $150 transfer
+	"From a feeling to an action in one tap."
+	1:20–1:30
+	Closing line
+	"Future You shows what happens next." Then invite the judge to ask her anything.
+	Before every demo
+* Press reset, and confirm Maya's score shows 55.
+* Plug in earbuds with a mic and check the volume.
+* Confirm the internet works, with a phone hotspot ready.
+* Keep the "saved answers" switch ready for the main path.
+* Keep the backup video open in another tab.
+If something fails
+* Voice fails: switch to typing in one click and say, "Same agent, typed."
+* Internet fails: turn on saved answers. The main path runs offline.
+* Everything fails: play the 2-minute video and take questions over it.
+Screens and design
+Seven screens, shown as a phone screen in the middle of a laptop, with the AI's activity panel on the right where judges can see it.
+Screen
+	What's on it
+	Key actions
+	PNC bullet
+ 
+	1. Today (home)
+	Greeting and a two-sentence summary. Health score ring (55, coping) with Spend, Save, Borrow and Plan bars. Accounts grouped as cash, savings and CDs, retirement, and debt. A "next 90 days" bills strip. A big "Meet 2031" button.
+	Tap the score to open the 8 tiles. Tap any number to show the math.
+	Whole picture, health indicators
+	2. Forecast
+	12-month cash chart: a middle line with a shaded good-to-bad band. Markers for rent, the car payment, the card due date and the CD maturing. A per-account list.
+	Switch accounts on and off. Show the math.
+	Forecast
+	3. Two Futures
+	Split screen. Left (gray): same path. Right (warm color): with a plan. Each side shows Maya at 32 in 2031, 4 numbers (cushion, card debt, car paid off, IRA), a short timeline, a mic button and live captions.
+	Tap a side to talk. "Ask both" sends one typed question to each in turn.
+	Coach, something new
+	4. What-if drawer
+	Chips: new job, move, big purchase, save more, job loss, buy a home. Sliders for income, spending and savings. A results line such as "+11k by 2031".
+	Apply to the plan, or ask by voice instead.
+	What-if simulator
+	5. Next step
+	One card: "Move $150 from Spend to savings every payday", with its effect on the score and the cushion. A confirm sheet lists amount, accounts, frequency and first date.
+	Start, then a "Scheduled" badge appears.
+	Confident next move
+	6. Agent activity panel
+	A live list in plain words: listening, the tool called and its inputs, the result, the number highlighted. A switch shows the raw data.
+	Expand any line.
+	Trust, technical depth
+	7. Show the math
+	For any number: its inputs, the formula in plain words, thresholds and assumptions.
+	Close and return.
+	Trust
+	Design rules
+* Layout: a phone frame in the center, the activity panel on the right, and nothing else on screen.
+* Color: a PNC-style orange accent, navy text and a white background. Gray for the same path, a warm tone for the plan. Red, amber and green only for indicator status, always with an icon so color isn't the only signal.
+* Type: one sans-serif family. Key numbers big (32–48 px). Labels in plain words, such as "savings cushion", never "liquidity".
+* Motion: numbers count up or down when a what-if lands, the forecast band eases in, and the "Scheduled" badge pops. Nothing moves for decoration only.
+* Voice: a big mic button, a waveform while listening, and captions always on.
+* Future selves: one simple illustrated avatar used on both sides, never a photo or an aged face. The plan side gets a soft warm glow.
+* Branding: use our own product name and icon and mention PNC in words. Don't copy PNC's logo unless organizers say it's fine.
+How it works: architecture, data and logic
+Part
+	What it does
+ 
+	ElevenLabs agent
+	Hears you (speech to text), thinks (prompt plus her facts, decides on tools) and speaks (her voice, with captions)
+	Browser (Next.js)
+	Phone screens (Today, Forecast, Futures, Next step), client tools (update_plan, start_transfer) and the activity panel (each tool call, in plain words)
+	FastAPI + Python
+	The API (/profile, /futures, /update_plan), the engine (score, forecast, two paths, what-if) and the data (made-up customers, bills, history)
+	
+
+From
+	To
+	What flows
+ 
+	Browser
+	ElevenLabs agent
+	Maya's facts, when a session starts
+	ElevenLabs agent
+	Browser
+	Tool calls
+	Browser and agent
+	Both ways
+	Voice
+	Browser
+	FastAPI + Python
+	Requests
+	FastAPI + Python
+	Browser
+	Numbers
+	The voice agent never touches the engine. It can only ask the browser to run a tool, and the browser gets every number from our Python engine.
+Tech stack
+Layer
+	Choice
+	Why
+ 
+	Front end
+	Next.js, React, Tailwind
+	Fast to build and easy to host
+	Charts
+	Recharts
+	Bands, markers and smooth updates with little code
+	Voice
+	ElevenLabs Agents with the @elevenlabs/react package
+	Voice in and out, captions, client tools, and the MLH prize
+	Back end
+	FastAPI (Python)
+	The engine is Python, so the API is too
+	Engine
+	Python and NumPy
+	Schedules, 1,000-run simulations and plan rules
+	Data
+	JSON files for 3 made-up customers, generated by a script
+	No real personal data
+	Optional
+	Plaid's test environment
+	A real "connect your bank" screen
+	API
+Endpoint
+	What it does
+	Returns
+ 
+	GET /api/profile
+	Loads a customer
+	Accounts, bills and the two-sentence summary
+	GET /api/health
+	Scores the 8 indicators
+	Score, band, pillar scores, reasons and the math
+	GET /api/forecast
+	Runs the 12-month simulation
+	Daily bands, a 90-day bills list and risk days
+	GET /api/futures
+	Builds both 5-year paths
+	Yearly snapshots and the agent's fact sheets
+	POST /api/update_plan
+	Applies a what-if to the plan path
+	New numbers and one plain sentence
+	POST /api/start_transfer
+	Schedules a simulated transfer
+	Status and first date
+	POST /api/reset
+	Restores the demo state
+	OK
+	Data model
+* Customer: name, age, city, pay schedule, take-home pay per paycheck, and the two setup answers.
+* Account: one of the 8 types, its name (for example "Spend"), balance, rate, limit, minimum payment, due day and maturity date.
+* Transaction: date, amount, merchant, category, account, and whether it repeats.
+* Bill: name, amount, due rule (a day each month, a yearly date or one time) and account.
+* Plan: ordered actions with start dates.
+* What-if: the update_plan inputs.
+* Path result: monthly balances, payoff dates, events, the 8 indicators and the score, for each path.
+* Fact sheet: the text the agent gets: today's facts, each path's future facts, the plan summary, the next step and the opening line.
+Health score: how each indicator is computed
+Each indicator scores 0 to 100 on a straight line between its two thresholds. A pillar is the average of its two indicators, and the overall score is the average of the four pillars. The bands follow the FinHealth framework: 0–39 vulnerable, 40–79 coping, 80–100 healthy (FinHealth Score toolkit).
+#
+	Pillar
+	Indicator
+	Our formula
+	Scores 100 at
+	Scores 0 at
+	Maya
+ 
+	1
+	Spend
+	Spending vs. income
+	12-month spending ÷ take-home pay
+	85% or less
+	100% or more
+	93% → 47
+	2
+	Spend
+	Bills paid on time
+	Late or missed payments in 12 months
+	0
+	2 or more
+	0 → 100
+	3
+	Save
+	Savings cushion
+	Checking and savings ÷ monthly spending
+	3 months or more
+	Half a month or less
+	1 month → 20
+	4
+	Save
+	Long-term saving
+	Retirement contributions ÷ take-home pay
+	10% or more
+	0%
+	2.4% → 24
+	5
+	Borrow
+	Debt load
+	Monthly debt payments ÷ take-home pay
+	10% or less
+	30% or more
+	12% → 90
+	6
+	Borrow
+	Credit health
+	Card balances ÷ card limits
+	30% or less
+	90% or more
+	78% → 20
+	7
+	Plan
+	Insurance
+	Setup answers: health, auto, renters or home, disability
+	All 4
+	None
+	3 of 4 → 75
+	8
+	Plan
+	Planning ahead
+	Setup answer plus any automatic saving
+	Yes, and automated
+	No
+	"Sometimes" → 60
+	Maya's pillars are Spend 74, Save 22, Borrow 55 and Plan 68, so her score is 55 (rounding halves up). $100 of her $300 monthly saving goes to her IRA. Our version uses account data instead of FinHealth's survey questions, so we say "aligned with" the framework. Check the Financial Health Network's terms before using the official FinHealth Score name in a product.
+Forecast logic
+1. Calendar. Paychecks every two weeks. Rent, the car payment, the card payment, subscriptions and yearly bills on their due dates. The CD matures in April 2027.
+2. Everyday spending. Each category moves around its 12-month average, by as much as it has moved in the past.
+3. Surprises. Each month has a 10% chance of a surprise bill between $300 and $2,000. This is an assumption, and users can see it.
+4. 1,000 runs. We simulate the next 12 months 1,000 times. The line is the middle result, and the band runs from the 10th to the 90th percentile.
+5. Risk days. The chance that checking drops below $0 in the next 90 days.
+6. Five-year paths. Monthly steps with interest: card APR, the loan schedule, savings interest, and IRA growth (5% typical, 2% bad, 8% good, all assumptions). Both paths get the same random surprises and the same 2028 car repair, so only the decisions differ.
+7. Output. Yearly snapshots for each path: balances, payoff dates, cushion months, the 8 indicators and the score. All numbers are in today's dollars.
+Plan rules (a fixed order, no AI)
+1. Cushion under 3 months: an automatic transfer every payday, set to the largest $25 step that keeps bad-case checking above $200. For Maya that's $150.
+2. Card over 30% used: windfalls, such as the CD maturing, go half to the card and half to savings.
+3. Unused or duplicate subscriptions: cancel them.
+4. Card paid off: its payment plus $200 a month goes to the next debt, the car loan.
+5. Debts gone: the freed money fills savings to 6 months, then goes to the IRA.
+6. Next step: the first action that can be automated today, which is rule 1.
+What-if rules
+* Raise or pay cut: monthly take-home change = yearly change × (1 − 22% federal − 7.65% payroll tax) ÷ 12. There is no state income tax because Maya lives in Texas. Austin example: +469 a month, minus 170 a month.
+* Spending change: added to monthly spending from the start month.
+* Savings change: added to the automatic transfer.
+* One-time cost: paid from savings first, then the card.
+* Job loss: income drops to $0 for the chosen number of months.
+* Buy a home: price, down payment and rate give a mortgage payment that replaces rent from the purchase month.
+* Wording: every result comes back with one sentence built from a template, such as "Taking the Austin job leaves about $170 more a month after taxes and the higher rent." That gives the agent accurate words to say.
+The AI: the Future You voice agent
+One ElevenLabs agent plays both future selves. It gets Maya's facts when a session starts, can change a number only by asking our engine through a tool, and must pass a 10-question test list before judging. The full prompt and setup are in two files: future-maya-system-prompt.txt and future-maya-setup.md.
+How one agent plays two people
+The app sends a path value (same_path or plan) and that path's facts when a session starts. Tapping the other card ends the session and starts a new one with the other path's facts. Both futures use the same voice, because they are the same person.
+Tools
+Tool
+	When she calls it
+	What she sends
+	What comes back
+	Waits for it?
+ 
+	update_plan
+	A what-if, on the plan path only
+	The change in the user's words, plus income, spending, savings, one-time cost and start month as stated
+	New numbers and one ready-made sentence
+	Yes
+	start_transfer
+	After a clear yes to the next step
+	Amount, from account, to account, how often
+	Status and first date
+	Yes
+	highlight_metric
+	When she mentions a number on screen
+	Which number
+	Nothing
+	No
+	Language detection (built-in, optional)
+	When someone speaks Spanish
+	The language
+	Her language switches
+	Built in
+	How we stop made-up numbers
+   1. Facts in, words out. Her only facts are the engine's short fact sheets.
+   2. New numbers only through a tool. update_plan returns the numbers and a sentence she can say.
+   3. The prompt bans math and guessing. If something isn't in her facts, she says she doesn't know that part.
+   4. Judges can check. The activity panel shows every tool call and its result.
+   5. Tests before judging. The 10-question list must pass, in a quiet room and in the hall.
+   6. Small fact sheets. No raw transactions go to the model, which also keeps private details out.
+Voice settings
+   * Voice: a warm voice from the library, or one designed from a description. Never a clone of a real person.
+   * Model: a fast one. If she starts inventing numbers in testing, switch to a stronger one.
+   * Loud rooms: use the mic mute control as push-to-talk, and earbuds with a mic.
+   * Captions: show every line she says, as she says it.
+   * First words: "Hey... it's me. Well, it's you, five years from now." Then one line that differs by path.
+Tests
+   * By hand: the 10-question table in future-maya-setup.md covers facts, tool use, investment questions, a PIN being shared, "are you real?", and noise.
+   * Automatic (P1): a script sends the same questions in text mode and checks that every dollar amount and year in her answers appears in the fact sheet or a tool result. A score such as "10 of 10 grounded" goes on a slide.
+When things go wrong
+   * A tool fails: she says that part is fuzzy and asks again. The screen shows a retry.
+   * The mic fails: switch to typing. It's the same agent.
+   * The session drops: it restarts on the same path, and the captions stay on screen.
+   * A slow answer: she says "Okay, let me think back..." while the tool runs.
+Trust, safety and compliance
+Trust is something judges can see. Every number has its math, the AI says it's a forecast, nothing moves without a clear yes, and private data never reaches the model. This is also our answer to PNC's own "Trusted AI in Banking" theme.
+Risk
+	What we do this weekend
+	What PNC would add before launch
+ 
+	Made-up numbers
+	Engine-only numbers, tool results with ready-made sentences, the test list, and the activity panel
+	Model risk review, monitoring and regular audits of answers
+	Advice risk
+	No specific investments, tax or legal advice. She talks about options and trade-offs and points to a PNC banker.
+	Compliance review of the wording, and routing to licensed advisors
+	Moving money
+	Simulated only. She needs a clear yes to the amount, accounts and frequency, then a confirm sheet appears.
+	PNC's normal transfer approval and disclosures, with one-tap cancel
+	Privacy
+	Made-up data. The model gets short fact sheets, never raw transactions. API keys stay on the server.
+	Customer consent for linked accounts, keeping data to the minimum, no training on customer data, and a vendor review
+	Manipulation
+	The future self never pushes products, which the MIT and UCLA authors warned about. Both paths get the same surprises, so there are no scare tactics.
+	A product-neutral policy and a review of every nudge
+	Deepfakes
+	No voice cloning and no aged photos. She says she's an AI if asked.
+	A written voice and likeness policy
+	Wellbeing
+	A kind tone. She doesn't push the plan when someone sounds stressed, and she points to 988 in a crisis.
+	Trained human hand-off
+	Access
+	Captions, a text mode, plain words, and Spanish (P2)
+	Full accessibility testing and more languages
+	Uncertainty
+	Ranges instead of single numbers, and the label "forecast, not a promise"
+	Checking forecasts against what actually happened
+	Fairness
+	The same rules for everyone. No age, race or other personal traits go into the plan, and no credit decisions are made.
+	A fair-treatment review of the plan rules
+	Lines we never cross in the demo
+   * No real customer data, no real money movement, and no PNC logo unless organizers allow it.
+   * No claim that this is a PNC product. It's a concept built for PNC's challenge.
+   * No stated forecast without its range and its assumptions one tap away.
+Making it unbeatable
+We can't control the judges, but we can turn every likely criterion into a strength, beat every likely rival on its own ground, and remove every way the demo can fail.
+Ten things that make it hard to beat
+   1. All 5 bullets in one story, each named out loud, plus a checklist at the end.
+   2. A research-backed core. Two future selves, one per choice, is the format that moved people most: 34% reconsidered, against 11% in the control group.
+   3. One moment people remember: the same question, the same voice, two lives.
+   4. Trust you can see: the activity panel and "show the math" answer PNC's "Trusted AI" theme.
+   5. A real action at the emotional peak: one tap starts the plan.
+   6. It speaks bank: the FinHealth framework, PNC's account names, Low Cash Mode, PNC's coming assistant, and new deposits.
+   7. Technical depth judges can see: a 1,000-run forecast, a voice agent that calls tools, live screen sync, and a grounding test score.
+   8. Polish: a phone-shaped screen, numbers that count up and down, and captions.
+   9. It never breaks: an offline path, a reset button, a backup video and practiced fallbacks.
+   10. Two prizes from one build: PNC's challenge and MLH's Best Use of ElevenLabs.
+Judging map
+Likely criterion
+	What judges look for
+	How we max it
+	Where they see it
+ 
+	Fit with the challenge
+	Every bullet answered
+	All 5, named out loud, plus a checklist
+	Demo steps 2–7 and the close
+	Innovation
+	Something they haven't seen
+	Two future selves on real accounts, ending in an action, backed by research
+	Step 5
+	Technical depth
+	Hard parts that work
+	Simulation engine, tool-calling voice agent, live sync, grounding tests
+	Activity panel, "10 of 10 grounded"
+	Design
+	Clear, calm and easy
+	Phone screen, plain words, one next step, captions
+	Today screen
+	Impact
+	Helps real people and helps PNC
+	Better cushion and score, the deposits illustration, access for more people
+	Close and Q&A
+	Presentation
+	A clear story, on time
+	Maya's story in 3 minutes, rehearsed
+	The whole demo
+	Trust (PNC's priority)
+	Safe AI they can explain
+	Show the math, forecast labels, no product pushing
+	Steps 5–7
+	What rival teams will build, and how we beat it
+Likely rival build
+	Its strength
+	How we beat it
+ 
+	Dashboard plus chatbot
+	Covers the bullets fast
+	Our dashboard is only the base. Our chat is a person with a story and real numbers.
+	Budget sliders or a what-if calculator
+	Hands-on
+	Our what-ifs happen inside a conversation and change the future self's story.
+	"Spotify Wrapped" or a spending roast
+	Fun and shareable
+	Ours is fun too, and it ends in an action instead of a laugh. The letter from 2031 (P2) covers sharing.
+	Credit score simulator
+	One clear number
+	Credit is one of our 8 indicators, inside the whole picture.
+	An agent that negotiates bills or acts for you
+	Wow factor
+	We act too, but only after a clear yes and with a reason.
+	Another voice assistant
+	Wow factor
+	Ours uses only real numbers, shows its work, and plays two future selves.
+	Pre-mortem: how we could lose, and the fix
+How we could lose
+	Early warning
+	Fix
+ 
+	Voice fails in the loud hall
+	Test 10 (mumbling) fails
+	Earbuds with a mic, push-to-talk, typing mode, saved answers
+	The AI says a wrong number
+	Any test fails
+	Engine-only facts, template sentences, a stronger model, and drop any risky question from the demo path
+	The demo runs long
+	A rehearsal goes past 3:00
+	Cut the forecast step to 10 seconds and practice with a timer
+	Too many features, none finished
+	P0 isn't working end to end by midnight
+	Freeze features at 2:00 AM. P1 and P2 only after P0 works.
+	The internet drops
+	Slow loading
+	Offline demo path, phone hotspot, backup video
+	"Isn't this a gimmick?"
+	A judge looks unconvinced
+	Lead with the research and the PNC fit, then show the math
+	"Isn't this MIT's Future You?"
+	A judge asks
+	"MIT showed it changes feelings. We add real accounts, two paths and an action." Submit as Two Futures.
+	Missing the Devpost deadline
+	Not submitted by 9:00 PM Saturday
+	Submit a rough version early and edit it until Sunday noon
+	Running out of ElevenLabs minutes
+	A low-balance warning
+	Test in text mode, check the plan's minutes, keep the video ready
+	It feels creepy
+	A judge looks uneasy
+	An illustrated avatar, "I'm an AI version of you", a warm tone, and it's opt-in
+	Scope ladder, team roles and build plan
+Get P0 working end to end before midnight, submit to Devpost by 9:00 PM, freeze features at 2:00 AM, and spend Sunday morning on the video and the pitch.
+Phase
+	Time
+	What gets done
+	Gate
+ 
+	Build the base
+	3:30 to 7:00 PM
+	Data for Maya and engine v1, screens with sample data, agent set up and tested
+	
+
+	Wire it together
+	7:00 to 11:00 PM
+	API feeds every screen, Two Futures plus voice, update_plan works end to end
+	Devpost submitted by 9 PM
+	Add the win layer
+	11:00 PM to 2:00 AM
+	What-if drawer and next step, activity panel and show the math, first full demo run
+	Feature freeze at 2 AM
+	Test and rest
+	2:00 to 7:00 AM
+	Fix bugs and run the test list, test in the loud hall, sleep in shifts
+	
+
+	Video and write-up
+	7:00 to 10:00 AM
+	Record the 2-minute video, Devpost text and screenshots, README and repo cleanup
+	
+
+	Rehearse and submit
+	10:00 AM to 12:00 PM
+	Five timed run-throughs, Q and A drill with the team, final Devpost check
+	Edits close at 12 PM
+	Registration closes at 11:00 PM, but submitting by 9:00 PM means a Devpost glitch can't cost us the prize. Times assume we start at 3:30 PM Saturday.
+Scope ladder
+By
+	Must work
+	Features
+ 
+	7:00 PM Saturday
+	The engine returns Maya's score of 55, her forecast and both paths. The Today screen shows real API data.
+	F1–F3
+	11:00 PM Saturday
+	Two Futures, voice and update_plan work end to end. Devpost is submitted.
+	F4–F6
+	2:00 AM Sunday (freeze)
+	Next step and start_transfer, the safety net, show the math and the activity panel
+	F7–F10
+	If time remains
+	Number highlight, job-loss shock, buy-a-home what-if, setup questions
+	F11–F14
+	Only if we're ahead
+	Spanish, Plaid, letter from 2031, third persona
+	F15–F18
+	Team roles (for a team of four)
+Role
+	Owns
+	First task, right now
+ 
+	Engine lead
+	Data, engine and API (F2, F3, the what-if math, F13)
+	Write Maya's data file and the health score function, and check it returns 55
+	Front-end lead
+	Screens, charts and motion (F1, F4, and the F7–F9 screens)
+	Build the phone frame and the Today screen with sample data
+	Voice and AI lead
+	The ElevenLabs agent, tools, tests and activity panel (F5, F10, F11)
+	Create the agent, paste the prompt, and test it in the dashboard
+	Story lead
+	Pitch, video, Devpost, design polish and rehearsals (F8's backup video, F17)
+	Write a rough Devpost page, submit it, and storyboard the video
+	Smaller teams
+   * Three people: the story lead's work splits. The front-end lead takes design and video, and the voice lead takes Devpost and the pitch.
+   * Two people: one person does engine and voice, the other does front end and story. Cut all P2 work.
+   * Solo: build F1–F7 with saved answers and skip the activity panel. If voice fights you, demo in text mode and say voice is next.
+Pitch, Devpost and prize tracks
+Enter PNC's challenge and MLH's Best Use of ElevenLabs, and make the video show the two-futures moment within its first 40 seconds.
+Prize tracks
+   * PNC 360° Financial Health Navigator: our main sponsor track.
+   * A second sponsor track (optional): teams can pick up to two. Choose one only if its prompt truly fits.
+   * MLH Best Use of ElevenLabs: separate from the sponsor limit.
+   * General prizes: open to every team.
+The 30-second pitch
+"Most bank apps tell you what already happened. Future You lets you meet two versions of yourself in 2031: one who kept doing what you do now, and one who followed a simple plan. You talk to them, try decisions out loud, and start the better path with one tap. Every number comes from a real forecast of your accounts, and the two-futures format comes from MIT and UCLA research."
+Demo video (2 minutes or less)
+Time
+	On screen
+	Voiceover
+ 
+	0:00–0:10
+	Title, then Maya
+	"More than a third of adults wouldn't cover a $400 surprise with cash. Meet Maya."
+	0:10–0:25
+	Today screen
+	Her whole picture and her health score of 55
+	0:25–0:35
+	Forecast
+	Every balance and bill for a year, with a range
+	0:35–1:05
+	Two Futures, both asked the car question
+	The moment: same voice, two lives
+	1:05–1:30
+	The Austin what-if, with the activity panel visible
+	Try a decision out loud and watch the numbers change
+	1:30–1:45
+	"Yes", then the Scheduled badge
+	From a feeling to an action
+	1:45–2:00
+	The 5-bullet checklist and the tagline
+	"Future You shows what happens next."
+	Record the real app and the agent's real voice, add captions, and use the split screen as the thumbnail. Show only what actually works.
+Devpost write-up
+   * Name and tagline: "Two Futures: meet the you of 2031, then take the first step today."
+   * Inspiration: thin savings cushions, the research on future selves, and PNC's challenge.
+   * What it does: the five bullets, one line each.
+   * How we built it: the architecture diagram, the engine, and the ElevenLabs agent with client tools.
+   * Challenges: keeping the AI honest with numbers, voice speed, and loud rooms.
+   * Accomplishments: the two-futures format on real-looking accounts, "10 of 10 grounded" tests, and a FinHealth-aligned score.
+   * What we learned: one honest paragraph.
+   * What's next: linked accounts with consent, a place in PNC's coming assistant, more languages, and a retention test like SaverLife's.
+   * Built with: Next.js, React, Tailwind, Recharts, FastAPI, Python, NumPy, ElevenLabs.
+Submission checklist
+   * Devpost project submitted (aim for 9:00 PM Saturday; it closes at 11:00 PM)
+   * Every teammate added to the project
+   * Tracks chosen: PNC, an optional second sponsor, and MLH ElevenLabs
+   * Public demo video, 2 minutes or less
+   * Screenshots of real, working screens
+   * Public repo with a README: setup, architecture and test results
+   * Final edits done before 12:00 PM Sunday
+Judge Q&A prep
+Fourteen questions PNC's judges are likely to ask, each with a short answer to practice until it comes out in one breath.
+   1. How accurate is the forecast? It's a range, not a promise. We simulate the year 1,000 times from her real bills and spending patterns, and the assumptions are one tap away. In production, PNC would check forecasts against what actually happened.
+   2. Isn't this just a chatbot? The chat is the front door. Underneath, an engine scores 8 standard indicators, forecasts every account and builds two paths. The agent can change a number only by calling that engine, and you can see every call.
+   3. How do you stop the AI making up numbers? Its facts come only from the engine, and new numbers only from tools that return a ready-made sentence. The prompt bans math, and our tests check every answer: 10 of 10 grounded.
+   4. Is this financial advice? No. It shows options and trade-offs, never recommends investments, and sends bigger questions to a PNC banker. The one step it suggests is moving your own money into savings, and only after a clear yes.
+   5. What data goes to the AI? Only a short fact sheet, never raw transactions or account numbers. The demo uses made-up data. In production it would use consent-based account linking and keep data to a minimum.
+   6. How would PNC ship this? As a feature of the digital assistant PNC plans to launch, inside the new app. Low Cash Mode covers the day a balance runs low, and Future You covers the months ahead.
+   7. Isn't talking to "future you" a gimmick, or creepy? In the MIT and UCLA study, 34% of people who met two future selves reconsidered their choice, against 11% in the control group. We skip aged faces and voice cloning on purpose, and she says she's an AI.
+   8. Why voice? Voice makes the future self feel real and helps people who avoid dashboards. Cleo found that personality lands harder in voice. Typing and captions always work too.
+   9. What about people with uneven income? The engine simulates income ups and downs, and the data model supports weekly pay. Andre's persona shows it if we have time to build him.
+   10. What's in it for PNC? More savings deposits ($312 million a year in our 1% illustration), more app engagement (SaverLife saw nearly 50% higher retention), and an assistant feature built on trust, which sets PNC apart from question-and-answer bots.
+   11. How did you measure financial health? With 8 indicators aligned to the Financial Health Network's framework and its score bands, computed from account data. The formulas are shown in the app.
+   12. What did you build, and what did you use? We built the engine, the health scoring, the plan rules, the what-if logic, the screens and the tool layer. ElevenLabs provides speech and runs the agent.
+   13. How is this different from MIT's Future You? MIT's is a general life chatbot. Ours runs on real account numbers, shows two paths side by side, and ends with an action. Their research inspired the design.
+   14. What if someone is in crisis? She stays kind, stops talking about the plan, and points to 988 and to people they trust. A launched version would add a hand-off to a person.
+Sources
+Every page below was opened while writing this PRD. The challenge text and prizes come from PNC's challenge page on the HackUTD site.
+Hackathon rules and prizes
+   * HackUTD hacker guide: Devpost and deadlines
+   * MLH prizes at HackUTD
+   * ACM UTD: HackUTD size
+PNC
+   * CX Dive: PNC's new mobile app and planned digital assistant
+   * Carnegie Mellon: PNC Corporate Startup Lab case competition 2025
+   * PNC: Low Cash Mode
+   * PNC: Virtual Wallet
+Research and data
+   * MIT Media Lab: Future You study
+   * Future You results poster
+   * UCLA Anderson Review: AI future-self twins
+   * NYU Stern: Hershfield's aged-photo savings studies
+   * Federal Reserve: Economic Well-Being of U.S. Households in 2025
+   * Financial Health Network: FinHealth Score toolkit
+Products and past projects
+   * SaverLife: early lessons from its AI Navigator
+   * CMSWire: Bank of America's Erica
+   * ElevenLabs: Cleo's voice mode
+   * Origin: why AI answers alone aren't enough
+   * Gloo: the Kommonwealth hackathon project
+   * Devpost: DollarPilot
+Building it
+   * ElevenLabs React SDK
+   * ElevenLabs personalization and dynamic variables

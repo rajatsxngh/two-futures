@@ -1,0 +1,2174 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Future You API",
+    "description": "Engine and API for Future You (PNC 360\u00b0 Financial Health Navigator).",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/ping": {
+      "get": {
+        "summary": "Ping",
+        "operationId": "ping_api_ping_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Ping Api Ping Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/profile": {
+      "get": {
+        "summary": "Get Profile",
+        "operationId": "get_profile_api_profile_get",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Customer id: 'maya' or 'household'",
+              "default": "maya",
+              "title": "Customer"
+            },
+            "description": "Customer id: 'maya' or 'household'"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "summary": "Get Health",
+        "operationId": "get_health_api_health_get",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Customer id: 'maya' or 'household'",
+              "default": "maya",
+              "title": "Customer"
+            },
+            "description": "Customer id: 'maya' or 'household'"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forecast": {
+      "get": {
+        "summary": "Get Forecast",
+        "operationId": "get_forecast_api_forecast_get",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Customer id: 'maya' or 'household'",
+              "default": "maya",
+              "title": "Customer"
+            },
+            "description": "Customer id: 'maya' or 'household'"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/futures": {
+      "get": {
+        "summary": "Get Futures",
+        "operationId": "get_futures_api_futures_get",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Customer id: 'maya' or 'household'",
+              "default": "maya",
+              "title": "Customer"
+            },
+            "description": "Customer id: 'maya' or 'household'"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FuturesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/update_plan": {
+      "post": {
+        "summary": "Update Plan",
+        "operationId": "update_plan_api_update_plan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WhatIfRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePlanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/start_transfer": {
+      "post": {
+        "summary": "Start Transfer",
+        "operationId": "start_transfer_api_start_transfer_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reset": {
+      "post": {
+        "summary": "Reset",
+        "operationId": "reset_api_reset_post",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Customer id: 'maya' or 'household'",
+              "default": "maya",
+              "title": "Customer"
+            },
+            "description": "Customer id: 'maya' or 'household'"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Account": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "$ref": "#/components/schemas/AccountType"
+          },
+          "group": {
+            "$ref": "#/components/schemas/AccountGroup"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "PNC-style name, e.g. 'Spend' (Virtual Wallet checking)"
+          },
+          "institution": {
+            "type": "string",
+            "title": "Institution"
+          },
+          "balance": {
+            "type": "number",
+            "title": "Balance",
+            "description": "Debts are positive amounts owed"
+          },
+          "rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate",
+            "description": "APY for deposits, APR for debts, in percent"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limit",
+            "description": "Credit limit (cards)"
+          },
+          "min_payment": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Payment"
+          },
+          "due_day": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 31.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due Day"
+          },
+          "maturity_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maturity Date"
+          },
+          "original_amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Amount"
+          },
+          "term_months": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Term Months"
+          },
+          "monthly_contribution": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Monthly Contribution",
+            "description": "Automatic monthly deposit (IRA, savings)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "group",
+          "name",
+          "institution",
+          "balance"
+        ],
+        "title": "Account"
+      },
+      "AccountForecast": {
+        "properties": {
+          "account_id": {
+            "type": "string",
+            "title": "Account Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "type": {
+            "$ref": "#/components/schemas/AccountType"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/AccountMonthPoint"
+            },
+            "type": "array",
+            "title": "Points"
+          }
+        },
+        "type": "object",
+        "required": [
+          "account_id",
+          "name",
+          "type",
+          "points"
+        ],
+        "title": "AccountForecast"
+      },
+      "AccountGroup": {
+        "type": "string",
+        "enum": [
+          "cash",
+          "savings_cds",
+          "retirement",
+          "debt"
+        ],
+        "title": "AccountGroup"
+      },
+      "AccountGroupSummary": {
+        "properties": {
+          "group": {
+            "$ref": "#/components/schemas/AccountGroup"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "total": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "account_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Account Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "group",
+          "label",
+          "total",
+          "account_ids"
+        ],
+        "title": "AccountGroupSummary"
+      },
+      "AccountMonthPoint": {
+        "properties": {
+          "month": {
+            "type": "string",
+            "title": "Month",
+            "description": "YYYY-MM"
+          },
+          "balance": {
+            "type": "number",
+            "title": "Balance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "month",
+          "balance"
+        ],
+        "title": "AccountMonthPoint"
+      },
+      "AccountType": {
+        "type": "string",
+        "enum": [
+          "checking",
+          "savings",
+          "cd",
+          "ira",
+          "auto_loan",
+          "personal_loan",
+          "credit_card",
+          "mortgage"
+        ],
+        "title": "AccountType"
+      },
+      "Bill": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "due_rule": {
+            "$ref": "#/components/schemas/DueRule"
+          },
+          "account_id": {
+            "type": "string",
+            "title": "Account Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "amount",
+          "category",
+          "due_rule",
+          "account_id"
+        ],
+        "title": "Bill"
+      },
+      "Customer": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "age": {
+            "type": "integer",
+            "title": "Age"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "occupation": {
+            "type": "string",
+            "title": "Occupation"
+          },
+          "pay_schedule": {
+            "type": "string",
+            "enum": [
+              "weekly",
+              "biweekly",
+              "semimonthly",
+              "monthly"
+            ],
+            "title": "Pay Schedule"
+          },
+          "take_home_per_paycheck": {
+            "type": "number",
+            "title": "Take Home Per Paycheck"
+          },
+          "next_payday": {
+            "type": "string",
+            "format": "date",
+            "title": "Next Payday"
+          },
+          "setup": {
+            "$ref": "#/components/schemas/SetupAnswers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "age",
+          "city",
+          "state",
+          "occupation",
+          "pay_schedule",
+          "take_home_per_paycheck",
+          "next_payday",
+          "setup"
+        ],
+        "title": "Customer"
+      },
+      "DueRule": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "monthly",
+              "yearly",
+              "once"
+            ],
+            "title": "Kind"
+          },
+          "day": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Day",
+            "description": "Day of month (monthly)"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date",
+            "description": "Date (yearly uses its month/day; once uses it exactly)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "title": "DueRule"
+      },
+      "FactSheet": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "same_path",
+              "plan"
+            ],
+            "title": "Path"
+          },
+          "today_facts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Today Facts"
+          },
+          "future_facts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Future Facts"
+          },
+          "plan_summary": {
+            "type": "string",
+            "title": "Plan Summary"
+          },
+          "next_step": {
+            "type": "string",
+            "title": "Next Step"
+          },
+          "opening_line": {
+            "type": "string",
+            "title": "Opening Line"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "The whole sheet as one block, sent to the agent as a dynamic variable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path",
+          "today_facts",
+          "future_facts",
+          "plan_summary",
+          "next_step",
+          "opening_line",
+          "text"
+        ],
+        "title": "FactSheet"
+      },
+      "ForecastMarker": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "rent",
+              "car",
+              "card",
+              "cd",
+              "insurance",
+              "payday",
+              "subscription",
+              "other"
+            ],
+            "title": "Kind"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "label",
+          "kind"
+        ],
+        "title": "ForecastMarker"
+      },
+      "ForecastPoint": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "p10": {
+            "type": "number",
+            "title": "P10",
+            "description": "Bad case"
+          },
+          "p50": {
+            "type": "number",
+            "title": "P50",
+            "description": "Typical"
+          },
+          "p90": {
+            "type": "number",
+            "title": "P90",
+            "description": "Good case"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "p10",
+          "p50",
+          "p90"
+        ],
+        "title": "ForecastPoint"
+      },
+      "ForecastResponse": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "runs": {
+            "type": "integer",
+            "title": "Runs"
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed"
+          },
+          "cash_series": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastPoint"
+            },
+            "type": "array",
+            "title": "Cash Series",
+            "description": "Daily checking balance band for 12 months"
+          },
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/AccountForecast"
+            },
+            "type": "array",
+            "title": "Accounts"
+          },
+          "markers": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastMarker"
+            },
+            "type": "array",
+            "title": "Markers"
+          },
+          "bills_next_90": {
+            "items": {
+              "$ref": "#/components/schemas/UpcomingBill"
+            },
+            "type": "array",
+            "title": "Bills Next 90"
+          },
+          "overdraft_risk_90d": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "Chance checking drops below $0 in the next 90 days"
+          },
+          "risk_days": {
+            "items": {
+              "type": "string",
+              "format": "date"
+            },
+            "type": "array",
+            "title": "Risk Days",
+            "description": "Days where the bad case goes below $0"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "default": "Forecast, not a promise"
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "runs",
+          "seed",
+          "cash_series",
+          "accounts",
+          "markers",
+          "bills_next_90",
+          "overdraft_risk_90d",
+          "risk_days",
+          "assumptions"
+        ],
+        "title": "ForecastResponse"
+      },
+      "FuturesResponse": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "target_year": {
+            "type": "integer",
+            "title": "Target Year"
+          },
+          "paths": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PathResult"
+            },
+            "propertyNames": {
+              "enum": [
+                "same_path",
+                "plan"
+              ]
+            },
+            "type": "object",
+            "title": "Paths"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "next_step": {
+            "$ref": "#/components/schemas/NextStep"
+          },
+          "fact_sheets": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/FactSheet"
+            },
+            "propertyNames": {
+              "enum": [
+                "same_path",
+                "plan"
+              ]
+            },
+            "type": "object",
+            "title": "Fact Sheets"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "target_year",
+          "paths",
+          "plan",
+          "next_step",
+          "fact_sheets",
+          "assumptions"
+        ],
+        "title": "FuturesResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "score": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "band": {
+            "type": "string",
+            "enum": [
+              "vulnerable",
+              "coping",
+              "healthy"
+            ],
+            "title": "Band"
+          },
+          "pillars": {
+            "items": {
+              "$ref": "#/components/schemas/Pillar"
+            },
+            "type": "array",
+            "title": "Pillars"
+          },
+          "indicators": {
+            "items": {
+              "$ref": "#/components/schemas/Indicator"
+            },
+            "type": "array",
+            "title": "Indicators"
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "score",
+          "band",
+          "pillars",
+          "indicators"
+        ],
+        "title": "HealthResponse"
+      },
+      "HomePurchase": {
+        "properties": {
+          "price": {
+            "type": "number",
+            "title": "Price"
+          },
+          "down_payment": {
+            "type": "number",
+            "title": "Down Payment"
+          },
+          "rate": {
+            "type": "number",
+            "title": "Rate",
+            "description": "Mortgage APR in percent"
+          },
+          "term_years": {
+            "type": "integer",
+            "title": "Term Years",
+            "default": 30
+          }
+        },
+        "type": "object",
+        "required": [
+          "price",
+          "down_payment",
+          "rate"
+        ],
+        "title": "HomePurchase"
+      },
+      "Indicator": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "e.g. 'credit_health'"
+          },
+          "number": {
+            "type": "integer",
+            "maximum": 8.0,
+            "minimum": 1.0,
+            "title": "Number"
+          },
+          "pillar": {
+            "type": "string",
+            "enum": [
+              "spend",
+              "save",
+              "borrow",
+              "plan"
+            ],
+            "title": "Pillar"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "The measured value, e.g. 78% card use"
+          },
+          "score": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Score"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "red",
+              "amber",
+              "green"
+            ],
+            "title": "Status"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "description": "One plain sentence on why"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "number",
+          "pillar",
+          "label",
+          "value",
+          "score",
+          "status",
+          "reason"
+        ],
+        "title": "Indicator"
+      },
+      "InsuranceAnswers": {
+        "properties": {
+          "health": {
+            "type": "boolean",
+            "title": "Health"
+          },
+          "auto": {
+            "type": "boolean",
+            "title": "Auto"
+          },
+          "renters_or_home": {
+            "type": "boolean",
+            "title": "Renters Or Home"
+          },
+          "disability": {
+            "type": "boolean",
+            "title": "Disability"
+          }
+        },
+        "type": "object",
+        "required": [
+          "health",
+          "auto",
+          "renters_or_home",
+          "disability"
+        ],
+        "title": "InsuranceAnswers"
+      },
+      "LifeEvent": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          },
+          "shared": {
+            "type": "boolean",
+            "title": "Shared",
+            "description": "True when the same event hits both paths (e.g. the 2028 car repair)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "title",
+          "description",
+          "shared"
+        ],
+        "title": "LifeEvent"
+      },
+      "Math": {
+        "properties": {
+          "formula": {
+            "type": "string",
+            "title": "Formula",
+            "description": "The formula in plain words"
+          },
+          "inputs": {
+            "items": {
+              "$ref": "#/components/schemas/MathInput"
+            },
+            "type": "array",
+            "title": "Inputs",
+            "default": []
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions",
+            "default": []
+          },
+          "thresholds": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Thresholds"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "formula"
+        ],
+        "title": "Math",
+        "description": "Everything 'show the math' needs to explain one number."
+      },
+      "MathInput": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "Plain-words name, e.g. 'Checking and savings'"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "usd",
+              "usd_per_month",
+              "pct",
+              "months",
+              "score",
+              "count",
+              "date",
+              "years"
+            ],
+            "title": "Unit"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source",
+            "description": "Where it came from, e.g. 'Spend account balance'"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "value",
+          "unit"
+        ],
+        "title": "MathInput"
+      },
+      "Metric": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Stable id, e.g. 'today.cushion_months' or 'plan.2031.ira'"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "Plain words, e.g. 'Savings cushion'"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "usd",
+              "usd_per_month",
+              "pct",
+              "months",
+              "score",
+              "count",
+              "date",
+              "years"
+            ],
+            "title": "Unit"
+          },
+          "display": {
+            "type": "string",
+            "title": "Display",
+            "description": "Pre-formatted text, e.g. '1.0 months' or '$4,210'"
+          },
+          "math": {
+            "$ref": "#/components/schemas/Math"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "value",
+          "unit",
+          "display",
+          "math"
+        ],
+        "title": "Metric",
+        "description": "One on-screen number."
+      },
+      "NextStep": {
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "title": "Action Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "from_account_id": {
+            "type": "string",
+            "title": "From Account Id"
+          },
+          "to_account_id": {
+            "type": "string",
+            "title": "To Account Id"
+          },
+          "frequency": {
+            "type": "string",
+            "enum": [
+              "payday",
+              "monthly"
+            ],
+            "title": "Frequency"
+          },
+          "first_date": {
+            "type": "string",
+            "format": "date",
+            "title": "First Date"
+          },
+          "effects": {
+            "items": {
+              "$ref": "#/components/schemas/Metric"
+            },
+            "type": "array",
+            "title": "Effects",
+            "description": "e.g. score change, cushion change by 2031"
+          }
+        },
+        "type": "object",
+        "required": [
+          "action_id",
+          "title",
+          "amount",
+          "from_account_id",
+          "to_account_id",
+          "frequency",
+          "first_date",
+          "effects"
+        ],
+        "title": "NextStep"
+      },
+      "PathResult": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "same_path",
+              "plan"
+            ],
+            "title": "Path"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "key_numbers": {
+            "items": {
+              "$ref": "#/components/schemas/Metric"
+            },
+            "type": "array",
+            "title": "Key Numbers",
+            "description": "2031: cushion, card debt, car paid off, IRA"
+          },
+          "snapshots": {
+            "items": {
+              "$ref": "#/components/schemas/YearSnapshot"
+            },
+            "type": "array",
+            "title": "Snapshots"
+          },
+          "payoff_dates": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Payoff Dates"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/LifeEvent"
+            },
+            "type": "array",
+            "title": "Events"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path",
+          "label",
+          "key_numbers",
+          "snapshots",
+          "payoff_dates",
+          "events"
+        ],
+        "title": "PathResult"
+      },
+      "Pillar": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "spend",
+              "save",
+              "borrow",
+              "plan"
+            ],
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "score": {
+            "$ref": "#/components/schemas/Metric"
+          },
+          "indicator_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Indicator Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "score",
+          "indicator_ids"
+        ],
+        "title": "Pillar"
+      },
+      "Plan": {
+        "properties": {
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/PlanAction"
+            },
+            "type": "array",
+            "title": "Actions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "actions"
+        ],
+        "title": "Plan"
+      },
+      "PlanAction": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "rule": {
+            "type": "integer",
+            "maximum": 6.0,
+            "minimum": 1.0,
+            "title": "Rule"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          },
+          "frequency": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "payday",
+                  "monthly",
+                  "once"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frequency"
+          },
+          "from_account_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Account Id"
+          },
+          "to_account_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Account Id"
+          },
+          "automatable": {
+            "type": "boolean",
+            "title": "Automatable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "rule",
+          "title",
+          "description",
+          "start_date",
+          "automatable"
+        ],
+        "title": "PlanAction"
+      },
+      "ProfileResponse": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/Account"
+            },
+            "type": "array",
+            "title": "Accounts"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/AccountGroupSummary"
+            },
+            "type": "array",
+            "title": "Groups"
+          },
+          "summary": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Summary",
+            "description": "Exactly two plain sentences for the top of Today"
+          },
+          "bills": {
+            "items": {
+              "$ref": "#/components/schemas/Bill"
+            },
+            "type": "array",
+            "title": "Bills",
+            "description": "Every recurring and one-time bill, with its due rule"
+          },
+          "bills_next_90": {
+            "items": {
+              "$ref": "#/components/schemas/UpcomingBill"
+            },
+            "type": "array",
+            "title": "Bills Next 90"
+          },
+          "totals": {
+            "items": {
+              "$ref": "#/components/schemas/Metric"
+            },
+            "type": "array",
+            "title": "Totals",
+            "description": "e.g. net worth, total cash, total debt"
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "customer",
+          "accounts",
+          "groups",
+          "summary",
+          "bills",
+          "bills_next_90",
+          "totals"
+        ],
+        "title": "ProfileResponse"
+      },
+      "ResetResponse": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok"
+          },
+          "customer": {
+            "type": "string",
+            "title": "Customer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ok",
+          "customer"
+        ],
+        "title": "ResetResponse"
+      },
+      "SetupAnswers": {
+        "properties": {
+          "insurance": {
+            "$ref": "#/components/schemas/InsuranceAnswers"
+          },
+          "planning_ahead": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "sometimes",
+              "no"
+            ],
+            "title": "Planning Ahead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "insurance",
+          "planning_ahead"
+        ],
+        "title": "SetupAnswers"
+      },
+      "Thresholds": {
+        "properties": {
+          "best": {
+            "type": "number",
+            "title": "Best",
+            "description": "Value that scores 100"
+          },
+          "worst": {
+            "type": "number",
+            "title": "Worst",
+            "description": "Value that scores 0"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "usd",
+              "usd_per_month",
+              "pct",
+              "months",
+              "score",
+              "count",
+              "date",
+              "years"
+            ],
+            "title": "Unit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "best",
+          "worst",
+          "unit"
+        ],
+        "title": "Thresholds"
+      },
+      "TransferRequest": {
+        "properties": {
+          "customer": {
+            "type": "string",
+            "title": "Customer",
+            "default": "maya"
+          },
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Amount"
+          },
+          "from_account_id": {
+            "type": "string",
+            "title": "From Account Id"
+          },
+          "to_account_id": {
+            "type": "string",
+            "title": "To Account Id"
+          },
+          "frequency": {
+            "type": "string",
+            "enum": [
+              "payday",
+              "monthly",
+              "once"
+            ],
+            "title": "Frequency"
+          },
+          "confirmed": {
+            "type": "boolean",
+            "title": "Confirmed",
+            "description": "Must be true: nothing moves without a clear yes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount",
+          "from_account_id",
+          "to_account_id",
+          "frequency",
+          "confirmed"
+        ],
+        "title": "TransferRequest"
+      },
+      "TransferResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "scheduled",
+            "title": "Status"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "from_account_id": {
+            "type": "string",
+            "title": "From Account Id"
+          },
+          "to_account_id": {
+            "type": "string",
+            "title": "To Account Id"
+          },
+          "frequency": {
+            "type": "string",
+            "enum": [
+              "payday",
+              "monthly",
+              "once"
+            ],
+            "title": "Frequency"
+          },
+          "first_date": {
+            "type": "string",
+            "format": "date",
+            "title": "First Date"
+          },
+          "sentence": {
+            "type": "string",
+            "title": "Sentence"
+          },
+          "simulated": {
+            "type": "boolean",
+            "title": "Simulated",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "amount",
+          "from_account_id",
+          "to_account_id",
+          "frequency",
+          "first_date",
+          "sentence"
+        ],
+        "title": "TransferResponse"
+      },
+      "UpcomingBill": {
+        "properties": {
+          "bill_id": {
+            "type": "string",
+            "title": "Bill Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "account_id": {
+            "type": "string",
+            "title": "Account Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "bill",
+              "income",
+              "maturity"
+            ],
+            "title": "Kind",
+            "default": "bill"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bill_id",
+          "name",
+          "amount",
+          "date",
+          "account_id"
+        ],
+        "title": "UpcomingBill"
+      },
+      "UpdatePlanResponse": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "const": "plan",
+            "title": "Path",
+            "default": "plan"
+          },
+          "result": {
+            "$ref": "#/components/schemas/PathResult"
+          },
+          "deltas": {
+            "items": {
+              "$ref": "#/components/schemas/Metric"
+            },
+            "type": "array",
+            "title": "Deltas",
+            "description": "Change vs. before this what-if, e.g. '+$11k by 2031'"
+          },
+          "sentence": {
+            "type": "string",
+            "title": "Sentence",
+            "description": "One ready-made sentence the agent can say"
+          },
+          "applied": {
+            "items": {
+              "$ref": "#/components/schemas/WhatIfRequest"
+            },
+            "type": "array",
+            "title": "Applied",
+            "description": "All what-ifs active on the plan path, in order"
+          },
+          "fact_sheet": {
+            "$ref": "#/components/schemas/FactSheet"
+          }
+        },
+        "type": "object",
+        "required": [
+          "result",
+          "deltas",
+          "sentence",
+          "applied",
+          "fact_sheet"
+        ],
+        "title": "UpdatePlanResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WhatIfRequest": {
+        "properties": {
+          "customer": {
+            "type": "string",
+            "title": "Customer",
+            "default": "maya"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "The change in the user's own words"
+          },
+          "preset": {
+            "type": "string",
+            "enum": [
+              "new_job",
+              "move",
+              "big_purchase",
+              "save_more",
+              "job_loss",
+              "buy_home",
+              "custom"
+            ],
+            "title": "Preset",
+            "default": "custom"
+          },
+          "income_change_yearly": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Income Change Yearly",
+            "description": "Gross yearly change, e.g. 8000"
+          },
+          "spending_change_monthly": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spending Change Monthly"
+          },
+          "savings_change_monthly": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Savings Change Monthly"
+          },
+          "one_time_cost": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "One Time Cost"
+          },
+          "job_loss_months": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Loss Months"
+          },
+          "home": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HomePurchase"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "start_month": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Month",
+            "description": "YYYY-MM; defaults to next month"
+          }
+        },
+        "type": "object",
+        "required": [
+          "description"
+        ],
+        "title": "WhatIfRequest"
+      },
+      "YearSnapshot": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "age": {
+            "type": "integer",
+            "title": "Age"
+          },
+          "balances": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Balances",
+            "description": "account_id -> balance at year end"
+          },
+          "cushion_months": {
+            "type": "number",
+            "title": "Cushion Months"
+          },
+          "card_debt": {
+            "type": "number",
+            "title": "Card Debt"
+          },
+          "ira_balance": {
+            "type": "number",
+            "title": "Ira Balance"
+          },
+          "net_worth": {
+            "type": "number",
+            "title": "Net Worth"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "enum": [
+              "vulnerable",
+              "coping",
+              "healthy"
+            ],
+            "title": "Band"
+          },
+          "indicator_scores": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Indicator Scores"
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "age",
+          "balances",
+          "cushion_months",
+          "card_debt",
+          "ira_balance",
+          "net_worth",
+          "score",
+          "band",
+          "indicator_scores"
+        ],
+        "title": "YearSnapshot"
+      }
+    }
+  }
+}

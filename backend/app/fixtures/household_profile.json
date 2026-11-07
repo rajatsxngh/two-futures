@@ -1,0 +1,501 @@
+{
+  "as_of": "2026-11-08",
+  "customer": {
+    "id": "household",
+    "name": "Jordan and Priya",
+    "age": 34,
+    "city": "Plano",
+    "state": "TX",
+    "occupation": "Teacher and engineer",
+    "pay_schedule": "semimonthly",
+    "take_home_per_paycheck": 4100.0,
+    "next_payday": "2026-11-15",
+    "setup": {
+      "insurance": {
+        "health": true,
+        "auto": true,
+        "renters_or_home": true,
+        "disability": true
+      },
+      "planning_ahead": "yes"
+    }
+  },
+  "accounts": [
+    {
+      "id": "spend",
+      "type": "checking",
+      "group": "cash",
+      "name": "Spend",
+      "institution": "PNC",
+      "balance": 5200.0,
+      "rate": 0.01,
+      "limit": null,
+      "min_payment": null,
+      "due_day": null,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": null
+    },
+    {
+      "id": "reserve",
+      "type": "savings",
+      "group": "savings_cds",
+      "name": "Reserve",
+      "institution": "PNC",
+      "balance": 14800.0,
+      "rate": 0.03,
+      "limit": null,
+      "min_payment": null,
+      "due_day": null,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": null
+    },
+    {
+      "id": "cd",
+      "type": "cd",
+      "group": "savings_cds",
+      "name": "18-month CD",
+      "institution": "PNC",
+      "balance": 10000.0,
+      "rate": 4.1,
+      "limit": null,
+      "min_payment": null,
+      "due_day": null,
+      "maturity_date": "2027-09-01",
+      "original_amount": null,
+      "term_months": 18,
+      "monthly_contribution": null
+    },
+    {
+      "id": "ira",
+      "type": "ira",
+      "group": "retirement",
+      "name": "Traditional IRA",
+      "institution": "Bluebonnet Investments",
+      "balance": 48200.0,
+      "rate": null,
+      "limit": null,
+      "min_payment": null,
+      "due_day": null,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": 500.0
+    },
+    {
+      "id": "auto1",
+      "type": "auto_loan",
+      "group": "debt",
+      "name": "Auto loan (SUV)",
+      "institution": "Lone Star Credit Union",
+      "balance": 21500.0,
+      "rate": 5.9,
+      "limit": null,
+      "min_payment": 520.0,
+      "due_day": 10,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": null
+    },
+    {
+      "id": "auto2",
+      "type": "auto_loan",
+      "group": "debt",
+      "name": "Auto loan (sedan)",
+      "institution": "PNC",
+      "balance": 6300.0,
+      "rate": 4.9,
+      "limit": null,
+      "min_payment": 280.0,
+      "due_day": 20,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": null
+    },
+    {
+      "id": "personal",
+      "type": "personal_loan",
+      "group": "debt",
+      "name": "Personal loan",
+      "institution": "PNC",
+      "balance": 7800.0,
+      "rate": 11.5,
+      "limit": null,
+      "min_payment": 260.0,
+      "due_day": 12,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": null
+    },
+    {
+      "id": "card",
+      "type": "credit_card",
+      "group": "debt",
+      "name": "Cash Rewards Visa",
+      "institution": "PNC",
+      "balance": 1900.0,
+      "rate": 22.99,
+      "limit": 12000.0,
+      "min_payment": 57.0,
+      "due_day": 25,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": null
+    },
+    {
+      "id": "mortgage",
+      "type": "mortgage",
+      "group": "debt",
+      "name": "Mortgage",
+      "institution": "PNC",
+      "balance": 286000.0,
+      "rate": 6.25,
+      "limit": null,
+      "min_payment": 2150.0,
+      "due_day": 1,
+      "maturity_date": null,
+      "original_amount": 300000.0,
+      "term_months": 360,
+      "monthly_contribution": null
+    }
+  ],
+  "groups": [
+    {
+      "group": "cash",
+      "label": "Cash",
+      "total": {
+        "id": "today.group.cash",
+        "label": "Cash",
+        "value": 5200.0,
+        "unit": "usd",
+        "display": "$5,200",
+        "math": {
+          "formula": "Sum of balances in cash",
+          "inputs": [],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "account_ids": [
+        "spend"
+      ]
+    },
+    {
+      "group": "savings_cds",
+      "label": "Savings and CDs",
+      "total": {
+        "id": "today.group.savings_cds",
+        "label": "Savings and CDs",
+        "value": 24800.0,
+        "unit": "usd",
+        "display": "$24,800",
+        "math": {
+          "formula": "Sum of balances in savings and cds",
+          "inputs": [],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "account_ids": [
+        "reserve",
+        "cd"
+      ]
+    },
+    {
+      "group": "retirement",
+      "label": "Retirement",
+      "total": {
+        "id": "today.group.retirement",
+        "label": "Retirement",
+        "value": 48200.0,
+        "unit": "usd",
+        "display": "$48,200",
+        "math": {
+          "formula": "Sum of balances in retirement",
+          "inputs": [],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "account_ids": [
+        "ira"
+      ]
+    },
+    {
+      "group": "debt",
+      "label": "Debt",
+      "total": {
+        "id": "today.group.debt",
+        "label": "Debt",
+        "value": 323500.0,
+        "unit": "usd",
+        "display": "$323,500",
+        "math": {
+          "formula": "Sum of balances in debt",
+          "inputs": [],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "account_ids": [
+        "auto1",
+        "auto2",
+        "personal",
+        "card",
+        "mortgage"
+      ]
+    }
+  ],
+  "summary": [
+    "You have a solid four-month cushion and every bill is on time.",
+    "With the baby coming, the personal loan is the first thing worth clearing."
+  ],
+  "bills": [
+    {
+      "id": "mortgage",
+      "name": "Mortgage",
+      "amount": 2150.0,
+      "category": "housing",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 1,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "auto1",
+      "name": "SUV payment",
+      "amount": 520.0,
+      "category": "auto_loan",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 10,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "personal",
+      "name": "Personal loan",
+      "amount": 260.0,
+      "category": "personal_loan",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 12,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "auto2",
+      "name": "Sedan payment",
+      "amount": 280.0,
+      "category": "auto_loan",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 20,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "card_pay",
+      "name": "Credit card payment",
+      "amount": 57.0,
+      "category": "credit_card",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 25,
+        "date": null
+      },
+      "account_id": "spend"
+    }
+  ],
+  "bills_next_90": [
+    {
+      "bill_id": "auto1",
+      "name": "SUV payment",
+      "amount": 520.0,
+      "date": "2026-11-10",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "personal",
+      "name": "Personal loan",
+      "amount": 260.0,
+      "date": "2026-11-12",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 4100.0,
+      "date": "2026-11-13",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "auto2",
+      "name": "Sedan payment",
+      "amount": 280.0,
+      "date": "2026-11-20",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "card_pay",
+      "name": "Credit card payment",
+      "amount": 57.0,
+      "date": "2026-11-25",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 4100.0,
+      "date": "2026-11-27",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "mortgage",
+      "name": "Mortgage",
+      "amount": 2150.0,
+      "date": "2026-12-01",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "auto1",
+      "name": "SUV payment",
+      "amount": 520.0,
+      "date": "2026-12-10",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 4100.0,
+      "date": "2026-12-11",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "personal",
+      "name": "Personal loan",
+      "amount": 260.0,
+      "date": "2026-12-12",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "auto2",
+      "name": "Sedan payment",
+      "amount": 280.0,
+      "date": "2026-12-20",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "card_pay",
+      "name": "Credit card payment",
+      "amount": 57.0,
+      "date": "2026-12-25",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 4100.0,
+      "date": "2026-12-25",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "mortgage",
+      "name": "Mortgage",
+      "amount": 2150.0,
+      "date": "2027-01-01",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 4100.0,
+      "date": "2027-01-08",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "auto1",
+      "name": "SUV payment",
+      "amount": 520.0,
+      "date": "2027-01-10",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "personal",
+      "name": "Personal loan",
+      "amount": 260.0,
+      "date": "2027-01-12",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "auto2",
+      "name": "Sedan payment",
+      "amount": 280.0,
+      "date": "2027-01-20",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 4100.0,
+      "date": "2027-01-22",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "card_pay",
+      "name": "Credit card payment",
+      "amount": 57.0,
+      "date": "2027-01-25",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "mortgage",
+      "name": "Mortgage",
+      "amount": 2150.0,
+      "date": "2027-02-01",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 4100.0,
+      "date": "2027-02-05",
+      "account_id": "spend",
+      "kind": "income"
+    }
+  ],
+  "totals": []
+}

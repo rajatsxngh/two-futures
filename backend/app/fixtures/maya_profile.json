@@ -1,0 +1,670 @@
+{
+  "as_of": "2026-11-08",
+  "customer": {
+    "id": "maya",
+    "name": "Maya",
+    "age": 27,
+    "city": "Dallas",
+    "state": "TX",
+    "occupation": "Nurse",
+    "pay_schedule": "biweekly",
+    "take_home_per_paycheck": 1938.46,
+    "next_payday": "2026-11-13",
+    "setup": {
+      "insurance": {
+        "health": true,
+        "auto": true,
+        "renters_or_home": true,
+        "disability": false
+      },
+      "planning_ahead": "sometimes"
+    }
+  },
+  "accounts": [
+    {
+      "id": "spend",
+      "type": "checking",
+      "group": "cash",
+      "name": "Spend",
+      "institution": "PNC",
+      "balance": 1556.0,
+      "rate": 0.01,
+      "limit": null,
+      "min_payment": null,
+      "due_day": null,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": null
+    },
+    {
+      "id": "reserve",
+      "type": "savings",
+      "group": "savings_cds",
+      "name": "Reserve",
+      "institution": "PNC",
+      "balance": 2350.0,
+      "rate": 0.03,
+      "limit": null,
+      "min_payment": null,
+      "due_day": null,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": 200.0
+    },
+    {
+      "id": "cd",
+      "type": "cd",
+      "group": "savings_cds",
+      "name": "12-month CD",
+      "institution": "PNC",
+      "balance": 2000.0,
+      "rate": 4.0,
+      "limit": null,
+      "min_payment": null,
+      "due_day": null,
+      "maturity_date": "2027-04-15",
+      "original_amount": 2000.0,
+      "term_months": 12,
+      "monthly_contribution": null
+    },
+    {
+      "id": "ira",
+      "type": "ira",
+      "group": "retirement",
+      "name": "Roth IRA",
+      "institution": "Bluebonnet Investments",
+      "balance": 6800.0,
+      "rate": null,
+      "limit": null,
+      "min_payment": null,
+      "due_day": null,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": 100.0
+    },
+    {
+      "id": "auto",
+      "type": "auto_loan",
+      "group": "debt",
+      "name": "Auto loan",
+      "institution": "Lone Star Credit Union",
+      "balance": 14000.0,
+      "rate": 6.9,
+      "limit": null,
+      "min_payment": 387.0,
+      "due_day": 5,
+      "maturity_date": null,
+      "original_amount": 22000.0,
+      "term_months": 60,
+      "monthly_contribution": null
+    },
+    {
+      "id": "card",
+      "type": "credit_card",
+      "group": "debt",
+      "name": "Cash Rewards Visa",
+      "institution": "PNC",
+      "balance": 3900.0,
+      "rate": 24.99,
+      "limit": 5000.0,
+      "min_payment": 117.0,
+      "due_day": 22,
+      "maturity_date": null,
+      "original_amount": null,
+      "term_months": null,
+      "monthly_contribution": null
+    }
+  ],
+  "groups": [
+    {
+      "group": "cash",
+      "label": "Cash",
+      "total": {
+        "id": "today.group.cash",
+        "label": "Cash",
+        "value": 1556.0,
+        "unit": "usd",
+        "display": "$1,556",
+        "math": {
+          "formula": "Sum of balances in cash",
+          "inputs": [
+            {
+              "label": "Spend",
+              "value": 1556.0,
+              "unit": "usd",
+              "source": "PNC"
+            }
+          ],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "account_ids": [
+        "spend"
+      ]
+    },
+    {
+      "group": "savings_cds",
+      "label": "Savings and CDs",
+      "total": {
+        "id": "today.group.savings_cds",
+        "label": "Savings and CDs",
+        "value": 4350.0,
+        "unit": "usd",
+        "display": "$4,350",
+        "math": {
+          "formula": "Sum of balances in savings and cds",
+          "inputs": [
+            {
+              "label": "Reserve",
+              "value": 2350.0,
+              "unit": "usd",
+              "source": "PNC"
+            },
+            {
+              "label": "12-month CD",
+              "value": 2000.0,
+              "unit": "usd",
+              "source": "PNC"
+            }
+          ],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "account_ids": [
+        "reserve",
+        "cd"
+      ]
+    },
+    {
+      "group": "retirement",
+      "label": "Retirement",
+      "total": {
+        "id": "today.group.retirement",
+        "label": "Retirement",
+        "value": 6800.0,
+        "unit": "usd",
+        "display": "$6,800",
+        "math": {
+          "formula": "Sum of balances in retirement",
+          "inputs": [
+            {
+              "label": "Roth IRA",
+              "value": 6800.0,
+              "unit": "usd",
+              "source": "Bluebonnet Investments"
+            }
+          ],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "account_ids": [
+        "ira"
+      ]
+    },
+    {
+      "group": "debt",
+      "label": "Debt",
+      "total": {
+        "id": "today.group.debt",
+        "label": "Debt",
+        "value": 17900.0,
+        "unit": "usd",
+        "display": "$17,900",
+        "math": {
+          "formula": "Sum of balances in debt",
+          "inputs": [
+            {
+              "label": "Auto loan",
+              "value": 14000.0,
+              "unit": "usd",
+              "source": "Lone Star Credit Union"
+            },
+            {
+              "label": "Cash Rewards Visa",
+              "value": 3900.0,
+              "unit": "usd",
+              "source": "PNC"
+            }
+          ],
+          "assumptions": [],
+          "thresholds": null
+        }
+      },
+      "account_ids": [
+        "auto",
+        "card"
+      ]
+    }
+  ],
+  "summary": [
+    "You're steady month to month, but you have about one month of backup.",
+    "Your credit card is at 78% of its limit, and that's the biggest drag on your score."
+  ],
+  "bills": [
+    {
+      "id": "rent",
+      "name": "Rent",
+      "amount": 1450.0,
+      "category": "housing",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 1,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "gym",
+      "name": "Gym membership",
+      "amount": 40.0,
+      "category": "subscription",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 3,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "car",
+      "name": "Car payment",
+      "amount": 387.0,
+      "category": "auto_loan",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 5,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "stream1",
+      "name": "Streaming (video)",
+      "amount": 15.99,
+      "category": "subscription",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 9,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "insurance",
+      "name": "Car insurance",
+      "amount": 142.0,
+      "category": "insurance",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 15,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "phone",
+      "name": "Phone",
+      "amount": 65.0,
+      "category": "utilities",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 18,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "card_pay",
+      "name": "Credit card payment",
+      "amount": 117.0,
+      "category": "credit_card",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 22,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "stream2",
+      "name": "Streaming (music)",
+      "amount": 11.99,
+      "category": "subscription",
+      "due_rule": {
+        "kind": "monthly",
+        "day": 27,
+        "date": null
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "renters",
+      "name": "Renters insurance",
+      "amount": 168.0,
+      "category": "insurance",
+      "due_rule": {
+        "kind": "yearly",
+        "day": null,
+        "date": "2027-01-12"
+      },
+      "account_id": "spend"
+    },
+    {
+      "id": "cd_maturity",
+      "name": "CD matures",
+      "amount": 2080.0,
+      "category": "cd_maturity",
+      "due_rule": {
+        "kind": "once",
+        "day": null,
+        "date": "2027-04-15"
+      },
+      "account_id": "cd"
+    }
+  ],
+  "bills_next_90": [
+    {
+      "bill_id": "stream1",
+      "name": "Streaming (video)",
+      "amount": 15.99,
+      "date": "2026-11-09",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 1938.46,
+      "date": "2026-11-13",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "insurance",
+      "name": "Car insurance",
+      "amount": 142.0,
+      "date": "2026-11-15",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "phone",
+      "name": "Phone",
+      "amount": 65.0,
+      "date": "2026-11-18",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "card_pay",
+      "name": "Credit card payment",
+      "amount": 117.0,
+      "date": "2026-11-22",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "stream2",
+      "name": "Streaming (music)",
+      "amount": 11.99,
+      "date": "2026-11-27",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 1938.46,
+      "date": "2026-11-27",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "rent",
+      "name": "Rent",
+      "amount": 1450.0,
+      "date": "2026-12-01",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "gym",
+      "name": "Gym membership",
+      "amount": 40.0,
+      "date": "2026-12-03",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "car",
+      "name": "Car payment",
+      "amount": 387.0,
+      "date": "2026-12-05",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "stream1",
+      "name": "Streaming (video)",
+      "amount": 15.99,
+      "date": "2026-12-09",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 1938.46,
+      "date": "2026-12-11",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "insurance",
+      "name": "Car insurance",
+      "amount": 142.0,
+      "date": "2026-12-15",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "phone",
+      "name": "Phone",
+      "amount": 65.0,
+      "date": "2026-12-18",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "card_pay",
+      "name": "Credit card payment",
+      "amount": 117.0,
+      "date": "2026-12-22",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 1938.46,
+      "date": "2026-12-25",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "stream2",
+      "name": "Streaming (music)",
+      "amount": 11.99,
+      "date": "2026-12-27",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "rent",
+      "name": "Rent",
+      "amount": 1450.0,
+      "date": "2027-01-01",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "gym",
+      "name": "Gym membership",
+      "amount": 40.0,
+      "date": "2027-01-03",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "car",
+      "name": "Car payment",
+      "amount": 387.0,
+      "date": "2027-01-05",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 1938.46,
+      "date": "2027-01-08",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "stream1",
+      "name": "Streaming (video)",
+      "amount": 15.99,
+      "date": "2027-01-09",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "renters",
+      "name": "Renters insurance",
+      "amount": 168.0,
+      "date": "2027-01-12",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "insurance",
+      "name": "Car insurance",
+      "amount": 142.0,
+      "date": "2027-01-15",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "phone",
+      "name": "Phone",
+      "amount": 65.0,
+      "date": "2027-01-18",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "card_pay",
+      "name": "Credit card payment",
+      "amount": 117.0,
+      "date": "2027-01-22",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 1938.46,
+      "date": "2027-01-22",
+      "account_id": "spend",
+      "kind": "income"
+    },
+    {
+      "bill_id": "stream2",
+      "name": "Streaming (music)",
+      "amount": 11.99,
+      "date": "2027-01-27",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "rent",
+      "name": "Rent",
+      "amount": 1450.0,
+      "date": "2027-02-01",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "gym",
+      "name": "Gym membership",
+      "amount": 40.0,
+      "date": "2027-02-03",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "car",
+      "name": "Car payment",
+      "amount": 387.0,
+      "date": "2027-02-05",
+      "account_id": "spend",
+      "kind": "bill"
+    },
+    {
+      "bill_id": "paycheck",
+      "name": "Paycheck",
+      "amount": 1938.46,
+      "date": "2027-02-05",
+      "account_id": "spend",
+      "kind": "income"
+    }
+  ],
+  "totals": [
+    {
+      "id": "today.net_worth",
+      "label": "Net worth",
+      "value": -5194.0,
+      "unit": "usd",
+      "display": "-$5,194",
+      "math": {
+        "formula": "Everything you have minus everything you owe",
+        "inputs": [
+          {
+            "label": "Assets",
+            "value": 12706.0,
+            "unit": "usd",
+            "source": null
+          },
+          {
+            "label": "Debts",
+            "value": 17900.0,
+            "unit": "usd",
+            "source": null
+          }
+        ],
+        "assumptions": [],
+        "thresholds": null
+      }
+    },
+    {
+      "id": "today.total_debt",
+      "label": "Total debt",
+      "value": 17900.0,
+      "unit": "usd",
+      "display": "$17,900",
+      "math": {
+        "formula": "Sum of all debt balances",
+        "inputs": [],
+        "assumptions": [],
+        "thresholds": null
+      }
+    }
+  ]
+}
