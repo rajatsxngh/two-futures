@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
+/* Design tokens (PRD "Design rules"): orange accent, navy text, white background,
+   gray for the same path, a warm tone for the plan, and red/amber/green only
+   for indicator status (always paired with an icon). */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0b2545;
 }
 
 @theme inline {
@@ -10,17 +13,107 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-accent: #ef6a1a;
+  --color-accent-dark: #c9530c;
+  --color-accent-soft: #fff1e7;
+  --color-navy: #0b2545;
+  --color-muted: #5b6b82;
+  --color-line: #e3e8ef;
+  --color-surface: #f6f8fb;
+
+  --color-same: #8792a2;
+  --color-same-soft: #f1f3f6;
+  --color-plan: #d9663f;
+  --color-plan-soft: #fff0e6;
+
+  --color-ok: #23905a;
+  --color-warn: #b7791f;
+  --color-bad: #cf3e3e;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide scrollbars inside the phone screen but keep scrolling. */
+.phone-scroll {
+  scrollbar-width: none;
+}
+.phone-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* highlight_metric glow */
+@keyframes metric-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(239 106 26 / 0);
+  }
+  30%,
+  70% {
+    box-shadow: 0 0 0 6px rgb(239 106 26 / 0.35);
+  }
+}
+.metric-highlight {
+  border-radius: 10px;
+  background: var(--color-accent-soft);
+  animation: metric-glow 1.4s ease-in-out 2;
+}
+
+/* "Scheduled" badge pop */
+@keyframes pop-in {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.pop-in {
+  animation: pop-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.sheet-up {
+  animation: sheet-up 260ms ease-out both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.fade-in {
+  animation: fade-in 200ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metric-highlight,
+  .pop-in,
+  .sheet-up,
+  .fade-in {
+    animation: none;
+  }
 }
