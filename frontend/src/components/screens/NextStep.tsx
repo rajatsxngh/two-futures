@@ -30,7 +30,11 @@ export function NextStepScreen() {
         {action && <p className="mt-1 text-sm leading-snug text-muted">{action.description}</p>}
 
         <div className="mt-3 flex items-end gap-2">
-          <span className="tabular text-[44px] font-semibold leading-none text-navy">{usd(step.amount)}</span>
+          {step.amount_metric ? (
+            <MetricValue metric={step.amount_metric} className="text-[44px] font-semibold leading-none text-navy" />
+          ) : (
+            <span className="tabular text-[44px] font-semibold leading-none text-navy">{usd(step.amount)}</span>
+          )}
           <span className="pb-1 text-sm text-muted">
             {nameOf(step.from_account_id)} → {nameOf(step.to_account_id)}
           </span>

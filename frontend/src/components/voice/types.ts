@@ -40,6 +40,8 @@ export interface ToolEvent {
   error?: string;
   ms?: number;
   at: number;
+  /** Who started it: the agent (default) or a tap on screen. */
+  source?: "voice" | "tap";
 }
 
 export interface Caption {

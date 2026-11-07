@@ -144,3 +144,29 @@ def test_endpoints_serve_engine():
     assert f["next_step"]["amount"] == 150
     fc = client.get("/api/forecast").json()
     assert len(fc["cash_series"]) == 366
+
+
+# --- M9: every on-screen number has its math --------------------------------
+
+def test_account_balances_are_metrics():
+    body = client.get("/api/profile").json()
+    ids = {m["id"]: m for m in body["account_metrics"]}
+    assert set(ids) == {f"account.{a['id']}.balance" for a in body["accounts"]}
+    card = ids["account.card.balance"]
+    assert card["display"] == "$3,900"
+    assert any(i["label"] == "Credit limit" for i in card["math"]["inputs"])
+
+
+def test_forecast_headline_and_account_ends(forecast):
+    ids = [m.id for m in forecast.headline]
+    assert ids == ["forecast.cash.p50_end", "forecast.cash.range"]
+    assert forecast.headline[0].value == forecast.cash_series[-1].p50
+    assert all(a.end is not None and a.end.id == f"forecast.account.{a.account_id}.end" for a in forecast.accounts)
+
+
+def test_next_step_amount_explains_itself(maya):
+    m = maya.next_step.amount_metric
+    assert m.id == "next_step.amount" and m.value == 150
+    assert "largest $25 step" in m.math.formula
+    low = next(i.value for i in m.math.inputs if i.label.startswith("Bad-case low point"))
+    assert low >= 200

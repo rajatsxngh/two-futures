@@ -8,7 +8,7 @@
  * - each returns plain data the agent can read back (the API response, or a short status),
  * - none of them needs React; they write to the shared store in `store.ts`.
  */
-import { api, type CustomerId, type PathId, type TransferRequest, type TransferResponse, type UpdatePlanResponse, type WhatIfRequest } from "./api";
+import { api, type CustomerId, type Metric, type PathId, type TransferRequest, type TransferResponse, type UpdatePlanResponse, type WhatIfRequest } from "./api";
 import { getState, initialState, setState, type Screen } from "./store";
 import type { ToolEvent, VoiceStatus } from "@/components/voice/types";
 
@@ -23,17 +23,20 @@ export type UpdatePlanInput = Omit<WhatIfRequest, "customer"> & { customer?: Cus
  * Apply a what-if to the plan path (never the same path) and update the screen.
  * Resolves with the API response so the agent can read `sentence` and `deltas`.
  */
-export async function updatePlan(input: UpdatePlanInput): Promise<UpdatePlanResponse> {
+export async function updatePlan(input: UpdatePlanInput, source: "tap" | "voice" = "tap"): Promise<UpdatePlanResponse> {
   const customer = input.customer ?? getState().customer;
   setState({ whatIfPending: true, error: null });
+  const done = source === "tap" ? tapEvent("update_plan", input as Record<string, unknown>) : null;
   try {
     const res = await api.updatePlan({ ...input, customer });
     // Futures now include every active what-if, so the plan card, fact sheets and next step all agree.
     const futures = await api.futures(customer).catch(() => null);
     setState((s) => ({ whatIf: res, whatIfPending: false, futures: futures ?? s.futures }));
+    done?.({ phase: "ok", result: res, reply: res.sentence });
     return res;
   } catch (e) {
     setState({ whatIfPending: false, error: errorText(e) });
+    done?.({ phase: "error", error: errorText(e) });
     throw e;
   }
 }
@@ -42,17 +45,40 @@ export async function updatePlan(input: UpdatePlanInput): Promise<UpdatePlanResp
 export type StartTransferInput = Omit<TransferRequest, "customer"> & { customer?: CustomerId };
 
 /** Schedule a (simulated) transfer. Only call after a clear yes from the user. */
-export async function startTransfer(input: StartTransferInput): Promise<TransferResponse> {
+export async function startTransfer(input: StartTransferInput, source: "tap" | "voice" = "tap"): Promise<TransferResponse> {
   const customer = input.customer ?? getState().customer;
   setState({ transferPending: true, error: null });
+  const done = source === "tap" ? tapEvent("start_transfer", input as Record<string, unknown>) : null;
   try {
     const res = await api.startTransfer({ ...input, customer });
     setState({ transfer: res, transferPending: false });
+    done?.({ phase: "ok", result: res, reply: res.sentence });
     return res;
   } catch (e) {
     setState({ transferPending: false, error: errorText(e) });
+    done?.({ phase: "error", error: errorText(e) });
     throw e;
   }
+}
+
+let tapId = 0;
+/** Log a tapped action in the activity panel, the same way the agent's tool calls are logged. */
+function tapEvent(name: "update_plan" | "start_transfer", params: Record<string, unknown>) {
+  const id = `tap_${++tapId}`;
+  const t0 = Date.now();
+  const path = name === "update_plan" ? "plan" : (getState().activePath ?? "plan");
+  recordToolEvent({ id, name, path, phase: "called", params, at: t0, source: "tap" });
+  return (e: Pick<ToolEvent, "phase"> & Partial<ToolEvent>) =>
+    recordToolEvent({ id, name, path, params, at: Date.now(), ms: Date.now() - t0, source: "tap", ...e });
+}
+
+/** Open the "show the math" sheet for one number. */
+export function openMath(metric: Metric) {
+  setState({ mathMetric: metric });
+}
+
+export function closeMath() {
+  setState({ mathMetric: null });
 }
 
 let highlightTimer: ReturnType<typeof setTimeout> | undefined;
@@ -64,7 +90,9 @@ let highlightTimer: ReturnType<typeof setTimeout> | undefined;
  */
 export function highlightMetric(metricId: string, durationMs = 3000): { ok: boolean; metricId: string } {
   const screen = screenForMetric(metricId);
-  if (screen && getState().screen !== screen) setState({ screen });
+  // Never leave the screen mid-call: switching screens would unmount the live voice session.
+  const inCall = getState().voiceStatus === "connected" || getState().voiceStatus === "connecting";
+  if (screen && getState().screen !== screen && !inCall) setState({ screen });
   // Indicator values live behind the score drill-down on Today.
   const isIndicator = metricId.startsWith("health.") && metricId !== "health.score" && !metricId.startsWith("health.pillar.");
   setState({ highlighted: metricId, ...(isIndicator ? { showIndicators: true } : {}) });

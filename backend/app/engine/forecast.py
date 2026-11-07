@@ -140,7 +140,12 @@ def _cached_forecast(customer_id: str, today: date) -> ForecastResponse:
     for a in data.accounts:
         pts = [AccountMonthPoint(month=mo, balance=round(float(v), 2))
                for mo, v in zip(fut.month_labels[:13], monthly[a.id][:13])]
-        accounts.append(AccountForecast(account_id=a.id, name=a.name, type=a.type, points=pts))
+        end = pts[-1]
+        accounts.append(AccountForecast(
+            account_id=a.id, name=a.name, type=a.type, points=pts,
+            end=metric(f"forecast.account.{a.id}.end", f"{a.name} in a year", end.balance, "usd", usd(end.balance),
+                       f"Typical (middle) balance of {a.name} in {end.month}, across {A.RUNS:,} simulated runs",
+                       [("Balance today", a.balance, "usd", a.name)], A.listed(plan=False))))
 
     runs_below = int(round(risk / 100 * A.RUNS))
     return ForecastResponse(
@@ -153,6 +158,19 @@ def _cached_forecast(customer_id: str, today: date) -> ForecastResponse:
             [("Simulated runs", A.RUNS, "count"), ("Runs below $0", runs_below, "count"),
              ("Starting balance", p.checking.balance, "usd", p.checking.name)],
             A.listed(plan=False)),
+        headline=[
+            metric("forecast.cash.p50_end", "Typical balance in a year", round(float(p50[-1]), 2), "usd",
+                   usd(float(p50[-1])), f"Middle result for {p.checking.name} on {dates[-1]:%b} {dates[-1].day}, "
+                   f"{dates[-1].year}, across {A.RUNS:,} simulated runs",
+                   [("Balance today", p.checking.balance, "usd", p.checking.name),
+                    ("Bad case (10th percentile)", round(float(p10[-1]), 2), "usd"),
+                    ("Good case (90th percentile)", round(float(p90[-1]), 2), "usd")], A.listed(plan=False)),
+            metric("forecast.cash.range", "Range in a year", f"{usd(float(p10[-1]))} to {usd(float(p90[-1]))}", "usd",
+                   f"{usd(float(p10[-1]))} to {usd(float(p90[-1]))}",
+                   "From the 10th to the 90th percentile of simulated balances: 8 in 10 runs land inside it",
+                   [("Bad case", round(float(p10[-1]), 2), "usd"), ("Good case", round(float(p90[-1]), 2), "usd")],
+                   A.listed(plan=False)),
+        ],
         assumptions=A.listed(plan=False) + [
             f"Typical low point for {p.checking.name} in the next 90 days: {usd(float(p50[:91].min()))}; "
             f"bad case: {usd(float(p10[:91].min()))}."],

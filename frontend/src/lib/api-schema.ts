@@ -98,7 +98,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Update Plan */
+        /**
+         * Update Plan
+         * @description Apply a what-if to the plan path. What-ifs stack until /api/reset.
+         */
         post: operations["update_plan_api_update_plan_post"];
         delete?: never;
         options?: never;
@@ -115,7 +118,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Start Transfer */
+        /**
+         * Start Transfer
+         * @description Schedule a simulated transfer. Refused without confirmed=true: nothing moves without a clear yes.
+         */
         post: operations["start_transfer_api_start_transfer_post"];
         delete?: never;
         options?: never;
@@ -132,7 +138,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Reset */
+        /**
+         * Reset
+         * @description Clear what-ifs and scheduled transfers: back to the starting demo state.
+         */
         post: operations["reset_api_reset_post"];
         delete?: never;
         options?: never;
@@ -197,6 +206,8 @@ export interface components {
             type: components["schemas"]["AccountType"];
             /** Points */
             points: components["schemas"]["AccountMonthPoint"][];
+            /** @description Typical balance in 12 months, id 'forecast.account.<id>.end' */
+            end?: components["schemas"]["Metric"] | null;
         };
         /**
          * AccountGroup
@@ -392,6 +403,12 @@ export interface components {
              * @default Forecast, not a promise
              */
             label: string;
+            /**
+             * Headline
+             * @description Typical balance in a year and its range
+             * @default []
+             */
+            headline: components["schemas"]["Metric"][];
         };
         /** FuturesResponse */
         FuturesResponse: {
@@ -614,6 +631,8 @@ export interface components {
              * @description e.g. score change, cushion change by 2031
              */
             effects: components["schemas"]["Metric"][];
+            /** @description The amount with why it's that amount, id 'next_step.amount' */
+            amount_metric?: components["schemas"]["Metric"] | null;
         };
         /** PathResult */
         PathResult: {
@@ -711,6 +730,12 @@ export interface components {
              * @description e.g. net worth, total cash, total debt
              */
             totals: components["schemas"]["Metric"][];
+            /**
+             * Account Metrics
+             * @description Each account balance as a Metric, id 'account.<id>.balance'
+             * @default []
+             */
+            account_metrics: components["schemas"]["Metric"][];
         };
         /** ResetResponse */
         ResetResponse: {

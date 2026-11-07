@@ -202,7 +202,11 @@ function Accounts() {
                       </p>
                       <p className="truncate text-xs text-muted">{accountDetail(a)}</p>
                     </div>
-                    <NumberHook id={`account.${a.id}.balance`} className="text-sm font-medium text-navy">
+                    <NumberHook
+                      id={`account.${a.id}.balance`}
+                      metric={profile.account_metrics?.find((m) => m.id === `account.${a.id}.balance`)}
+                      className="text-sm font-medium text-navy"
+                    >
                       {a.group === "debt" ? `−${usd(a.balance)}` : usd(a.balance)}
                     </NumberHook>
                   </li>

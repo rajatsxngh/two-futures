@@ -191,6 +191,7 @@ class ProfileResponse(BaseModel):
     bills: list[Bill] = Field(description="Every recurring and one-time bill, with its due rule")
     bills_next_90: list[UpcomingBill]
     totals: list[Metric] = Field(description="e.g. net worth, total cash, total debt")
+    account_metrics: list[Metric] = Field(default=[], description="Each account balance as a Metric, id 'account.<id>.balance'")
 
 
 # ---------------------------------------------------------------------------
@@ -256,6 +257,7 @@ class AccountForecast(BaseModel):
     name: str
     type: AccountType
     points: list[AccountMonthPoint]
+    end: Metric | None = Field(default=None, description="Typical balance in 12 months, id 'forecast.account.<id>.end'")
 
 
 class ForecastResponse(BaseModel):
@@ -270,6 +272,7 @@ class ForecastResponse(BaseModel):
     risk_days: list[dt.date] = Field(description="Days where the bad case goes below $0")
     assumptions: list[str]
     label: str = "Forecast, not a promise"
+    headline: list[Metric] = Field(default=[], description="Typical balance in a year and its range")
 
 
 # ---------------------------------------------------------------------------
@@ -335,6 +338,7 @@ class NextStep(BaseModel):
     frequency: Literal["payday", "monthly"]
     first_date: dt.date
     effects: list[Metric] = Field(description="e.g. score change, cushion change by 2031")
+    amount_metric: Metric | None = Field(default=None, description="The amount with why it's that amount, id 'next_step.amount'")
 
 
 class FactSheet(BaseModel):

@@ -374,6 +374,16 @@ def build_futures(data: CustomerData, today: date,
         next_step = NextStep(
             action_id=first.id, title=first.title, amount=first.amount or 0, from_account_id=first.from_account_id or "",
             to_account_id=first.to_account_id or "", frequency="payday", first_date=first.start_date,
+            amount_metric=metric(
+                "next_step.amount", "Payday transfer", first.amount or 0, "usd", usd(first.amount or 0),
+                f"The largest ${A.TRANSFER_STEP:,.0f} step per payday that keeps bad-case (10th percentile) "
+                f"{p.checking.name} above ${A.CHECKING_FLOOR:,.0f} for the next 12 months",
+                [("Bad-case low point with this amount", round(low, 2), "usd", "12-month simulation"),
+                 ("Floor", A.CHECKING_FLOOR, "usd"), ("Step", A.TRANSFER_STEP, "usd"),
+                 ("Next step up", (first.amount or 0) + A.TRANSFER_STEP, "usd", "would dip below the floor")],
+                [f"The plan spends {A.FLEXIBLE_TRIM:.0%} less on flexible categories and cancels unused "
+                 "subscriptions.", f"It replaces the ${p.reserve_contrib:,.0f} monthly savings transfer."
+                 if p.reserve_contrib else "No existing savings transfer to replace."]),
             effects=[
                 metric("next_step.score_2031", f"Score in {A.TARGET_YEAR}", plan_end.score, "score",
                        f"{plan_end.score} vs {same_end.score}",

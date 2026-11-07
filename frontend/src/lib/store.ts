@@ -9,6 +9,7 @@
 import { useSyncExternalStore } from "react";
 import type {
   CustomerId,
+  Metric,
   ForecastResponse,
   FuturesResponse,
   HealthResponse,
@@ -56,6 +57,8 @@ export type AppState = {
   voiceStatus: VoiceStatus;
   /** Every agent tool call and outcome, newest last (the M9 activity panel reads this). */
   toolEvents: ToolEvent[];
+  /** The number whose "show the math" sheet is open. */
+  mathMetric: Metric | null;
 };
 
 export const initialState: AppState = {
@@ -80,6 +83,7 @@ export const initialState: AppState = {
   askBothPending: null,
   voiceStatus: "idle",
   toolEvents: [],
+  mathMetric: null,
 };
 
 let state: AppState = initialState;

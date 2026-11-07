@@ -4,9 +4,32 @@
  * Small shared pieces: the Metric renderer (with its DOM hook), the count-up
  * number, status icons and formatting helpers.
  */
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
 import type { Metric } from "@/lib/api";
+import { openMath } from "@/lib/actions";
 import { useApp } from "@/lib/store";
+
+/** Props that make a number open its "show the math" sheet on tap or Enter. */
+function mathTrigger(metric: Metric | undefined) {
+  if (!metric) return { className: "" };
+  const open = (e: MouseEvent | KeyboardEvent) => {
+    e.stopPropagation();
+    openMath(metric);
+  };
+  return {
+    role: "button" as const,
+    tabIndex: 0,
+    "aria-label": `${metric.label}: ${metric.display}. Show the math`,
+    onClick: open,
+    onKeyDown: (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open(e);
+      }
+    },
+    className: "cursor-pointer underline decoration-dotted decoration-1 underline-offset-4 decoration-muted/50 hover:decoration-accent focus-visible:outline-2 focus-visible:outline-accent",
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Formatting
@@ -101,11 +124,13 @@ export function MetricValue({
   children?: ReactNode;
 }) {
   const highlighted = useApp((s) => s.highlighted === metric.id);
+  const trigger = mathTrigger(metric);
   return (
     <span
+      {...trigger}
       data-metric-id={metric.id}
       title={metric.math.formula}
-      className={`inline-block transition-colors ${highlighted ? "metric-highlight" : ""} ${className}`}
+      className={`inline-block transition-colors ${highlighted ? "metric-highlight" : ""} ${trigger.className} ${className}`}
     >
       {children ?? (animate ? <CountUp text={metric.display} /> : <span className="tabular">{metric.display}</span>)}
     </span>
@@ -113,10 +138,26 @@ export function MetricValue({
 }
 
 /** Wrapper for numbers that aren't Metrics in the contract yet (e.g. account balances). */
-export function NumberHook({ id, className = "", children }: { id: string; className?: string; children: ReactNode }) {
+export function NumberHook({
+  id,
+  metric,
+  className = "",
+  children,
+}: {
+  id: string;
+  /** When the contract has a Metric for this number, tapping it shows the math. */
+  metric?: Metric | null;
+  className?: string;
+  children: ReactNode;
+}) {
   const highlighted = useApp((s) => s.highlighted === id);
+  const trigger = mathTrigger(metric ?? undefined);
   return (
-    <span data-metric-id={id} className={`inline-block tabular ${highlighted ? "metric-highlight" : ""} ${className}`}>
+    <span
+      {...trigger}
+      data-metric-id={id}
+      className={`inline-block tabular ${highlighted ? "metric-highlight" : ""} ${trigger.className} ${className}`}
+    >
       {children}
     </span>
   );

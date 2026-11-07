@@ -197,6 +197,7 @@
     "/api/update_plan": {
       "post": {
         "summary": "Update Plan",
+        "description": "Apply a what-if to the plan path. What-ifs stack until /api/reset.",
         "operationId": "update_plan_api_update_plan_post",
         "requestBody": {
           "content": {
@@ -235,6 +236,7 @@
     "/api/start_transfer": {
       "post": {
         "summary": "Start Transfer",
+        "description": "Schedule a simulated transfer. Refused without confirmed=true: nothing moves without a clear yes.",
         "operationId": "start_transfer_api_start_transfer_post",
         "requestBody": {
           "content": {
@@ -273,6 +275,7 @@
     "/api/reset": {
       "post": {
         "summary": "Reset",
+        "description": "Clear what-ifs and scheduled transfers: back to the starting demo state.",
         "operationId": "reset_api_reset_post",
         "parameters": [
           {
@@ -466,6 +469,17 @@
             },
             "type": "array",
             "title": "Points"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Metric"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Typical balance in 12 months, id 'forecast.account.<id>.end'"
           }
         },
         "type": "object",
@@ -898,6 +912,15 @@
             "type": "string",
             "title": "Label",
             "default": "Forecast, not a promise"
+          },
+          "headline": {
+            "items": {
+              "$ref": "#/components/schemas/Metric"
+            },
+            "type": "array",
+            "title": "Headline",
+            "description": "Typical balance in a year and its range",
+            "default": []
           }
         },
         "type": "object",
@@ -1395,6 +1418,17 @@
             "type": "array",
             "title": "Effects",
             "description": "e.g. score change, cushion change by 2031"
+          },
+          "amount_metric": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Metric"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The amount with why it's that amount, id 'next_step.amount'"
           }
         },
         "type": "object",
@@ -1669,6 +1703,15 @@
             "type": "array",
             "title": "Totals",
             "description": "e.g. net worth, total cash, total debt"
+          },
+          "account_metrics": {
+            "items": {
+              "$ref": "#/components/schemas/Metric"
+            },
+            "type": "array",
+            "title": "Account Metrics",
+            "description": "Each account balance as a Metric, id 'account.<id>.balance'",
+            "default": []
           }
         },
         "type": "object",

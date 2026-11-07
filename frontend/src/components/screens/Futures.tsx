@@ -23,7 +23,11 @@ import { CountUp, MetricValue } from "../ui";
 
 // The agent's client tools are the same functions the buttons use, so a spoken
 // what-if or "yes" changes exactly the same state as a tap.
-const VOICE_TOOLS: VoiceTools = { updatePlan, startTransfer, highlightMetric };
+const VOICE_TOOLS: VoiceTools = {
+  updatePlan: (input) => updatePlan(input, "voice"),
+  startTransfer: (input) => startTransfer(input, "voice"),
+  highlightMetric,
+};
 const PATH_LABEL: Record<PathId, string> = { same_path: "Same path", plan: "With a plan" };
 
 export function FuturesScreen() {

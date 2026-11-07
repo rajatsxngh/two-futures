@@ -9,6 +9,8 @@ import { ForecastScreen } from "./screens/Forecast";
 import { FuturesScreen } from "./screens/Futures";
 import { NextStepScreen } from "./screens/NextStep";
 import { WhatIfDrawer } from "./WhatIfDrawer";
+import { MathSheet } from "./MathSheet";
+import { ActivityPanel } from "./ActivityPanel";
 
 const TABS: { id: Screen; label: string; icon: string }[] = [
   { id: "today", label: "Today", icon: "M3 10.5 10 4l7 6.5V17a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1v-6.5Z" },
@@ -61,6 +63,7 @@ export function App() {
           )}
         </main>
         <WhatIfDrawer />
+        <MathSheet />
         <nav className="grid grid-cols-4 border-t border-line bg-white pb-[env(safe-area-inset-bottom)]" aria-label="Screens">
           {TABS.map((t) => (
             <button
@@ -78,8 +81,10 @@ export function App() {
         </nav>
       </div>
 
-      {/* Reserved for the agent activity panel (M9). Intentionally empty. */}
-      <aside id="activity-panel-slot" aria-label="Agent activity" className="hidden h-[844px] max-h-[calc(100dvh-3rem)] w-[360px] shrink-0 xl:block" />
+      {/* Agent activity panel (M9): beside the phone on laptop screens, where judges can see it. */}
+      <aside id="activity-panel" aria-label="Agent activity" className="hidden h-[844px] max-h-[calc(100dvh-3rem)] w-[340px] shrink-0 lg:block">
+        <ActivityPanel />
+      </aside>
     </div>
   );
 }

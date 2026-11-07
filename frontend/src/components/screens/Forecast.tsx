@@ -101,11 +101,18 @@ function CashChart({ forecast }: { forecast: ForecastResponse }) {
       <div className="flex items-start justify-between px-2">
         <div>
           <p className="text-xs text-muted">Typical balance in a year</p>
-          <NumberHook id="forecast.cash.p50_end" className="text-[32px] font-semibold leading-tight text-navy">
+          <NumberHook
+            id="forecast.cash.p50_end"
+            metric={forecast.headline?.find((m) => m.id === "forecast.cash.p50_end")}
+            className="text-[32px] font-semibold leading-tight text-navy"
+          >
             {usd(end.p50)}
           </NumberHook>
           <p className="text-xs text-muted">
-            Range {usd(end.p10)} to {usd(end.p90)}
+            Range{" "}
+            <NumberHook id="forecast.cash.range" metric={forecast.headline?.find((m) => m.id === "forecast.cash.range")}>
+              {usd(end.p10)} to {usd(end.p90)}
+            </NumberHook>
           </p>
         </div>
         <div className="text-right">
@@ -276,7 +283,7 @@ function AccountsChart({ forecast }: { forecast: ForecastResponse }) {
                     {a.name}
                   </span>
                   <span className="text-right">
-                    <NumberHook id={`forecast.account.${a.account_id}.end`} className="text-sm font-semibold text-navy">
+                    <NumberHook id={`forecast.account.${a.account_id}.end`} metric={a.end} className="text-sm font-semibold text-navy">
                       {usd(end)}
                     </NumberHook>
                     <span className="block text-[11px] text-muted">

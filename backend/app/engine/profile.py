@@ -67,7 +67,32 @@ def profile_for(data: CustomerData, health: HealthResponse, today: date) -> Prof
     debts = sum(a.balance for a in data.accounts if a.group == AccountGroup.debt)
     checking = next((a.id for a in data.accounts if a.type == AccountType.checking), "spend")
 
+    labels = {"checking": "Checking", "savings": "Savings", "cd": "CD", "ira": "Retirement",
+              "auto_loan": "Auto loan", "personal_loan": "Personal loan", "credit_card": "Credit card",
+              "mortgage": "Mortgage"}
+    account_metrics = []
+    for a in data.accounts:
+        inputs = [("Institution", a.institution, "count")]
+        if a.rate is not None:
+            inputs.append(("APR" if a.group == AccountGroup.debt else "APY", a.rate, "pct"))
+        if a.limit:
+            inputs.append(("Credit limit", a.limit, "usd"))
+        if a.min_payment:
+            inputs.append(("Minimum payment", a.min_payment, "usd_per_month"))
+        if a.due_day:
+            inputs.append(("Due day", a.due_day, "count"))
+        if a.maturity_date:
+            inputs.append(("Matures", a.maturity_date.isoformat(), "date"))
+        if a.monthly_contribution:
+            inputs.append(("Automatic deposit", a.monthly_contribution, "usd_per_month"))
+        owed = " owed" if a.group == AccountGroup.debt else ""
+        account_metrics.append(metric(
+            f"account.{a.id}.balance", a.name, a.balance, "usd", usd(a.balance),
+            f"{labels[a.type.value]} balance{owed} as of {today:%B} {today.day}, {today.year}",
+            inputs, ["Made-up demo data: no real accounts are connected."]))
+
     return ProfileResponse(
+        account_metrics=account_metrics,
         as_of=today,
         customer=data.customer,
         accounts=data.accounts,

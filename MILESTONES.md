@@ -137,7 +137,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M9: Trust layer (F9, F10, F11)
+## M9: Trust layer (F9, F10, F11) ✅ done (voice-side events untested live)
 **Depends on:** M8 (the activity panel shows agent tool calls), M1 (math fields in every response)
 **Goal:** make PNC's "Trusted AI" theme something judges can see.
 
