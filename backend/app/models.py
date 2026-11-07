@@ -159,6 +159,7 @@ class Bill(BaseModel):
     category: str
     due_rule: DueRule
     account_id: str
+    unused: bool = Field(default=False, description="Subscription with no recent use (plan rule 3 cancels it)")
 
 
 class UpcomingBill(BaseModel):

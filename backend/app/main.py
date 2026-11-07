@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import config
 from .engine import data as customer_data
+from .engine.forecast import forecast_for
+from .engine.futures import futures_for
 from .engine.health import health_for
 from .engine.profile import profile_for
 from .fixtures import load
@@ -70,12 +72,18 @@ def get_health(customer: str = CustomerParam):
 
 @app.get("/api/forecast", response_model=ForecastResponse)
 def get_forecast(customer: str = CustomerParam):
-    return load(check_customer(customer), "forecast")
+    check_customer(customer)
+    if config.USE_FIXTURES:
+        return load(customer, "forecast")
+    return forecast_for(customer, config.DEMO_TODAY)
 
 
 @app.get("/api/futures", response_model=FuturesResponse)
 def get_futures(customer: str = CustomerParam):
-    return load(check_customer(customer), "futures")
+    check_customer(customer)
+    if config.USE_FIXTURES:
+        return load(customer, "futures")
+    return futures_for(customer, config.DEMO_TODAY).response
 
 
 @app.post("/api/update_plan", response_model=UpdatePlanResponse)

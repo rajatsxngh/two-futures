@@ -240,6 +240,12 @@ export interface components {
             due_rule: components["schemas"]["DueRule"];
             /** Account Id */
             account_id: string;
+            /**
+             * Unused
+             * @description Subscription with no recent use (plan rule 3 cancels it)
+             * @default false
+             */
+            unused: boolean;
         };
         /** Customer */
         Customer: {

@@ -65,7 +65,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M4: Forecast, two futures and plan rules (F3, F4 backend)
+## M4: Forecast, two futures and plan rules (F3, F4 backend) ✅ done
 **Depends on:** M3 (each future year is scored with the health engine)
 **Goal:** every balance and bill for the next 12 months, plus two 5-year paths to 2031.
 
@@ -77,6 +77,8 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 - `GET /api/forecast` and `GET /api/futures` are live. A fixed seed makes demo runs repeatable.
 
 **Done when:** tests confirm the $150 transfer, that both paths contain the 2028 repair, and that forecast totals reconcile; one call to `/api/futures` finishes in under 1 second.
+
+> **As built:** $150 comes from rule 1 with the plan trimming flexible spending by 20% (at 15% it would be $125). Rule 4 is "once the cushion hits 3 months, the transfer pays debt, highest rate first", and paid-off payments join the transfer. Maya in 2031: same path score 73, 4.6-month cushion, $3,900 card, ~$4,950 card interest paid; plan score 92, 5.9 months, $0 card. The 2028 repair comes out of savings on both paths (her existing $200/month habit covers it), so the fact sheets don't say it went on the card.
 
 ---
 

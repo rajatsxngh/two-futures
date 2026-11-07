@@ -573,6 +573,12 @@
           "account_id": {
             "type": "string",
             "title": "Account Id"
+          },
+          "unused": {
+            "type": "boolean",
+            "title": "Unused",
+            "description": "Subscription with no recent use (plan rule 3 cancels it)",
+            "default": false
           }
         },
         "type": "object",

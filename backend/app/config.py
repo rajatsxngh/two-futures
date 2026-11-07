@@ -14,8 +14,7 @@ CUSTOMERS = ("maya", "household")
 
 # USE_FIXTURES=1 forces every endpoint to serve app/fixtures/*.json.
 # Otherwise endpoints the engine already covers use it, and the rest fall back
-# to fixtures until their milestone lands (profile/health: M2-M3; forecast,
-# futures: M4; update_plan, start_transfer, reset: M5).
+# to fixtures until their milestone lands (update_plan, start_transfer, reset: M5).
 USE_FIXTURES = os.getenv("USE_FIXTURES", "0") == "1"
 
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")

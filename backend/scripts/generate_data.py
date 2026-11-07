@@ -97,9 +97,9 @@ def account(**kw) -> dict:
     return kw
 
 
-def bill(id, name, amount, category, account_id, day=None, kind="monthly", on=None) -> dict:
+def bill(id, name, amount, category, account_id, day=None, kind="monthly", on=None, unused=False) -> dict:
     return {"id": id, "name": name, "amount": amount, "category": category, "account_id": account_id,
-            "due_rule": {"kind": kind, "day": day, "date": on.isoformat() if on else None}}
+            "due_rule": {"kind": kind, "day": day, "date": on.isoformat() if on else None}, "unused": unused}
 
 
 def add_variable(b: Builder, account_id: str, category: str, merchants: list[str], per_week: float,
@@ -136,7 +136,7 @@ def maya() -> dict:
     ]
     bills = [
         bill("rent", "Rent", 1450.0, "housing", "spend", day=1),
-        bill("gym", "Gym membership", 40.0, "subscription", "spend", day=3),
+        bill("gym", "Gym membership", 40.0, "subscription", "spend", day=3, unused=True),  # no visits in 4 months
         bill("car", "Car payment", 387.0, "auto_loan", "spend", day=5),
         bill("stream1", "Streaming (video)", 15.99, "subscription", "spend", day=9),
         bill("insurance", "Car insurance", 142.0, "insurance", "spend", day=15),

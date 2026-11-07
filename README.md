@@ -10,7 +10,7 @@ A 360° Financial Health Navigator built for PNC's HackUTD challenge. See your w
 | Folder | What it is |
 |---|---|
 | `backend/` | FastAPI + NumPy. `app/models.py` is the API contract; `app/main.py` holds the routes. |
-| `backend/app/engine/` | The engine: data loading, health score, profile (M2–M3); forecast and what-if arrive in M4–M5. |
+| `backend/app/engine/` | The engine: data, health score, profile (M2–M3), 12-month forecast, plan rules and both 5-year paths (M4). Assumptions live in `assumptions.py`. |
 | `backend/app/fixtures/` | Placeholder JSON for endpoints the engine doesn't cover yet (and for `USE_FIXTURES=1`). Built by `scripts/make_fixtures.py`. |
 | `frontend/` | Next.js 16 + React + Tailwind + Recharts. `src/lib/api.ts` is the typed client. |
 | `agent/` | ElevenLabs agent prompt and setup (M8). |
@@ -28,7 +28,7 @@ npm run setup
 npm run dev
 ```
 
-The web app runs at http://localhost:3000 and the API at http://localhost:8000 (docs at `/docs`). The browser only calls Next, which forwards `/api/*` to FastAPI. Open http://localhost:3000/dev to see every endpoint's response.
+The web app runs at http://localhost:3000 and the API at http://localhost:8000 (docs at `/docs`). `npm run dev` doesn't auto-reload the API (on Windows uvicorn's reloader takes the whole console down); for back-end work run `npm run dev:api:watch` and `npm run dev:web` in two terminals. The browser only calls Next, which forwards `/api/*` to FastAPI. Open http://localhost:3000/dev to see every endpoint's response.
 
 ## Everyday commands
 
