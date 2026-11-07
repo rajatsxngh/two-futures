@@ -58,31 +58,30 @@ function formatLike(value: number, decimals: number, commas: boolean) {
 }
 
 export function CountUp({ text, durationMs = 900 }: { text: string; durationMs?: number }) {
-  const [shown, setShown] = useState(text);
+  // The true value always renders; an in-between frame only shows while an animation for *this* text runs.
+  // So a paused animation (background tab) or an unparseable value can never leave a stale number on screen.
+  const [frame, setFrame] = useState<{ for: string; value: string } | null>(null);
   const prev = useRef(text);
 
   useEffect(() => {
     const from = parseDisplay(prev.current);
     const to = parseDisplay(text);
     prev.current = text;
-    if (!from || !to || from.value === to.value || from.before !== to.before || from.after !== to.after) {
-      const id = requestAnimationFrame(() => setShown(text));
-      return () => cancelAnimationFrame(id);
-    }
+    if (!from || !to || from.value === to.value || from.before !== to.before || from.after !== to.after) return;
     const start = performance.now();
     let id = 0;
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / durationMs);
       const eased = 1 - Math.pow(1 - t, 3);
       const v = from.value + (to.value - from.value) * eased;
-      setShown(t < 1 ? `${to.before}${formatLike(v, to.decimals, to.commas)}${to.after}` : text);
+      setFrame(t < 1 ? { for: text, value: `${to.before}${formatLike(v, to.decimals, to.commas)}${to.after}` } : null);
       if (t < 1) id = requestAnimationFrame(tick);
     };
     id = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(id);
   }, [text, durationMs]);
 
-  return <span className="tabular">{shown}</span>;
+  return <span className="tabular">{frame && frame.for === text ? frame.value : text}</span>;
 }
 
 // ---------------------------------------------------------------------------

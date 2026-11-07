@@ -97,7 +97,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M6: Today and Forecast screens (F1, F2, F3 UI)
+## M6: Today and Forecast screens (F1, F2, F3 UI) ✅ done
 **Depends on:** M3, M4 (and M1's contracts)
 **Goal:** the first two screens judges see, on real engine data.
 
@@ -110,7 +110,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M7: Two Futures, what-if drawer and next step (F4, F6, F7 UI)
+## M7: Two Futures, what-if drawer and next step (F4, F6, F7 UI) ✅ done
 **Depends on:** M5, M6
 **Goal:** the whole demo story works **by tapping, with no voice**. This is the backbone the voice agent plugs into.
 
@@ -123,7 +123,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M8: Future You voice agent (F5) ── P0 complete
+## M8: Future You voice agent (F5) ── P0 complete · 🟡 wired, live voice untested (needs ElevenLabs key)
 **Depends on:** M7 (client tools and screens), M4 (fact sheets)
 **Goal:** talk out loud to either future self, with only engine numbers.
 

@@ -90,6 +90,10 @@ function VoiceSessionInner({
   tools,
   onToolEvent,
   onStatusChange,
+  queued,
+  onQueuedSent,
+  onAgentReply,
+  onError,
   signedUrlEndpoint = "/api/voice/signed-url",
   className,
   captions,
@@ -106,17 +110,27 @@ function VoiceSessionInner({
   const { isSpeaking } = useConversationMode();
 
   const [fetching, setFetching] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<string | null>(null);
+  const onErrorRef = useRef(onError);
+  useEffect(() => {
+    onErrorRef.current = onError;
+  });
+  const setError = useCallback((message: string | null) => {
+    setErrorState(message);
+    if (message) onErrorRef.current?.(message);
+  }, []);
   const [dropped, setDropped] = useState(false);
   const [toolsRunning, setToolsRunning] = useState(0);
   const [typed, setTyped] = useState("");
   const [mode, setMode] = useState<SessionMode | null>(null);
 
   // Latest props for callbacks that outlive renders.
-  const latest = useRef({ path, factSheet, tools, onToolEvent });
+  const latest = useRef({ path, factSheet, tools, onToolEvent, onAgentReply });
   useEffect(() => {
-    latest.current = { path, factSheet, tools, onToolEvent };
+    latest.current = { path, factSheet, tools, onToolEvent, onAgentReply };
   });
+  // True after the user says or types something, until the agent's next finished reply.
+  const awaitingReplyRef = useRef(false);
   const pendingTextRef = useRef<string | null>(null);
   const streamedIdRef = useRef<string | null>(null);
   const userEndedRef = useRef(false);
@@ -142,8 +156,16 @@ function VoiceSessionInner({
     ({ message, role }) => {
       if (!message) return;
       if (role === "user") {
+        awaitingReplyRef.current = true;
         pushCaption({ role: "user", text: message });
         return;
+      }
+      // Report a finished answer (her opening line doesn't count as one).
+      const opening = latest.current.factSheet.opening_line.slice(0, 24);
+      const isOpening = opening.length > 0 && message.trim().startsWith(opening);
+      if (!isOpening && awaitingReplyRef.current) {
+        awaitingReplyRef.current = false;
+        latest.current.onAgentReply?.(latest.current.path, message);
       }
       setCaptions((list) => {
         const last = list[list.length - 1];
@@ -294,7 +316,7 @@ function VoiceSessionInner({
         },
       });
     },
-    [clientTools, controls, onActiveModeChange, onAgentChatResponsePart, onMessage, signedUrlEndpoint],
+    [clientTools, controls, onActiveModeChange, onAgentChatResponsePart, onMessage, setError, signedUrlEndpoint],
   );
 
   const end = useCallback(() => {
@@ -366,9 +388,35 @@ function VoiceSessionInner({
     if (!text) return;
     setTyped("");
     pushCaption({ role: "user", text, typed: true });
+    awaitingReplyRef.current = true;
     if (connected) controls.sendUserMessage(text);
     else if (!connecting) void begin("text", text);
   };
+
+  // ---- queued questions (typed on a card, or "Ask both") ------------------
+  // Right after a path switch the auto-start owns the first connection; wait for it.
+  const waitForAuto = useRef(autoStart !== null);
+  useEffect(() => {
+    if (connected || error) waitForAuto.current = false;
+  }, [connected, error]);
+  const sentQueue = useRef<number | null>(null);
+  useEffect(() => {
+    if (!queued || sentQueue.current === queued.id) return;
+    if (!connected && (connecting || waitForAuto.current)) return;
+    const { id, text } = queued;
+    // Deferred a tick (like the auto-start above) so state updates don't run inside the effect body.
+    // Marked sent only when it actually goes, so a re-run that cancels this timer retries it.
+    const t = setTimeout(() => {
+      if (sentQueue.current === id) return;
+      sentQueue.current = id;
+      pushCaption({ role: "user", text, typed: true });
+      awaitingReplyRef.current = true;
+      if (connected) controls.sendUserMessage(text);
+      else void begin(mode ?? "text", text);
+      onQueuedSent?.(id);
+    }, 0);
+    return () => clearTimeout(t);
+  }, [queued, connected, connecting, controls, begin, mode, pushCaption, onQueuedSent]);
 
   // Keep the newest caption in view.
   const captionsRef = useRef<HTMLDivElement>(null);

@@ -17,10 +17,14 @@ import type {
   TransferResponse,
   UpdatePlanResponse,
 } from "./api";
+import type { ToolEvent, VoiceStatus } from "@/components/voice/types";
 
 export type Screen = "today" | "forecast" | "futures" | "next";
 
 export type AskedQuestion = { path: PathId; text: string; at: number };
+
+/** A typed question waiting to be sent into the voice session (id changes per question). */
+export type QueuedQuestion = { id: number; text: string; path: PathId };
 
 export type AppState = {
   customer: CustomerId;
@@ -43,8 +47,15 @@ export type AppState = {
   showIndicators: boolean;
   /** Which future self is selected on Two Futures (the voice lane starts that path's session). */
   activePath: PathId | null;
-  /** Typed questions to a future self. The voice lane replaces this with a real session. */
+  /** Typed questions to a future self (also sent into the voice session). */
   questions: AskedQuestion[];
+  /** Next question for the voice session to send; cleared once sent. */
+  voiceQueue: QueuedQuestion | null;
+  /** "Ask both": the question still to be asked of the plan path once the same path answers. */
+  askBothPending: string | null;
+  voiceStatus: VoiceStatus;
+  /** Every agent tool call and outcome, newest last (the M9 activity panel reads this). */
+  toolEvents: ToolEvent[];
 };
 
 export const initialState: AppState = {
@@ -65,6 +76,10 @@ export const initialState: AppState = {
   showIndicators: false,
   activePath: null,
   questions: [],
+  voiceQueue: null,
+  askBothPending: null,
+  voiceStatus: "idle",
+  toolEvents: [],
 };
 
 let state: AppState = initialState;

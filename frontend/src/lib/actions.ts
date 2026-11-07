@@ -10,6 +10,7 @@
  */
 import { api, type CustomerId, type PathId, type TransferRequest, type TransferResponse, type UpdatePlanResponse, type WhatIfRequest } from "./api";
 import { getState, initialState, setState, type Screen } from "./store";
+import type { ToolEvent, VoiceStatus } from "@/components/voice/types";
 
 // ---------------------------------------------------------------------------
 // Agent-facing tools (M8 registers these)
@@ -27,7 +28,9 @@ export async function updatePlan(input: UpdatePlanInput): Promise<UpdatePlanResp
   setState({ whatIfPending: true, error: null });
   try {
     const res = await api.updatePlan({ ...input, customer });
-    setState({ whatIf: res, whatIfPending: false });
+    // Futures now include every active what-if, so the plan card, fact sheets and next step all agree.
+    const futures = await api.futures(customer).catch(() => null);
+    setState((s) => ({ whatIf: res, whatIfPending: false, futures: futures ?? s.futures }));
     return res;
   } catch (e) {
     setState({ whatIfPending: false, error: errorText(e) });
@@ -152,12 +155,52 @@ export function selectFuture(path: PathId | null) {
   setState({ activePath: path });
 }
 
-/** Typed question to one future self. M8 swaps this for the real agent session. */
+let queueId = 0;
+
+/** Typed question to one future self: opens that path's voice session and sends it there. */
 export function askFuture(path: PathId, text: string) {
   const q = text.trim();
   if (!q) return;
-  console.info(`[future-you] ask ${path}:`, q);
-  setState((s) => ({ activePath: path, questions: [...s.questions, { path, text: q, at: Date.now() }] }));
+  setState((s) => ({
+    activePath: path,
+    questions: [...s.questions, { path, text: q, at: Date.now() }],
+    voiceQueue: { id: ++queueId, text: q, path },
+  }));
+}
+
+/** "Ask both": the same path answers first, then the plan path gets the same question. */
+export function askBoth(text: string) {
+  const q = text.trim();
+  if (!q) return;
+  setState({ askBothPending: q });
+  askFuture("same_path", q);
+}
+
+/** The voice session sent a queued question. */
+export function queuedQuestionSent(id: number) {
+  if (getState().voiceQueue?.id === id) setState({ voiceQueue: null });
+}
+
+/** A future self finished a reply. Continues "Ask both" on the plan path. */
+export function agentReplied(path: PathId) {
+  const pending = getState().askBothPending;
+  if (pending && path === "same_path") {
+    setState({ askBothPending: null });
+    askFuture("plan", pending);
+  }
+}
+
+/** The voice session failed: stop waiting on "Ask both". */
+export function voiceFailed() {
+  if (getState().askBothPending) setState({ askBothPending: null });
+}
+
+export function recordToolEvent(e: ToolEvent) {
+  setState((s) => ({ toolEvents: [...s.toolEvents, e].slice(-60) }));
+}
+
+export function setVoiceStatus(status: VoiceStatus) {
+  if (getState().voiceStatus !== status) setState({ voiceStatus: status });
 }
 
 function errorText(e: unknown) {

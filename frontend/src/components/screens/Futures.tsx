@@ -1,10 +1,30 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import type { LifeEvent, Metric, PathId, PathResult } from "@/lib/api";
-import { askFuture, goTo, openWhatIf, selectFuture } from "@/lib/actions";
+import {
+  agentReplied,
+  askBoth,
+  askFuture,
+  goTo,
+  highlightMetric,
+  openWhatIf,
+  queuedQuestionSent,
+  recordToolEvent,
+  selectFuture,
+  setVoiceStatus,
+  startTransfer,
+  updatePlan,
+  voiceFailed,
+} from "@/lib/actions";
 import { useApp } from "@/lib/store";
+import { VoiceSession, type VoiceTools } from "../voice";
 import { CountUp, MetricValue } from "../ui";
+
+// The agent's client tools are the same functions the buttons use, so a spoken
+// what-if or "yes" changes exactly the same state as a tap.
+const VOICE_TOOLS: VoiceTools = { updatePlan, startTransfer, highlightMetric };
+const PATH_LABEL: Record<PathId, string> = { same_path: "Same path", plan: "With a plan" };
 
 export function FuturesScreen() {
   const futures = useApp((s) => s.futures)!;
@@ -23,6 +43,8 @@ export function FuturesScreen() {
         <FutureSide id="plan" path={planPath} year={futures.target_year} />
       </div>
 
+      <VoicePanel />
+      <AskBoth />
       <WhatIfResult />
 
       <div className="grid grid-cols-2 gap-2">
@@ -159,6 +181,92 @@ function AskBox({ path, warm }: { path: PathId; warm: boolean }) {
         </button>
       </form>
     </div>
+  );
+}
+
+/** The live conversation with whichever future self is selected. */
+function VoicePanel() {
+  const path = useApp((s) => s.activePath);
+  const sheets = useApp((s) => s.futures?.fact_sheets);
+  const queue = useApp((s) => s.voiceQueue);
+  const name = useApp((s) => s.profile?.customer.name ?? "You");
+  const [configured, setConfigured] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/voice/signed-url?check=1", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((b: { configured?: boolean }) => alive && setConfigured(Boolean(b.configured)))
+      .catch(() => alive && setConfigured(false));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  if (!path || !sheets) return null;
+  const warm = path === "plan";
+  return (
+    <section
+      aria-label={`Talking to ${name} 2031`}
+      className={`fade-in rounded-2xl border-2 bg-white p-3 ${warm ? "border-plan/40" : "border-same/30"}`}
+    >
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <p className={`text-xs font-bold uppercase tracking-wide ${warm ? "text-plan" : "text-same"}`}>
+          Talking to {name} 2031 · {PATH_LABEL[path]}
+        </p>
+        <button onClick={() => selectFuture(null)} className="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted hover:text-navy">
+          Close
+        </button>
+      </div>
+      {configured === false && (
+        <p className="mb-2 rounded-lg bg-amber-50 px-2.5 py-1.5 text-xs leading-snug text-amber-800">
+          Live voice is off: add ELEVENLABS_API_KEY and ELEVENLABS_AGENT_ID to frontend/.env.local, then restart.
+        </p>
+      )}
+      <VoiceSession
+        path={path}
+        factSheet={sheets[path]}
+        tools={VOICE_TOOLS}
+        onToolEvent={recordToolEvent}
+        onStatusChange={setVoiceStatus}
+        queued={queue && queue.path === path ? queue : null}
+        onQueuedSent={queuedQuestionSent}
+        onAgentReply={agentReplied}
+        onError={voiceFailed}
+      />
+    </section>
+  );
+}
+
+/** One typed question to both futures in turn: same path first, then the plan. */
+function AskBoth() {
+  const [text, setText] = useState("");
+  const pending = useApp((s) => s.askBothPending);
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    askBoth(text);
+    setText("");
+  };
+  return (
+    <form onSubmit={submit} className="flex gap-2">
+      <label className="sr-only" htmlFor="ask-both">
+        Ask both futures
+      </label>
+      <input
+        id="ask-both"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Ask both, e.g. Was buying the car worth it?"
+        className="min-w-0 flex-1 rounded-full border border-line bg-white px-3 py-2 text-sm text-navy placeholder:text-muted focus:border-accent focus:outline-none"
+      />
+      <button
+        type="submit"
+        disabled={!text.trim() || pending !== null}
+        className="shrink-0 rounded-full bg-navy px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+      >
+        {pending ? "Asking…" : "Ask both"}
+      </button>
+    </form>
   );
 }
 

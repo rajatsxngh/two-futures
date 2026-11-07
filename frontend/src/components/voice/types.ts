@@ -67,5 +67,13 @@ export interface VoiceSessionProps {
   signedUrlEndpoint?: string;
   /** Start push-to-talk instead of an open mic (for loud rooms). */
   defaultPushToTalk?: boolean;
+  /** A question to send as if typed. Starts a text session if none is live. Send a new id for each question. */
+  queued?: { id: number; text: string } | null;
+  /** Called once `queued` has been sent (or handed to a starting session). */
+  onQueuedSent?: (id: number) => void;
+  /** Called when the agent finishes answering a user message (not for her opening line). */
+  onAgentReply?: (path: PathId, text: string) => void;
+  /** Called when a session can't start or fails (no key, mic blocked, network). */
+  onError?: (message: string) => void;
   className?: string;
 }
