@@ -2,7 +2,9 @@
 
 Paste each section into the matching Devpost field. Everything here is true of the current build. Before submitting, check the line marked **[confirm]**.
 
-**Tracks:** PNC 360° Financial Health Navigator · MLH Best Use of ElevenLabs (separate from the sponsor limit) · general prizes.
+**Event:** [HackUTD 2026: ZeroDay](https://hackutd-zeroday.devpost.com/). Team registration (first submit) by **11:00 PM Saturday 11/7**; final edits by **12:00 PM Sunday 11/8** (Dallas time).
+
+**Tracks:** tick **PNC Track**. You may add up to two more sponsor tracks only if their challenge statement truly fits, plus one HackUTD track (the **Design Track** fits best). Every project is automatically in the General Track. There is **no ElevenLabs prize track** at this event, and none of the listed [MLH] tracks (Gemini, Solana, Tiger Data, Vultr, MongoDB Atlas, GoDaddy, SpaceXSI) fit this project, so don't claim them.
 
 ---
 
@@ -84,7 +86,7 @@ Next.js, React, TypeScript, Tailwind CSS, Recharts, Python, FastAPI, NumPy, Pyda
 
 - [ ] Devpost project submitted (aim for 9:00 PM Saturday; registration closes at 11:00 PM; a saved draft doesn't count)
 - [ ] Every teammate added
-- [ ] Tracks chosen: PNC, MLH Best Use of ElevenLabs
+- [ ] Tracks chosen: PNC Track (+ Design Track; other sponsor tracks only if they truly fit)
 - [ ] Public demo video, 2 minutes or less (script: [DEMO_SCRIPT.md](DEMO_SCRIPT.md))
 - [ ] Screenshots uploaded (list above)
 - [ ] Public repo with the README
