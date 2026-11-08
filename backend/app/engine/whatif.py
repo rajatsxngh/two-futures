@@ -19,6 +19,11 @@ import numpy as np
 
 from ..models import PathResult, WhatIfRequest
 from .fmt import round_half_up, usd
+
+
+def _mo(x: float) -> str:
+    """Months with the same rounding as the on-screen numbers (half up)."""
+    return f"{round_half_up(x, 1):.1f}"
 from .params import Params
 from .sim import Adjust, HomePlan, SimResult
 
@@ -106,7 +111,7 @@ def sentence(wi: WhatIfRequest, before: PathResult, after: PathResult, months: l
     c0, c1 = before.snapshots[-1].cushion_months, after.snapshots[-1].cushion_months
     nw = after.snapshots[-1].net_worth - before.snapshots[-1].net_worth
     if abs(c1 - c0) >= 0.05:
-        tail = f"By {year}, your cushion would be about {c1:.1f} months instead of {c0:.1f}."
+        tail = f"By {year}, your cushion would be about {_mo(c1)} months instead of {_mo(c0)}."
     elif abs(nw) >= 50:
         tail = f"By {year}, that's about {_about(nw)} {'more' if nw > 0 else 'less'} in net worth."
     else:
@@ -122,22 +127,46 @@ def sentence(wi: WhatIfRequest, before: PathResult, after: PathResult, months: l
             liquid = after_sim.balances[p.checking.id][:, h.start] + (
                 after_sim.balances[p.savings.id][:, h.start] if p.savings else 0)
             short = float(np.median(np.maximum(h.down - liquid, 0)))
-            if short >= 50:
+            card = p.card
+            room = (float(np.median(np.maximum(card.limit - after_sim.balances[card.id][:, h.start], 0)))
+                    if card and card.limit else (short if card else 0.0))
+            if short >= 50 and short - room >= 50:
+                out += (f" You'd be about {_about(short)} short for the down payment then: more than the card's "
+                        f"{usd(room)} of room, so about {_about(short - room)} of bills would go unpaid.")
+            elif short >= 50:
                 out += f" You'd be about {_about(short)} short for the down payment then, so that part would go on the card."
         return out
     if wi.job_loss_months:
         s = start_index(months, wi)
         e = min(len(months), s + wi.job_loss_months)
-        low = float(np.median(after_sim.cushion[:, s + 1:e + 2].min(axis=1)))
-        card_peak = after.snapshots[-1].card_debt
         k = wi.job_loss_months
         gone = f"{k} month{'s' if k != 1 else ''} without pay"
-        out = (f"Going {gone}, your savings would run out and the rest would go on the card; "
-               f"you'd be back to about {c1:.1f} months of cushion by {year}." if low < 0.05 else
-               f"Going {gone}, your cushion would bottom out around {low:.1f} months, "
-               f"and you'd be back to about {c1:.1f} months by {year}.")
-        if card_peak >= 1:
-            out += f" Your card would end {year} at about {usd(card_peak)}."
+        low = float(np.median(after_sim.cushion[:, s + 1:e + 2].min(axis=1)))
+        unpaid = after_sim.balances["unpaid_bills"]
+        peak_unpaid = float(np.median(unpaid.max(axis=1)))
+        end_unpaid = float(np.median(unpaid[:, -1]))
+        card = p.card if p is not None else None
+        card_maxed = bool(card and card.limit and
+                          float(np.median(after_sim.balances[card.id].max(axis=1))) >= card.limit - 1)
+        if low >= 0.05:
+            out = f"Going {gone}, your cushion would bottom out around {_mo(low)} months."
+        else:
+            hits = ["your savings would run out"]
+            if card_maxed:
+                hits.append(f"your card would hit its {usd(card.limit)} limit")
+            if peak_unpaid >= 50:
+                hits.append(f"about {_about(peak_unpaid)} of bills would go unpaid")
+            joined = hits[0] if len(hits) == 1 else ", ".join(hits[:-1]) + (", and " if len(hits) > 2 else " and ") + hits[-1]
+            out = f"Going {gone}, {joined}."
+        if end_unpaid >= 50:
+            out += f" By {year} you'd still be catching up, with about {_about(end_unpaid)} of bills unpaid."
+        elif c1 >= 0.05:
+            out += f" You'd be back to about {_mo(c1)} months of cushion by {year}."
+        else:
+            out += f" By {year} you'd still be rebuilding your savings."
+        card_end = after.snapshots[-1].card_debt
+        if card_end >= 1:
+            out += f" Your card would end {year} at about {usd(card_end)}."
         return out
     if wi.income_change_yearly:
         verb = "Taking the new job" if wi.preset in ("new_job", "move") else (

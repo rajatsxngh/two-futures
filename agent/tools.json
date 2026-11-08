@@ -130,7 +130,7 @@
         "properties": {
           "metric_id": {
             "type": "string",
-            "description": "One of: same_path.2031.cushion_months, same_path.2031.card_debt, same_path.2031.car_paid_off, same_path.2031.ira, plan.2031.cushion_months, plan.2031.card_debt, plan.2031.car_paid_off, plan.2031.ira, next_step.score_2031. Use the ids for your own path."
+            "description": "One of: same_path.2031.cushion_months, same_path.2031.card_debt, same_path.2031.card_interest, same_path.2031.ira, plan.2031.cushion_months, plan.2031.card_debt, plan.2031.card_interest, plan.2031.ira, next_step.score_2031. Use the ids for your own path."
           }
         }
       }

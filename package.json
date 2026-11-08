@@ -4,16 +4,18 @@
   "scripts": {
     "setup": "uv --directory backend sync && npm --prefix frontend install && npm install",
     "dev": "concurrently -n api,web -c blue,magenta \"npm:dev:api\" \"npm:dev:web\"",
-    "dev:api": "uv --directory backend run uvicorn app.main:app --port 8000",
+    "dev:api": "uv --directory backend run uvicorn app.main:app --host 127.0.0.1 --port 8000",
     "dev:web": "npm --prefix frontend run dev",
     "test": "uv --directory backend run pytest -q",
     "fixtures": "uv --directory backend run python scripts/make_fixtures.py",
     "gen:types": "uv --directory backend run python scripts/export_openapi.py && npm --prefix frontend run gen:types",
     "check": "npm test && npm --prefix frontend run typecheck && npm --prefix frontend run lint",
     "data": "uv --directory backend run python scripts/generate_data.py",
-    "dev:api:watch": "uv --directory backend run uvicorn app.main:app --reload --reload-dir app --port 8000",
+    "dev:api:watch": "uv --directory backend run uvicorn app.main:app --host 127.0.0.1 --reload --reload-dir app --port 8000",
     "agent:create": "uv --directory backend run python scripts/create_elevenlabs_agent.py",
-    "agent:update": "uv --directory backend run python scripts/create_elevenlabs_agent.py --update"
+    "agent:update": "uv --directory backend run python scripts/create_elevenlabs_agent.py --update",
+    "demo": "npm --prefix frontend run build && concurrently -n api,web -c blue,magenta \"npm:dev:api\" \"npm:demo:web\"",
+    "demo:web": "npm --prefix frontend run start"
   },
   "devDependencies": {
     "concurrently": "^10.0.7"

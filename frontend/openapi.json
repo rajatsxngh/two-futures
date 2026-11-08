@@ -1882,7 +1882,18 @@
           },
           "card": {
             "$ref": "#/components/schemas/Metric",
-            "description": "About how much would go on the card for the months not covered"
+            "description": "About how much would go on the card for the months not covered (up to its limit)"
+          },
+          "unpaid": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Metric"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Bills that couldn't be paid once savings and the card ran out"
           },
           "sentence": {
             "type": "string",

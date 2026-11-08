@@ -33,6 +33,14 @@ const PATH_LABEL: Record<PathId, string> = { same_path: "Same path", plan: "With
 
 let idCounter = 0;
 
+/**
+ * The agent's expressive voice can add audio tags like "[sad]" or "[laughs]". They shape how she sounds,
+ * so they stay in what she says, but captions are for reading: hide them there.
+ */
+export function stripVoiceTags(text: string): string {
+  return text.replace(/\[[^\]\n]{1,30}\]\s*/g, "").trimStart();
+}
+
 /** Streamed parts and the final message can both arrive, in either order: never show the same line twice in a row. */
 function collapse(list: Caption[]): Caption[] {
   const n = list.length;
@@ -151,6 +159,8 @@ function VoiceSessionInner({
   });
   // True after the user says or types something, until the agent's next finished reply.
   const awaitingReplyRef = useRef(false);
+  // The id of the last queued question already sent (or handed to a starting session).
+  const sentQueue = useRef<number | null>(null);
   const pendingTextRef = useRef<string | null>(null);
   const streamedIdRef = useRef<string | null>(null);
   const userEndedRef = useRef(false);
@@ -314,7 +324,9 @@ function VoiceSessionInner({
         dynamicVariables: {
           path: latest.current.path,
           fact_sheet: fs.text,
-          opening_line: fs.opening_line,
+          // Started by a question (Ask both, a card's "Ask me"): skip the greeting and answer straight away.
+          // An empty first message makes the agent wait for the user's message instead of greeting.
+          opening_line: firstText ? "" : fs.opening_line,
         },
         clientTools: clientTools(),
         onMessage,
@@ -347,17 +359,33 @@ function VoiceSessionInner({
     setMode(null);
   }, [controls, onActiveModeChange]);
 
-  // Start the other future right after a path switch, if one was live.
+  // Start the other future right after a path switch, if one was live. If a question is already
+  // waiting for this path ("Ask both"), start with it: no greeting, straight to the answer.
   const autoStarted = useRef(false);
+  const queuedRef = useRef(queued);
+  useEffect(() => {
+    queuedRef.current = queued;
+  });
   useEffect(() => {
     if (!autoStart || autoStarted.current) return;
     autoStarted.current = true;
-    const t = setTimeout(() => void begin(autoStart), 0);
+    const t = setTimeout(() => {
+      const q = queuedRef.current;
+      if (q && sentQueue.current !== q.id) {
+        sentQueue.current = q.id;
+        pushCaption({ role: "user", text: q.text, typed: true });
+        awaitingReplyRef.current = true;
+        void begin(autoStart, q.text);
+        onQueuedSent?.(q.id);
+      } else {
+        void begin(autoStart);
+      }
+    }, 0);
     return () => {
       clearTimeout(t);
       autoStarted.current = false;
     };
-  }, [autoStart, begin]);
+  }, [autoStart, begin, pushCaption, onQueuedSent]);
 
   useEffect(() => {
     const s: VoiceStatus = status === "error" ? "error" : connecting ? "connecting" : connected ? "connected" : "idle";
@@ -420,7 +448,6 @@ function VoiceSessionInner({
   useEffect(() => {
     if (connected || error) waitForAuto.current = false;
   }, [connected, error]);
-  const sentQueue = useRef<number | null>(null);
   useEffect(() => {
     if (!queued || sentQueue.current === queued.id) return;
     if (!connected && (connecting || waitForAuto.current)) return;
@@ -433,11 +460,12 @@ function VoiceSessionInner({
       pushCaption({ role: "user", text, typed: true });
       awaitingReplyRef.current = true;
       if (connected) controls.sendUserMessage(text);
-      else void begin(mode ?? "text", text);
+      // Live voice mode answers asked questions out loud ("same voice, two lives"); Text mode stays typed.
+      else void begin(mode ?? (hideMic ? "text" : "voice"), text);
       onQueuedSent?.(id);
     }, 0);
     return () => clearTimeout(t);
-  }, [queued, connected, connecting, controls, begin, mode, pushCaption, onQueuedSent]);
+  }, [queued, connected, connecting, controls, begin, mode, hideMic, pushCaption, onQueuedSent]);
 
   // Keep the newest caption in view.
   const captionsRef = useRef<HTMLDivElement>(null);
@@ -477,7 +505,8 @@ function VoiceSessionInner({
         ) : (
           <ul className="flex flex-col gap-2">
             {captions.map((c) =>
-              c.role === "system" ? (
+              // A line that was only an expressive tag ("[warmly]") has nothing to read: skip it.
+              c.role === "agent" && !c.live && !stripVoiceTags(c.text).trim() ? null : c.role === "system" ? (
                 <li key={c.id} className="text-center text-xs uppercase tracking-wide text-slate-400">
                   {c.text}
                 </li>
@@ -491,7 +520,7 @@ function VoiceSessionInner({
                       c.role === "user" ? "bg-[#1b2a4a] text-white" : "bg-white text-[#1b2a4a] shadow-sm"
                     } ${c.live ? "opacity-80" : ""}`}
                   >
-                    {c.text}
+                    {c.role === "agent" ? stripVoiceTags(c.text) : c.text}
                     {c.live && <span className="ml-1 animate-pulse">▍</span>}
                   </span>
                 </li>

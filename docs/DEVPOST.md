@@ -1,6 +1,6 @@
 # Devpost draft
 
-Paste each section into the matching Devpost field. Everything here is true of the current build. Before submitting, check the line marked **[confirm]**.
+Paste each section into the matching Devpost field. Everything here is true of the current build. It's written in the first person: this is a solo project.
 
 **Event:** [HackUTD 2026: ZeroDay](https://hackutd-zeroday.devpost.com/). Team registration (first submit) by **11:00 PM Saturday 11/7**; final edits by **12:00 PM Sunday 11/8** (Dallas time).
 
@@ -20,7 +20,7 @@ Meet the you of 2031, then take the first step today.
 
 More than a third of adults told the Fed they wouldn't cover a $400 surprise with cash, and most of them have a bank app. Bank apps explain what already happened. Most people don't know what to ask a chatbot, and the future feels like someone else's problem.
 
-Research on future selves says that changes when the future feels real. In an MIT and UCLA study, people who met two future selves, one for each choice, reconsidered their decision about three times as often as the control group (34% vs 11%). PNC asked for a navigator that helps people see their whole picture, understand it, and feel confident about their next move. We built that around two future selves.
+Research on future selves says that changes when the future feels real. In an MIT and UCLA study, people who met two future selves, one for each choice, reconsidered their decision about three times as often as the control group (34% vs 11%). PNC asked for a navigator that helps people see their whole picture, understand it, and feel confident about their next move. I built that around two future selves.
 
 ## What it does
 
@@ -31,32 +31,32 @@ Research on future selves says that changes when the future feels real. In an MI
 - **Try a decision:** a new job, a move, a big purchase, saving more, losing your job, buying a home, by voice or by tap. The numbers and her story change.
 - **Take the first step:** one next step ("Move $150 from Spend to savings every payday"), started with one tap, and only after a clear yes.
 
-Our demo customer, Maya (27, a nurse in Dallas), scores 55 today. On the same path she reaches 2031 with her card still at $3,900 and about $4,954 paid in interest. With the plan, her card is at $0, her score is 92 and her IRA is about $24,100 instead of $15,700.
+My demo customer, Maya (27, a nurse in Dallas), scores 55 today. On the same path she reaches 2031 with her card still at $3,900 and about $4,954 paid in interest. With the plan, a 2-month starter cushion comes first, then the same $150 attacks the card: it's gone by September 2028, the car is paid off 8 months early, she pays about $962 in card interest instead of $4,954, and her score reaches 92.
 
-## How we built it
+## How I built it
 
 - **Engine (Python, NumPy, FastAPI):** health scoring from raw transactions; spending patterns learned from 12 months of history; a 1,000-run Monte Carlo forecast; fixed plan rules (no AI); and two 5-year paths that share the same random surprises and the same 2028 car repair, so only the decisions differ. What-ifs re-run the plan path in about half a second.
 - **Every number shows its math:** the API returns each on-screen number with its formula, inputs, thresholds and assumptions. Tap any number to see it.
-- **Voice (ElevenLabs Agents with `@elevenlabs/react`):** one agent plays both future selves. The app hands her a short fact sheet the engine wrote. She can only get new numbers through three client tools (`update_plan`, `start_transfer`, `highlight_metric`) that call our engine. A live activity panel shows every call in plain words.
+- **Voice (ElevenLabs Agents with `@elevenlabs/react`):** one agent plays both future selves. The app hands her a short fact sheet the engine wrote. She can only get new numbers through three client tools (`update_plan`, `start_transfer`, `highlight_metric`) that call my engine. A live activity panel shows every call in plain words.
 - **Front end (Next.js, React, Tailwind, Recharts):** a phone-shaped app with the activity panel beside it, live captions, push-to-talk for loud rooms, and a typed fallback.
 - **Demo safety net:** an offline "saved answers" agent that follows the same rules and reads the engine's numbers, a pre-demo checklist page, and one-click reset.
 
-## Challenges we ran into
+## Challenges I ran into
 
-- **Keeping the AI honest with numbers.** Our rule is "code does the math, AI does the talking." The agent gets facts in and says words out; new numbers only come back from tools, with a ready-made sentence. We built an automatic grounding test that checks every dollar amount and year she says against what she was given.
-- **Making the comparison fair.** Both futures get identical random surprises, so the plan wins on decisions, not luck. That also meant reporting results that didn't match our first story: Maya's existing savings habit covers the 2028 repair on both paths, so we tell that truthfully and let the card's interest make the point.
+- **Keeping the AI honest with numbers.** My rule is "code does the math, AI does the talking." The agent gets facts in and says words out; new numbers only come back from tools, with a ready-made sentence. I built an automatic grounding test that checks every dollar amount and year she says against what she was given.
+- **Making the comparison fair.** Both futures get identical random surprises, so the plan wins on decisions, not luck. That also meant reporting results that didn't match my first story: Maya's existing savings habit covers the 2028 repair on both paths, so I tell that truthfully and let the card's interest make the point.
 - **Voice in a loud hall:** push-to-talk, captions always on, a text mode, and an offline fallback.
 
-## Accomplishments that we're proud of
+## Accomplishments that I'm proud of
 
 - The two-futures format, running on real-looking accounts, ending in a real action.
-- **10 of 10 grounded and 10 of 10 behaved** on our grounding test with the live ElevenLabs agent: every dollar amount and year she said was in her facts or a tool result.
+- **10 of 10 grounded and 10 of 10 behaved** on my grounding test with the live ElevenLabs agent: every dollar amount and year she said was in her facts or a tool result.
 - A health score computed from first principles: Maya's 55 comes out of her transactions, not a hard-coded number.
-- 71 automated back-end tests, and a forecast whose every number can explain itself.
+- 73 automated back-end tests, and a forecast whose every number can explain itself.
 
-## What we learned
+## What I learned
 
-**[confirm: replace with the team's own honest paragraph.]** Suggested start: the hard part wasn't the voice, it was trust. People only believe a future self if every number she says can be checked, so we put the engine first and made the AI's job small and visible.
+The hard part wasn't the voice, it was trust. People only believe a future self if every number she says can be checked, so I put the engine first and made the AI's job small and visible.
 
 ## What's next for Two Futures
 
@@ -85,7 +85,7 @@ Next.js, React, TypeScript, Tailwind CSS, Recharts, Python, FastAPI, NumPy, Pyda
 ## Submission checklist
 
 - [ ] Devpost project submitted (aim for 9:00 PM Saturday; registration closes at 11:00 PM; a saved draft doesn't count)
-- [ ] Every teammate added
+- [ ] Solo project: no teammates to add
 - [ ] Tracks chosen: PNC Track (+ Design Track; other sponsor tracks only if they truly fit)
 - [ ] Public demo video, 2 minutes or less (script: [DEMO_SCRIPT.md](DEMO_SCRIPT.md))
 - [ ] Screenshots uploaded (list above)

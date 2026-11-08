@@ -35,6 +35,7 @@ const PATH_LABEL: Record<PathId, string> = { same_path: "Same path", plan: "With
 
 export function FuturesScreen() {
   const futures = useApp((s) => s.futures)!;
+  const customer = useApp((s) => s.customer);
   const whatIf = useApp((s) => s.whatIf);
   const planPath = whatIf?.result ?? futures.paths.plan;
 
@@ -51,7 +52,7 @@ export function FuturesScreen() {
       </div>
 
       <VoicePanel />
-      <AskBoth />
+      {customer === "maya" && <AskBoth />}
       <WhatIfResult />
       <JobLossCheck />
 
@@ -198,6 +199,7 @@ function VoicePanel() {
   const sheets = useApp((s) => s.futures?.fact_sheets);
   const queue = useApp((s) => s.voiceQueue);
   const name = useApp((s) => s.profile?.customer.name ?? "You");
+  const customer = useApp((s) => s.customer);
   const mode = useApp((s) => s.voiceMode);
   const [configured, setConfigured] = useState<boolean | null>(null);
 
@@ -221,6 +223,23 @@ function VoicePanel() {
   }, []);
 
   if (!path || !sheets) return null;
+  if (customer !== "maya") {
+    // The agent's persona is written for Maya; a couple's future self would get a confused voice.
+    return (
+      <section className="fade-in rounded-2xl border-2 border-line bg-white p-3 text-sm text-navy">
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <p className="text-xs font-bold uppercase tracking-wide text-muted">Talking to 2031</p>
+          <button onClick={() => selectFuture(null)} className="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted hover:text-navy">
+            Close
+          </button>
+        </div>
+        <p className="leading-snug">
+          The future-self conversation is set up for Maya, the demo customer. Switch the customer to Maya at the top to talk to her
+          two futures. Everything else on this screen works for {name}.
+        </p>
+      </section>
+    );
+  }
   const warm = path === "plan";
   return (
     <section

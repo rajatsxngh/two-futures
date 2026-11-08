@@ -89,19 +89,36 @@ def request(method: str, path: str, key: str, body: dict | None = None) -> dict:
         sys.exit(f"ElevenLabs returned {e.code} for {method} {path}.\n{e.read().decode('utf-8', errors='replace')[:2000]}")
 
 
+TURN_TIMEOUT_SECS = 20  # how long she waits for you to speak before re-engaging (push-to-talk needs room)
+
+
 def update(env: dict[str, str], key: str) -> None:
-    """Push the current system prompt (and streaming caption events) to the saved agent."""
+    """Push agent/ to the saved agent: system prompt, tool definitions, caption events and turn timing."""
     agent_id = env.get("ELEVENLABS_AGENT_ID")
     if not agent_id:
         sys.exit("No ELEVENLABS_AGENT_ID saved yet. Run `npm run agent:create` first.")
     current = request("GET", f"/agents/{agent_id}", key)
     prompt_cfg = dict(current["conversation_config"]["agent"]["prompt"])
     prompt_cfg["prompt"] = (AGENT_DIR / "future-maya-system-prompt.txt").read_text(encoding="utf-8")
+
+    # tools: match the agent's attached tools by name and push agent/tools.json over them
+    wanted = {t["name"]: {k: v for k, v in t.items() if not k.startswith("_")}
+              for t in json.loads((AGENT_DIR / "tools.json").read_text(encoding="utf-8"))["tools"]}
+    for tool_id in prompt_cfg.get("tool_ids") or []:
+        name = request("GET", f"/tools/{tool_id}", key)["tool_config"]["name"]
+        if name in wanted:
+            request("PATCH", f"/tools/{tool_id}", key, {"tool_config": wanted.pop(name)})
+            print(f"updated tool {name}")
+    if wanted:
+        print(f"warning: not attached to the agent, so not updated: {', '.join(wanted)}")
+
     request("PATCH", f"/agents/{agent_id}", key, {"conversation_config": {
         "agent": {"prompt": {k: prompt_cfg[k] for k in ("prompt", "llm", "temperature", "tool_ids") if k in prompt_cfg}},
         "conversation": {"client_events": CLIENT_EVENTS},
+        "turn": {"turn_timeout": TURN_TIMEOUT_SECS},
     }})
-    print(f"updated agent {agent_id}: system prompt pushed ({len(prompt_cfg['prompt'])} chars), streaming captions on")
+    print(f"updated agent {agent_id}: system prompt pushed ({len(prompt_cfg['prompt'])} chars), "
+          f"streaming captions on, turn timeout {TURN_TIMEOUT_SECS}s")
 
 
 def main() -> None:

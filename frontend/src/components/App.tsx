@@ -96,7 +96,7 @@ function Header() {
     <header className="flex items-center justify-between border-b border-line px-4 pb-2 pt-3">
       <div className="flex items-center gap-2">
         <Logo />
-        <span className="text-base font-semibold text-navy">Future You</span>
+        <span className="text-base font-semibold text-navy">Two Futures</span>
       </div>
       <div className="flex items-center gap-2">
         <label className="sr-only" htmlFor="customer">

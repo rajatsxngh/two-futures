@@ -24,7 +24,7 @@ A 360° Financial Health Navigator built for PNC's HackUTD challenge. Future You
 | 2031 | Score | Cushion | Card debt | IRA | Card interest since 2026 |
 |---|---|---|---|---|---|
 | Same path | 73 | 4.6 months | $3,900 | $15,692 | about $4,954 |
-| With a plan | 92 | 5.9 months | $0 | $24,146 | about $2,068 |
+| With a plan | 92 | 5.9 months | $0 | $25,046 | about $962 |
 
 The plan's first step is **$150 from Spend to savings every payday**: the largest $25 step that keeps bad-case checking above $200 for the next year. Tap it to see why ([screenshot](docs/screenshots/7-show-the-math.png)).
 
@@ -56,7 +56,8 @@ flowchart LR
 
 - **Health score** ([health.py](backend/app/engine/health.py)): 8 indicators, each scored on a straight line between two thresholds, aligned with the Financial Health Network's Spend / Save / Borrow / Plan framework. Computed from raw transactions, so Maya's 55 comes out of her data rather than being typed in.
 - **Forecast** ([forecast.py](backend/app/engine/forecast.py), [sim.py](backend/app/engine/sim.py)): spending patterns learned from 12 months of history; 1,000 simulated runs; a 10% monthly chance of a $300–$2,000 surprise; the same random draws and the same 2028 car repair on both paths, so only the decisions differ.
-- **Plan rules** (no AI): build a cushion with an automatic payday transfer, split windfalls with the card, cancel unused subscriptions and trim flexible spending 20%, then pay debts highest-rate first, then fill savings to 6 months and the IRA.
+- **Plan rules** (no AI): an automatic payday transfer builds a 2-month starter cushion, then the same money pays debts highest-rate first (the 25% card is gone by September 2028, the car is paid off 8 months early), windfalls are split with the card, unused subscriptions are cancelled and flexible spending is trimmed 20%, then savings fill to 6 months and the rest goes to the IRA.
+- **Real limits:** the card can't go past its $5,000 limit. When savings and the card run out (say, a long job loss), the rest shows up honestly as unpaid bills, which count as late payments in the score.
 - **What-ifs** ([whatif.py](backend/app/engine/whatif.py)): pay changes after 22% federal and 7.65% payroll tax (no Texas state tax), spending, saving more (which means spending less), one-time costs, job loss, buying a home. Each returns the new numbers and one ready-made sentence.
 - **Every number has its math**: the API returns each on-screen number as a `Metric` with its formula, inputs, thresholds and assumptions. Tap any number to see it.
 
@@ -96,7 +97,7 @@ Open http://localhost:3000. The API runs at http://localhost:8000 (docs at `/doc
 
 | What | Result |
 |---|---|
-| Back-end tests (`npm test`) | **71 passing**: the 8 indicators and score 55 from raw data, forecast shape, rule 1 picks $150, both paths share the 2028 repair, what-ifs (Austin ≈ +$170/month), transfers need a yes, reset, job-loss check, buy a home, setup answers |
+| Back-end tests (`npm test`) | **73 passing**: the 8 indicators and score 55 from raw data, forecast shape, rule 1 picks $150, both paths share the 2028 repair, what-ifs (Austin ≈ +$170/month), transfers need a yes, reset, job-loss check, buy a home, setup answers, the card limit |
 | Grounding test (`/grounding`) | **Live ElevenLabs agent: 10 of 10 grounded, 10 of 10 behaved.** Saved answers: 10 of 10, 10 of 10. The checker reads digits and spoken numbers ("twenty-four thousand…", "twenty thirty-one") |
 | Speed | Both 5-year paths in about 0.2 s; a what-if in about 0.5 s; reset in one click |
 

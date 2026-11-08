@@ -8,12 +8,14 @@ charges each month (the balance never really shrinks), keep the existing
 automatic transfers, and let freed-up money sit in checking.
 
 Plan path (fixed order, no AI):
-  1. Cushion under 3 months: an automatic transfer every payday (amount from
-     `forecast.rule1_transfer`). It replaces the old monthly savings transfer.
+  1. Cushion under the starter level (2 months): an automatic transfer every payday
+     builds savings (amount from `forecast.rule1_transfer`). It replaces the old
+     monthly savings transfer.
   2. Card over 30% used: windfalls (a maturing CD) go half to the card, half to savings.
   3. Cancel unused subscriptions; spend less on flexible categories.
-  4. Cushion at 3 months: the transfer pays down debts, highest rate first
-     (mortgage excluded). When a debt is paid off, its payment joins the transfer.
+  4. Starter cushion in place: the transfer pays down debts, highest rate first
+     (mortgage excluded), so a 25% card isn't carried while savings earn almost
+     nothing. When a debt is paid off, its payment joins the transfer.
   5. Debts gone: fill savings to 6 months, then send the money to the IRA.
 """
 
@@ -102,6 +104,8 @@ class SimResult:
     transfer: float = 0.0
     income: np.ndarray | None = None  # monthly take-home per month, after what-ifs
     home: HomePlan | None = None
+    late: np.ndarray | None = None  # runs x months: bills unpaid at month end
+    card_limit: float = float("inf")
 
 
 def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_events: list[dict],
@@ -126,6 +130,10 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         hist["home_value"] = np.zeros((runs, n + 1))
     ira_extra = np.zeros((runs, n))
     card_interest = np.zeros((runs, n))
+    # Money nothing could cover (savings empty, card at its limit): bills that went unpaid.
+    unpaid = np.zeros(runs)
+    hist["unpaid_bills"] = np.zeros((runs, n + 1))
+    late = np.zeros((runs, n), dtype=bool)
     cushion = np.zeros((runs, n + 1))
     spend_typ = np.zeros((runs, n + 1))
 
@@ -149,6 +157,18 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
 
     def liquid() -> np.ndarray:
         return bal[chk] + (bal[sav] if sav else 0)
+
+    card_limit = float(cards[0].limit) if cards and cards[0].limit else float("inf")
+
+    def overflow(amount: np.ndarray) -> None:
+        """Money savings couldn't cover: onto the card up to its limit, the rest becomes unpaid bills."""
+        rest = amount
+        if cards:
+            c = cards[0]
+            x = np.minimum(amount, np.maximum(card_limit - bal[c.id], 0.0))
+            bal[c.id] += x
+            rest = amount - x
+        unpaid[:] += rest
 
     st = typical_spend()
     spend_typ[:, 0] = st
@@ -196,13 +216,19 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
             bal[sav] += p.reserve_contrib
             bal[chk] -= p.reserve_contrib
 
+        # catch up on unpaid bills first, with whatever checking has this month
+        catch_up = np.minimum(unpaid, np.maximum(bal[chk], 0))
+        bal[chk] -= catch_up
+        unpaid[:] -= catch_up
+
         # plan waterfall (rules 1, 4, 5)
         if plan:
             st = typical_spend(adj.spending[i] + home_payment)
             cush = liquid() / st
-            pool = np.zeros(runs) if adj.pause[i] else base_pool + freed + adj.pool[i]
+            # no plan transfers while out of work or behind on bills
+            pool = np.where(adj.pause[i] | (unpaid > 0.005), 0.0, base_pool + freed + adj.pool[i])
             bal[chk] -= pool
-            building = cush < A.CUSHION_TARGET
+            building = cush < A.STARTER_CUSHION
             to_sav = np.where(building, pool, 0.0)
             remaining = np.where(building, 0.0, pool)
             for d in snowball:
@@ -229,11 +255,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         from_sav = np.minimum(s, np.maximum(bal[sav], 0)) if sav else np.zeros(runs)
         if sav:
             bal[sav] -= from_sav
-        rest = s - from_sav
-        if cards:
-            bal[cards[0].id] += rest
-        else:
-            bal[chk] -= rest
+        overflow(s - from_sav)
         if ev:
             # how the scheduled event itself was paid (assume it comes first in the month)
             ev_sav = np.minimum(ev["amount"], from_sav)
@@ -263,8 +285,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
             pull = np.minimum(short, np.maximum(bal[sav], 0))
             bal[sav] -= pull
             short -= pull
-        if cards:
-            bal[cards[0].id] += short
+        overflow(short)
         bal[chk] += np.maximum(-bal[chk], 0)
 
         # rule 4: a paid-off debt's payment joins the transfer
@@ -278,6 +299,8 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         for a in accounts:
             bal[a.id] = np.where(np.abs(bal[a.id]) < 0.005, 0.0, bal[a.id])
             hist[a.id][:, i + 1] = bal[a.id]
+        hist["unpaid_bills"][:, i + 1] = unpaid
+        late[:, i] = unpaid > 0.5
         if home:
             hist["home_mortgage"][:, i + 1] = mortgage
             hist["home_value"][:, i + 1] = home.price if i >= home.start else 0.0
@@ -289,5 +312,6 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
     return SimResult(
         path=path, months=months, balances=hist, spending=spending, ira_extra=ira_extra, card_interest=card_interest, cushion=cushion,
         spend_typical=spend_typ, transfer=transfer, income=p.take_home_monthly + adj.income, home=home,
+        late=late, card_limit=card_limit,
         event_split={k: (float(np.median(a)), float(np.median(b))) for k, (a, b) in split_log.items()},
     )

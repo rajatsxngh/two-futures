@@ -243,3 +243,14 @@ Parallel coding (by teammates or by separate Claude sessions) needs **git**. Thi
 | M12 | F15–F18 + submission | Only if ahead / by 12:00 PM Sun |
 
 Small difference from the PRD: F11 (number highlight) moves into M9 because it shares wiring with the activity panel, and the grounding script moves into M10 because the safety net is where it pays off.
+
+---
+
+## After submission: fixes from the review
+
+- **Plan rule:** a 2-month starter cushion first, then the transfer pays debts highest rate first (was: a 3-month cushion before touching the 25% card). Card gone September 2028 (was January 2030), car paid off August 2029, 8 months early (was March 2030), card interest $962 (was $2,068). Same path unchanged.
+- **Card limit:** the card can't pass its $5,000 limit; what savings and the card can't cover becomes unpaid bills (caught up first, counted as debt and as late payments). A 12-month job loss now reads "your card would hit its $5,000 limit, and about $41,600 of bills would go unpaid", not a $102,351 card.
+- **Key numbers:** "Car paid off" (a one-month difference) replaced by "Card interest paid" ($4,954 vs $962).
+- **Voice:** expressive tags like [sad] hidden from captions; questions that start a conversation (Ask both, a card's "Ask me") skip the greeting; Ask both speaks in Live voice mode; turn timeout 20 s; prompt and tools pushed with `npm run agent:update`.
+- **Product:** renamed to Two Futures in the app; the household (not set up for voice) gets a clear note instead of a confused voice; `npm run demo` serves the production build, and dev and demo listen on 127.0.0.1 only.
+- Back-end tests 73 passing; grounding 10/10 grounded and 10/10 behaved for both saved answers and the live agent.

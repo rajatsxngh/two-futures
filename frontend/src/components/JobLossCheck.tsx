@@ -72,6 +72,11 @@ export function JobLossCheck() {
                 <p className={`text-xs ${full ? "text-ok" : "text-navy"}`}>
                   {full ? "All of it" : <>On the card: <MetricValue metric={r.card} className="font-semibold" /></>}
                 </p>
+                {r.unpaid && (
+                  <p className="text-xs text-bad">
+                    Bills unpaid: <MetricValue metric={r.unpaid} className="font-semibold" />
+                  </p>
+                )}
               </div>
             );
           })}

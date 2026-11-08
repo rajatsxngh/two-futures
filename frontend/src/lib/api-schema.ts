@@ -813,8 +813,10 @@ export interface components {
             runway: components["schemas"]["Metric"];
             /** Covered Months */
             covered_months: number;
-            /** @description About how much would go on the card for the months not covered */
+            /** @description About how much would go on the card for the months not covered (up to its limit) */
             card: components["schemas"]["Metric"];
+            /** @description Bills that couldn't be paid once savings and the card ran out */
+            unpaid?: components["schemas"]["Metric"] | null;
             /** Sentence */
             sentence: string;
         };

@@ -71,23 +71,24 @@ function highlight(ctx: SavedContext, used: VoiceToolName[], metricId: string) {
 
 function carAnswer(ctx: SavedContext): string {
   const p = ctx.futures.paths[ctx.path];
-  const car = key(p, "car_paid_off")?.display;
+  const carEvent = p.events.find((e) => e.title === "Car paid off");
+  const car = carEvent ? mon(carEvent.date) : undefined;
+  const early = carEvent?.description.match(/\d+ months? early/)?.[0];
   const card = key(p, "card_debt");
   const shared = p.events.find((e) => e.shared);
   const how: LifeEvent | undefined = shared && p.events.find((e) => !e.shared && e.title.startsWith(shared.title));
   const repair = shared && how ? `When the ${shared.title.toLowerCase()} hit in ${mon(shared.date)}, ${lowerFirst(how.description)}` : "";
   if (ctx.path === "same_path") {
-    const sheet = ctx.futures.fact_sheets.same_path.future_facts.join(" ");
-    const interest = sheet.match(/Card interest paid[^$]*about (\$[\d,]+)/)?.[1];
+    const interest = key(p, "card_interest")?.display;
     const cardLine =
       card && Number(card.value) > 0
         ? ` But that card never really went away: it's still at ${card.display}${interest ? `, and I've paid about ${interest} in interest on it` : ""}.`
         : "";
-    return `The car itself? ${car && car !== "Not yet" ? `It's been paid off since ${car}.` : "I'm still paying it off."} ${repair}${cardLine}`.replace(/\s+/g, " ").trim();
+    return `The car itself? ${car ? `It's been paid off since ${car}.` : "I'm still paying it off."} ${repair}${cardLine}`.replace(/\s+/g, " ").trim();
   }
   const cardPaid = p.events.find((e) => e.title === "Card paid off");
   const cardLine = cardPaid ? `The card's been at $0 since ${mon(cardPaid.date)}` : card ? `The card is at ${card.display}` : "";
-  const carLine = car && car !== "Not yet" ? `the car was paid off in ${car}` : "";
+  const carLine = car ? `the car was paid off in ${car}${early ? `, ${early}` : ""}` : "";
   const last = [cardLine, carLine].filter(Boolean).join(", and ");
   return `Yes. ${repair}${last ? ` ${last[0].toUpperCase()}${last.slice(1)}.` : ""}`.replace(/\s+/g, " ").trim();
 }
@@ -224,6 +225,7 @@ export async function savedReply(text: string, ctx: SavedContext): Promise<Saved
     return done("I don't know that part. I can tell you where things landed by " + year + ", though.");
   }
   const factual =
+    asked(/\binterest\b/, ".card_interest", (d) => `About ${d} in card interest since ${ctx.futures.as_of.slice(0, 4)}.`) ??
     asked(/\bira\b|retire/, ".ira", (d) => `About ${d} in my IRA by ${year}.`) ??
     asked(/card|credit|debt/, ".card_debt", (d) => (d === "$0" ? `The card's at $0.` : `The card's at about ${d}.`)) ??
     asked(/cushion|savings|emergency|saved/, ".cushion_months", (d) => `About ${d} of spending set aside.`);

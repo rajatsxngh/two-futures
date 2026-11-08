@@ -110,7 +110,7 @@ def test_plan_beats_same_path_in_2031(maya):
 def test_key_numbers(maya):
     for k, path in maya.paths.items():
         ids = [m.id for m in path.key_numbers]
-        assert ids == [f"{k}.2031.cushion_months", f"{k}.2031.card_debt", f"{k}.2031.car_paid_off", f"{k}.2031.ira"]
+        assert ids == [f"{k}.2031.cushion_months", f"{k}.2031.card_debt", f"{k}.2031.card_interest", f"{k}.2031.ira"]
         assert all(m.math.formula for m in path.key_numbers)
 
 
@@ -170,3 +170,12 @@ def test_next_step_amount_explains_itself(maya):
     assert "largest $25 step" in m.math.formula
     low = next(i.value for i in m.math.inputs if i.label.startswith("Bad-case low point"))
     assert low >= 200
+
+
+
+def test_plan_pays_the_card_after_a_starter_cushion(maya):
+    plan_events = {e.title: e.date.isoformat()[:7] for e in maya.paths["plan"].events}
+    assert plan_events["Cushion reaches 2 months"] < plan_events["Card paid off"] < plan_events["Car paid off"]
+    same_interest = next(m.value for m in maya.paths["same_path"].key_numbers if m.id.endswith("card_interest"))
+    plan_interest = next(m.value for m in maya.paths["plan"].key_numbers if m.id.endswith("card_interest"))
+    assert plan_interest < same_interest / 3

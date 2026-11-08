@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Future You",
+  title: "Two Futures",
   description: "Meet the you of 2031, then take the first step today.",
 };
 

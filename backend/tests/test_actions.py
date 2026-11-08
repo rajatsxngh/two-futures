@@ -71,8 +71,8 @@ def test_directions_make_sense():
 
 def test_sentence_numbers_come_from_the_engine():
     body = client.post("/api/update_plan", json=PRESETS["job_loss"]).json()
-    snap = body["result"]["snapshots"][-1]
-    assert f"{snap['cushion_months']:.1f} months" in body["sentence"]
+    on_screen = body["result"]["key_numbers"][0]["display"]  # e.g. "3.6 months", same rounding as the sentence
+    assert on_screen in body["sentence"]
 
 
 def test_what_ifs_only_touch_the_plan_path():
@@ -167,7 +167,9 @@ def test_job_loss_shock_compares_both_futures_and_changes_nothing():
     body = client.post("/api/shock", json={"job_loss_months": 3, "start_month": "2029-01"}).json()
     same, plan = body["paths"]["same_path"], body["paths"]["plan"]
     assert plan["runway"]["value"] > same["runway"]["value"]
-    assert plan["card"]["value"] < same["card"]["value"]
+    # same path: card already near its limit, so bills go unpaid; plan: the paid-off card has room
+    assert same["unpaid"]["value"] > 0 and plan["unpaid"] is None
+    assert same["card"]["value"] <= 5000 - 3900 + 1
     assert same["runway"]["math"]["formula"]
     assert same["sentence"].startswith("Losing your income for 3 months in January 2029")
     assert [y["year"] for y in body["by_year"]] == [2027, 2028, 2029, 2030, 2031]
@@ -184,3 +186,18 @@ def test_setup_answers_rescore_and_reset_restores():
     assert client.get("/api/profile").json()["customer"]["setup"]["planning_ahead"] == "yes"
     client.post("/api/reset")
     assert client.get("/api/health").json()["score"]["value"] == 55
+
+
+
+# --- card limit and unpaid bills ------------------------------------------------
+
+def test_long_job_loss_stays_within_the_card_limit():
+    body = client.post("/api/update_plan", json={"description": "Lose my job for a year", "preset": "job_loss",
+                                                 "job_loss_months": 12}).json()
+    snap = body["result"]["snapshots"][-1]
+    assert snap["card_debt"] <= 5000  # the card can't go past its limit any more
+    assert snap["balances"]["unpaid_bills"] > 0
+    assert "limit" in body["sentence"] and "unpaid" in body["sentence"]
+    assert "0.0 months" not in body["sentence"]
+    assert any(e["title"] == "Fell behind on bills" for e in body["result"]["events"])
+    assert snap["indicator_scores"]["bills_on_time"] < 100  # unpaid months count as late payments

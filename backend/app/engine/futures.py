@@ -100,7 +100,7 @@ def state_for_year(p: Params, sim: SimResult, year: int, today: date) -> Financi
     return FinancialState(
         take_home_monthly=float(sim.income[cols].mean()) if sim.income is not None else p.take_home_monthly,
         spending_monthly=med(sim.spending[:, cols].mean(axis=1)),
-        late_payments_12m=0,
+        late_payments_12m=int(round(med(sim.late[:, cols].sum(axis=1)))) if sim.late is not None else 0,
         checking=bal[p.checking.id],
         savings=bal[p.savings.id] if p.savings else 0.0,
         retirement_contrib_monthly=p.ira_contrib + med(sim.ira_extra[:, cols].mean(axis=1)),
@@ -132,6 +132,7 @@ def _snapshots(p: Params, sim: SimResult, health_today: HealthResponse, today: d
         scored[year] = h
         assets = sum(sim.balances[a.id][:, j] for a in p.data.accounts if a.group.value != "debt")
         debts = sum(sim.balances[a.id][:, j] for a in p.data.accounts if a.group.value == "debt")
+        debts = debts + sim.balances["unpaid_bills"][:, j]  # bills that went unpaid are owed
         if sim.home:  # the home counts at its purchase price (today's dollars), the mortgage as debt
             assets = assets + sim.balances["home_value"][:, j]
             debts = debts + sim.balances["home_mortgage"][:, j]
@@ -160,13 +161,13 @@ def _key_numbers(p: Params, sim: SimResult, snap: YearSnapshot, health: HealthRe
         metric(f"{pre}.card_debt", "Card debt", snap.card_debt, "usd", usd(snap.card_debt),
                f"Credit card balance at the end of {snap.year} (typical run)", [], note),
     ]
-    car = next((l for l in p.loans if l.type == AccountType.auto_loan), None)
-    if car:
+    if p.card:
+        paid = med(sim.card_interest.sum(axis=1))
         out.append(metric(
-            f"{pre}.car_paid_off", "Car paid off", car_paid.isoformat() if car_paid else None, "date",
-            mon(car_paid) if car_paid else "Not yet", "Month the auto loan balance reaches $0 (typical run)",
-            [("Balance today", car.balance, "usd", car.name), ("Rate", car.rate or 0, "pct"),
-             ("Monthly payment", car.min_payment or 0, "usd_per_month")], note))
+            f"{pre}.card_interest", "Card interest paid", round(paid, 2), "usd", usd(paid),
+            f"Interest paid on the credit card from {p.today.year} through {snap.year} (typical run)",
+            [("Card balance today", p.card.balance, "usd", p.card.name), ("APR", p.card.rate or 0, "pct"),
+             ("Car paid off", mon(car_paid) if car_paid else "not yet", "date", "for reference")], note))
     out.append(metric(f"{pre}.ira", "IRA", snap.ira_balance, "usd", usd(snap.ira_balance),
                       f"IRA balance at the end of {snap.year} (typical run, 5% growth)",
                       [("Balance today", sum(a.balance for a in p.iras), "usd"),
@@ -202,6 +203,13 @@ def _events(p: Params, sim: SimResult, shared: list[dict], car_paid: date | None
             date=sim.months[h.start], title="Bought a home", amount=h.price, shared=False,
             description=(f"A {usd(h.price)} home with {usd(h.down)} down. The {usd(h.payment)} mortgage payment "
                          f"replaces {usd(h.rent)} rent.")))
+    unpaid = sim.balances["unpaid_bills"]
+    behind = first_month(sim, unpaid > 50)
+    if behind:
+        peak = med(unpaid.max(axis=1))
+        ev.append(LifeEvent(date=behind, title="Fell behind on bills", amount=round(peak, 2), shared=False,
+                            description=f"Savings and the card ran out. At the worst point about {usd(peak)} "
+                                        "of bills went unpaid."))
     if card_paid:
         ev.append(LifeEvent(date=card_paid, title="Card paid off", shared=False,
                             description="The card balance hits $0, and its payment rolls into the next debt."))
@@ -213,7 +221,7 @@ def _events(p: Params, sim: SimResult, shared: list[dict], car_paid: date | None
         ev.append(LifeEvent(date=car_paid, title="Car paid off", shared=False,
                             description=f"The last car payment.{early}"))
     if sim.path == "plan":
-        for target in (A.CUSHION_TARGET, A.CUSHION_FULL):
+        for target in (A.STARTER_CUSHION, A.CUSHION_FULL):
             d = first_month(sim, sim.cushion >= target)
             if d:
                 ev.append(LifeEvent(date=d, title=f"Cushion reaches {target:.0f} months", shared=False,
@@ -230,7 +238,8 @@ def _plan(p: Params, plan_sim: SimResult, transfer: float, low: float) -> Plan:
         old = f" It replaces the ${p.reserve_contrib:,.0f} monthly transfer." if p.reserve_contrib else ""
         acts.append(PlanAction(
             id="auto_transfer", rule=1, title=f"Move ${transfer:,.0f} from {chk.name} to {sav.name} every payday",
-            description=(f"Builds the cushion toward {A.CUSHION_TARGET:.0f} months. ${transfer:,.0f} is the largest "
+            description=(f"Builds a {A.STARTER_CUSHION:.0f}-month starter cushion, then pays down the card. "
+                         f"${transfer:,.0f} is the largest "
                          f"${A.TRANSFER_STEP:,.0f} step that keeps bad-case checking above ${A.CHECKING_FLOOR:,.0f} "
                          f"(its low point: {usd(low)}).{old}"),
             start_date=customer.next_payday, amount=transfer, frequency="payday", from_account_id=chk.id,
@@ -257,12 +266,13 @@ def _plan(p: Params, plan_sim: SimResult, transfer: float, low: float) -> Plan:
             id="trim_flexible", rule=3, title=f"Spend {A.FLEXIBLE_TRIM:.0%} less on dining, shopping and fun",
             description=f"About ${flex:,.0f} a month, based on the last 12 months.", start_date=first_of_next,
             amount=round(flex, 2), frequency="monthly", automatable=False))
-    d3 = first_month(plan_sim, plan_sim.cushion >= A.CUSHION_TARGET)
+    d3 = first_month(plan_sim, plan_sim.cushion >= A.STARTER_CUSHION)
     snowball = [c.name.lower() for c in p.cards] + [l.name.lower() for l in sorted(
         (l for l in p.loans if l.type != AccountType.mortgage), key=lambda a: -(a.rate or 0))]
     if snowball and d3:
         acts.append(PlanAction(
-            id="debt_snowball", rule=4, title="Cushion at 3 months: point the transfer at debt",
+            id="debt_snowball", rule=4,
+            title=f"Starter cushion at {A.STARTER_CUSHION:.0f} months: point the transfer at debt",
             description=(f"The transfer pays down debt, highest rate first ({', then '.join(snowball)}). "
                          "Each paid-off payment joins the transfer."),
             start_date=d3, frequency="monthly", automatable=False))
@@ -311,7 +321,7 @@ def _fact_sheet(path: PathId, p: Params, health_today: HealthResponse, snap: Yea
             paid = next((v for k, v in how.items() if k.startswith(e.title)), None)
             facts.append(f"In {mon(e.date)}: {e.title.lower()}, {usd(e.amount or 0)}. "
                          f"{paid.description if paid else ''}".strip())
-        elif e.title in ("Card paid off", "Car paid off", "Bought a home") or e.title.startswith("Cushion reaches"):
+        elif e.title in ("Card paid off", "Car paid off", "Bought a home", "Fell behind on bills") or e.title.startswith("Cushion reaches"):
             facts.append(f"{e.title} in {mon(e.date)}. {e.description}")
     facts.append(f"In {y}: cushion about {fmt_months(snap.cushion_months)}, card debt {usd(snap.card_debt)}, "
                  f"IRA about {usd(snap.ira_balance)}, net worth about {usd(snap.net_worth)}.")

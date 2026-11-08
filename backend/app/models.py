@@ -441,7 +441,8 @@ class ShockPath(BaseModel):
     path: PathId
     runway: Metric = Field(description="Months of no pay that checking + savings would cover")
     covered_months: float
-    card: Metric = Field(description="About how much would go on the card for the months not covered")
+    card: Metric = Field(description="About how much would go on the card for the months not covered (up to its limit)")
+    unpaid: Metric | None = Field(default=None, description="Bills that couldn't be paid once savings and the card ran out")
     sentence: str
 
 

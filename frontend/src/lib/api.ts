@@ -1,5 +1,5 @@
 /**
- * Typed client for the Future You API.
+ * Typed client for the Two Futures API.
  *
  * Types come from `api-schema.ts`, which is generated from the backend's
  * Pydantic models. Never edit that file by hand: run `npm run gen:types`.

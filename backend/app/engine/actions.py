@@ -128,10 +128,23 @@ def job_loss_shock(req: ShockRequest, today: date) -> ShockResponse:
         spend = float(np.median(sim.spend_typical[:, i]))
         covered = min(k, runway)
         short = max(0.0, k - runway) * spend
+        card = bundle.params.card
+        room = (max(0.0, card.limit - float(np.median(sim.balances[card.id][:, i])))
+                if card and card.limit else (short if card else 0.0))
+        on_card = min(short, room)
+        unpaid = short - on_card
         plural = "s" if k != 1 else ""
         cover_txt = (f"would cover all {k} month{plural}" if runway >= k else
                      f"would cover about {runway:.1f} of the {k} month{plural}")
-        card_txt = "" if short < 50 else f", and about {usd(round_half_up(short / 100) * 100)} would go on the card"
+        about = lambda x: usd(round_half_up(x / 100) * 100)  # noqa: E731
+        if unpaid >= 50 and on_card >= 50:
+            card_txt = (f", about {about(on_card)} would go on the card until it hits its {usd(card.limit)} limit, "
+                        f"and about {about(unpaid)} of bills would go unpaid")
+        elif unpaid >= 50:
+            card_txt = (f", the card is already at its {usd(card.limit)} limit, "
+                        f"and about {about(unpaid)} of bills would go unpaid")
+        else:
+            card_txt = "" if on_card < 50 else f", and about {about(on_card)} would go on the card"
         paths[path] = ShockPath(
             path=path, covered_months=round(covered, 2),
             runway=metric(f"shock.{path}.runway", "Months your savings cover", round(runway, 2), "months",
@@ -140,10 +153,15 @@ def job_loss_shock(req: ShockRequest, today: date) -> ShockResponse:
                           [("Monthly spending then", round(spend, 2), "usd_per_month"),
                            ("Months without pay", k, "count")],
                           ["Spending carries on as usual while out of work.", "Typical (middle) simulated run."]),
-            card=metric(f"shock.{path}.card", "On the card", round(short, 2), "usd", usd(short),
-                        "Months not covered × monthly spending",
+            card=metric(f"shock.{path}.card", "On the card", round(on_card, 2), "usd", usd(on_card),
+                        "Months not covered × monthly spending, up to the card's remaining limit",
                         [("Months not covered", round(max(0.0, k - runway), 2), "months"),
-                         ("Monthly spending", round(spend, 2), "usd_per_month")]),
+                         ("Monthly spending", round(spend, 2), "usd_per_month"),
+                         ("Room left on the card", round(room, 2), "usd")]),
+            unpaid=(metric(f"shock.{path}.unpaid", "Bills unpaid", round(unpaid, 2), "usd", usd(unpaid),
+                           "What's left once savings and the card's limit are used up",
+                           [("Not covered", round(short, 2), "usd"), ("On the card", round(on_card, 2), "usd")])
+                    if unpaid >= 50 else None),
             sentence=f"Losing your income for {k} month{plural} in {when:%B %Y}: savings {cover_txt}{card_txt}.",
         )
     years = []
