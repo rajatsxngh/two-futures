@@ -512,28 +512,28 @@ function VoiceSessionInner({
       {/* Captions: always on */}
       <div
         ref={captionsRef}
-        className="h-64 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-3 text-[15px] leading-snug"
+        className="phone-scroll h-56 overflow-y-auto rounded-[22px] border border-white/5 bg-black/30 p-3.5 text-sm leading-[1.42]"
         aria-live="polite"
         aria-label="Live captions"
       >
         {captions.length === 0 ? (
-          <p className="text-slate-400">Captions appear here as you talk.</p>
+          <p className="text-smoke">Captions appear here as you talk.</p>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-3">
             {captions.map((c) =>
               // A line that was only an expressive tag ("[warmly]") has nothing to read: skip it.
               c.role === "agent" && !c.live && !stripVoiceTags(c.text).trim() ? null : c.role === "system" ? (
-                <li key={c.id} className="text-center text-xs uppercase tracking-wide text-slate-400">
+                <li key={c.id} className="text-center text-[10.5px] font-semibold uppercase tracking-[0.06em] text-smoke">
                   {c.text}
                 </li>
               ) : (
-                <li key={c.id} className={c.role === "user" ? "self-end text-right" : "self-start"}>
-                  <span className="block text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                <li key={c.id} className={`flex flex-col gap-1.5 ${c.role === "user" ? "items-end text-right" : "items-start"}`}>
+                  <span className="block text-[10.5px] font-semibold uppercase tracking-[0.06em] text-smoke">
                     {c.role === "user" ? (c.typed ? "You (typed)" : "You") : `Maya 2031 · ${PATH_LABEL[c.path]}`}
                   </span>
                   <span
-                    className={`inline-block rounded-2xl px-3 py-2 ${
-                      c.role === "user" ? "bg-[#1b2a4a] text-white" : "bg-white text-[#1b2a4a] shadow-sm"
+                    className={`inline-block max-w-[92%] px-3 py-2.5 text-left ${
+                      c.role === "user" ? "rounded-[18px_18px_6px_18px] bg-snow text-ink" : "rounded-[18px_18px_18px_6px] bg-white/[0.08] text-snow"
                     } ${c.live ? "opacity-80" : ""}`}
                   >
                     {c.role === "agent" ? stripVoiceTags(c.text) : c.text}
@@ -547,54 +547,76 @@ function VoiceSessionInner({
       </div>
 
       {toolsRunning > 0 && (
-        <p className="text-center text-sm italic text-orange-600" role="status">
+        <p className="text-center text-sm italic text-ember-text" role="status">
           Okay, let me think back…
         </p>
       )}
 
-      {/* Big mic button + waveform */}
-      <div className={`flex flex-col items-center gap-2 ${hideMic ? "hidden" : ""}`}>
-        <button
-          type="button"
-          onClick={onMicClick}
-          onPointerDown={holdStart}
-          onPointerUp={holdEnd}
-          onPointerLeave={holdEnd}
-          onPointerCancel={holdEnd}
-          onKeyDown={onMicKey}
-          onKeyUp={onMicKey}
-          disabled={connecting}
-          aria-pressed={voiceLive ? !micMuted : undefined}
-          aria-label={micLabel}
-          className={`relative flex h-24 w-24 touch-none select-none items-center justify-center rounded-full text-white shadow-lg transition ${
-            listening ? "bg-orange-500 ring-8 ring-orange-200" : voiceLive ? "bg-orange-400" : "bg-[#1b2a4a]"
-          } ${connecting ? "opacity-60" : "hover:scale-105 active:scale-95"}`}
-        >
-          <MicIcon muted={voiceLive && micMuted} />
-        </button>
-        <Waveform
-          getData={getWave}
-          active={voiceLive && (isSpeaking || !micMuted)}
-          color={isSpeaking ? "#1b2a4a" : "#f97316"}
-          className="h-8 w-48"
-        />
-        <p className="text-sm text-slate-600">{micLabel}</p>
+      {/* Mic orb, with the waveform on both sides */}
+      <div className={`flex flex-col items-center gap-2.5 ${hideMic ? "hidden" : ""}`}>
+        <div className="flex items-center justify-center gap-4">
+          <Waveform
+            getData={getWave}
+            active={voiceLive && (isSpeaking || !micMuted)}
+            color={isSpeaking ? "#F4F4F5" : "#FF6B1A"}
+            className="h-8 w-[84px] -scale-x-100"
+          />
+          <button
+            type="button"
+            onClick={onMicClick}
+            onPointerDown={holdStart}
+            onPointerUp={holdEnd}
+            onPointerLeave={holdEnd}
+            onPointerCancel={holdEnd}
+            onKeyDown={onMicKey}
+            onKeyUp={onMicKey}
+            disabled={connecting}
+            aria-pressed={voiceLive ? !micMuted : undefined}
+            aria-label={micLabel}
+            className={`relative flex h-[72px] w-[72px] shrink-0 touch-none select-none items-center justify-center rounded-full transition ${
+              listening
+                ? "bg-[radial-gradient(circle_at_34%_28%,#ffb27e_0%,#ff6b1a_46%,#de520a_100%)] text-ink shadow-[0_0_0_7px_rgba(255,107,26,0.16),0_14px_40px_rgba(255,107,26,0.55),inset_0_1px_0_rgba(255,255,255,0.4)]"
+                : voiceLive
+                  ? "bg-ember text-ink shadow-[0_10px_30px_-8px_rgba(255,107,26,0.6)]"
+                  : "glass-strong text-snow"
+            } ${connecting ? "opacity-60" : "hover:scale-105 active:scale-95"}`}
+          >
+            {listening && (
+              <>
+                <span aria-hidden className="absolute inset-0 animate-ring rounded-full border-2 border-ember/60" />
+                <span aria-hidden className="absolute inset-0 animate-ring rounded-full border-2 border-ember/60 [animation-delay:-1s]" />
+              </>
+            )}
+            <MicIcon muted={voiceLive && micMuted} />
+          </button>
+          <Waveform
+            getData={getWave}
+            active={voiceLive && (isSpeaking || !micMuted)}
+            color={isSpeaking ? "#F4F4F5" : "#FF6B1A"}
+            className="h-8 w-[84px]"
+          />
+        </div>
+        <p className="text-[13px] text-fog">{micLabel}</p>
       </div>
 
       <div className="flex items-center justify-between gap-2 text-sm">
-        <label className="flex items-center gap-2 text-slate-600">
-          <input type="checkbox" checked={pushToTalk} onChange={togglePushToTalk} />
+        <label className="flex h-11 cursor-pointer items-center gap-2.5 text-[13px] text-fog">
+          <input type="checkbox" checked={pushToTalk} onChange={togglePushToTalk} className="peer sr-only" />
+          <span
+            aria-hidden
+            className="relative h-6 w-10 shrink-0 rounded-full bg-white/[0.14] transition after:absolute after:left-[3px] after:top-[3px] after:h-[18px] after:w-[18px] after:rounded-full after:bg-snow after:transition peer-checked:bg-ember peer-checked:after:translate-x-4 peer-focus-visible:ring-2 peer-focus-visible:ring-ember/60"
+          />
           Push-to-talk (loud room)
         </label>
         {connected || connecting ? (
-          <button type="button" onClick={end} className="rounded-full border border-slate-300 px-3 py-1 text-slate-700">
+          <button type="button" onClick={end} className="glass h-11 rounded-full px-[18px] text-sm font-semibold text-snow transition hover:bg-white/10">
             End
           </button>
         ) : dropped ? (
           <button
             type="button"
             onClick={() => void begin("voice")}
-            className="rounded-full border border-orange-400 px-3 py-1 text-orange-700"
+            className="h-11 rounded-full border border-ember/60 px-[18px] text-sm font-semibold text-ember-text transition hover:bg-ember/10"
           >
             Reconnect
           </button>
@@ -610,21 +632,21 @@ function VoiceSessionInner({
             if (connected) controls.sendUserActivity();
           }}
           placeholder={connected ? "Or type to her…" : "Type a question (starts a text chat)"}
-          className="min-w-0 flex-1 rounded-full border border-slate-300 px-4 py-2 text-[15px]"
+          className="h-11 min-w-0 flex-1 rounded-full border border-white/10 bg-white/[0.06] px-4 text-sm text-snow placeholder:text-smoke focus:outline-none focus:ring-2 focus:ring-ember/50"
           aria-label="Type a message"
         />
         <button
           type="submit"
           disabled={!typed.trim() || connecting}
-          className="rounded-full bg-orange-500 px-4 py-2 font-medium text-white disabled:opacity-40"
+          className="h-11 shrink-0 rounded-full bg-ember px-[18px] text-sm font-semibold text-ink transition hover:brightness-110 disabled:opacity-40"
         >
           Send
         </button>
       </form>
 
-      {dropped && !error && <p className="text-sm text-amber-700">The call dropped. Captions are kept; tap Reconnect.</p>}
+      {dropped && !error && <p className="text-[13px] text-[#fde68a]">The call dropped. Captions are kept; tap Reconnect.</p>}
       {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+        <p className="rounded-2xl border border-poor/30 bg-poor/10 px-3 py-2 text-[13px] leading-snug text-[#fecaca]" role="alert">
           {error}
         </p>
       )}
@@ -634,7 +656,7 @@ function VoiceSessionInner({
 
 function MicIcon({ muted }: { muted: boolean }) {
   return (
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x="9" y="2" width="6" height="12" rx="3" />
       <path d="M5 10v1a7 7 0 0 0 14 0v-1" />
       <line x1="12" y1="18" x2="12" y2="22" />

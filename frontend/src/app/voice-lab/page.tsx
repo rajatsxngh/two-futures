@@ -192,13 +192,16 @@ export default function VoiceLabPage() {
         </ul>
 
         {factSheet ? (
-          <VoiceSession
-            path={path}
-            factSheet={factSheet}
-            tools={tools}
-            onToolEvent={onToolEvent}
-            onStatusChange={setStatus}
-          />
+          // The session is styled for the app's dark voice panel.
+          <div className="rounded-3xl bg-[#0a0a0b] p-3 text-[#f4f4f5]">
+            <VoiceSession
+              path={path}
+              factSheet={factSheet}
+              tools={tools}
+              onToolEvent={onToolEvent}
+              onStatusChange={setStatus}
+            />
+          </div>
         ) : (
           <p className="text-sm text-slate-500">{loadError ? "No fact sheet." : "Loading fact sheets…"}</p>
         )}

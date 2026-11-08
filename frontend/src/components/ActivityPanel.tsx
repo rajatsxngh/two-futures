@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ToolEvent } from "./voice";
 import type { TransferResponse, UpdatePlanResponse } from "@/lib/api";
 import { useApp } from "@/lib/store";
-import { usd } from "./ui";
+import { StatusIcon, usd } from "./ui";
 
 const PATH_LABEL = { same_path: "Same path", plan: "With a plan" } as const;
 
@@ -109,54 +109,71 @@ export function ActivityPanel() {
   const live = status === "connected" ? `Live: talking to 2031 · ${path ? PATH_LABEL[path] : ""}` : status === "connecting" ? "Connecting…" : "Voice idle";
 
   return (
-    <div className="flex h-full flex-col rounded-3xl border border-line bg-white p-4 shadow-sm">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <h2 className="text-base font-semibold text-navy">What she checked</h2>
-          <p className="text-xs leading-snug text-muted">Every number she says comes from our forecast engine. Each step, in plain words.</p>
+    <div className="relative flex h-full flex-col overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#0e0e10] p-5 text-snow antialiased shadow-[0_40px_100px_-40px_rgba(0,0,0,0.9)]">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(90%_70%_at_0%_0%,rgba(255,255,255,0.06),transparent_70%)]" />
+      <div className="relative flex items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <h2 className="text-[19px] font-semibold tracking-[-0.02em]">What she checked</h2>
+          <p className="text-[13px] leading-[1.45] text-fog">Every number she says comes from our forecast engine. Each step, in plain words.</p>
         </div>
-        <label className="flex shrink-0 items-center gap-1.5 text-xs text-muted">
-          <input type="checkbox" checked={raw} onChange={(e) => setRaw(e.target.checked)} />
+        <label className="flex h-11 shrink-0 cursor-pointer items-center gap-2 text-[12.5px] text-fog">
           Raw data
+          <input type="checkbox" checked={raw} onChange={(e) => setRaw(e.target.checked)} className="peer sr-only" />
+          <span
+            aria-hidden
+            className="relative h-[22px] w-9 rounded-full bg-white/[0.14] transition after:absolute after:left-[3px] after:top-[3px] after:h-4 after:w-4 after:rounded-full after:bg-snow after:transition peer-checked:bg-ember peer-checked:after:translate-x-[14px] peer-focus-visible:ring-2 peer-focus-visible:ring-ember/60"
+          />
         </label>
       </div>
-      <p className={`mt-3 flex items-center gap-2 text-xs font-medium ${status === "connected" ? "text-ok" : "text-muted"}`}>
-        <span className={`h-2 w-2 rounded-full ${status === "connected" ? "animate-pulse bg-ok" : "bg-line"}`} />
+      <p className={`relative mt-4 flex items-center gap-2 text-[12.5px] font-semibold ${status === "connected" ? "text-good" : "text-fog"}`}>
+        <span
+          aria-hidden
+          className={`h-2 w-2 rounded-full ${
+            status === "connected" ? "animate-live bg-good shadow-[0_0_10px_rgba(74,222,128,0.7)]" : status === "connecting" ? "animate-live bg-fair" : "bg-white/20"
+          }`}
+        />
         {live}
       </p>
 
       {entries.length === 0 ? (
-        <p className="mt-6 text-sm leading-snug text-muted">
+        <p className="relative mt-6 text-sm leading-relaxed text-fog">
           Tap a future self and ask a question, or try a what-if. Each tool call shows up here with its inputs and result.
         </p>
       ) : (
-        <ol ref={listRef} className="mt-3 flex-1 space-y-2 overflow-y-auto pr-1">
+        <ol ref={listRef} className="phone-scroll relative mt-4 flex flex-1 flex-col gap-2.5 overflow-y-auto pr-0.5">
           {entries.map((en) => {
             const w = words(en);
+            const tap = en.first.source === "tap";
             const time = new Date(en.first.at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit" });
             return (
-              <li key={en.first.id} className="fade-in rounded-xl border border-line bg-surface px-3 py-2">
+              <li key={en.first.id} className="fade-in rounded-[18px] border border-white/[0.07] bg-white/[0.045] px-3.5 py-3">
                 <details open={raw || undefined}>
-                  <summary className="cursor-pointer list-none">
-                    <div className="flex items-center justify-between gap-2 text-[11px] text-muted">
-                      <span>
-                        <span className={`mr-1.5 rounded px-1 py-px font-semibold uppercase ${en.first.source === "tap" ? "bg-line text-navy" : "bg-accent-soft text-accent-dark"}`}>
-                          {en.first.source === "tap" ? "Tap" : "Voice"}
+                  <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span
+                          className={`shrink-0 rounded-md px-1.5 py-0.5 text-[10.5px] font-bold uppercase tracking-[0.06em] ${
+                            tap ? "bg-white/10 text-[#e4e4e7]" : "bg-ember/15 text-ember-text"
+                          }`}
+                        >
+                          {tap ? "Tap" : "Voice"}
                         </span>
-                        {en.first.name} · {PATH_LABEL[en.first.path]}
+                        <span className="truncate font-mono text-[11px] text-smoke">
+                          {en.first.name} · {PATH_LABEL[en.first.path]}
+                        </span>
                       </span>
-                      <span className="tabular">
+                      <span className="tabular shrink-0 font-mono text-[11px] text-smoke">
                         {time}
                         {en.last.ms !== undefined && ` · ${en.last.ms} ms`}
                       </span>
                     </div>
-                    <p className={`mt-0.5 text-sm font-medium leading-snug ${w.tone === "warn" ? "text-warn" : "text-navy"}`}>
-                      {w.tone === "run" && <span className="mr-1 animate-pulse">●</span>}
-                      {w.title}
+                    <p className={`mt-2 flex gap-2 text-sm font-medium leading-[1.4] ${w.tone === "warn" ? "text-fair" : "text-snow"}`}>
+                      <ToneMark tone={w.tone} />
+                      <span>{w.title}</span>
                     </p>
-                    {w.detail && <p className="mt-0.5 text-xs leading-snug text-muted">{w.detail}</p>}
+                    {w.detail && <p className="mt-1.5 pl-6 text-[12.5px] leading-[1.45] text-fog">{w.detail}</p>}
                   </summary>
-                  <pre className="mt-2 max-h-48 overflow-auto rounded-lg bg-white p-2 text-[10px] leading-snug text-navy">
+                  <pre className="mt-2.5 max-h-48 overflow-auto whitespace-pre-wrap rounded-xl border border-white/[0.06] bg-black/40 p-2.5 font-mono text-[10.5px] leading-[1.55] text-[#d4d4d8]">
                     {JSON.stringify(raw ? { params: en.first.params, reply: en.last.reply, result: en.last.result } : { params: en.first.params, reply: en.last.reply }, null, 2)}
                   </pre>
                 </details>
@@ -165,6 +182,16 @@ export function ActivityPanel() {
           })}
         </ol>
       )}
+
+      <p className="relative mt-auto border-t border-white/[0.06] pt-4 text-xs leading-normal text-smoke">
+        She can only read the engine&apos;s numbers or ask it for new ones. Money moves only on your tap.
+      </p>
     </div>
   );
+}
+
+/** Running: a pulsing ember dot. Done: a check. Skipped or failed: a warning. */
+function ToneMark({ tone }: { tone: "run" | "ok" | "warn" }) {
+  if (tone === "run") return <span aria-hidden className="mt-1.5 h-2 w-2 shrink-0 animate-live rounded-full bg-ember" />;
+  return <StatusIcon status={tone === "ok" ? "green" : "amber"} tone="dark" className="mt-0.5 h-4 w-4" />;
 }

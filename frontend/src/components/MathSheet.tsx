@@ -53,41 +53,45 @@ export function MathSheet() {
   const isForecast = FORECAST_PREFIXES.some((p) => metric.id.startsWith(p));
 
   return (
-    <div className="absolute inset-0 z-40 flex items-end bg-navy/30 fade-in" onClick={closeMath}>
+    <div className="fade-in absolute inset-0 z-40 flex items-end bg-black/60 backdrop-blur-[2px]" onClick={closeMath}>
       <section
         role="dialog"
         aria-modal="true"
         aria-label={`The math behind ${metric.label}`}
         onClick={(e) => e.stopPropagation()}
-        className="sheet-up max-h-[85%] w-full overflow-y-auto rounded-t-3xl bg-white px-5 pb-6 pt-3 shadow-2xl"
+        className="sheet-up phone-scroll max-h-[85%] w-full overflow-y-auto rounded-t-[32px] bg-white px-[22px] pb-[max(28px,env(safe-area-inset-bottom))] pt-2.5 text-ink shadow-[0_-24px_60px_rgba(0,0,0,0.45)]"
       >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line" />
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Show the math</p>
-            <h2 className="text-lg font-semibold text-navy">{metric.label}</h2>
+        <div aria-hidden className="mx-auto h-[5px] w-10 rounded-full bg-hair" />
+        <div className="mt-3.5 flex items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <p className="text-xs font-semibold text-ink-3">Show the math</p>
+            <h2 className="text-[20px] font-semibold leading-tight tracking-[-0.02em]">{metric.label}</h2>
           </div>
-          <button onClick={closeMath} className="rounded-full border border-line px-3 py-1 text-sm text-muted hover:text-navy">
+          <button onClick={closeMath} className="h-11 shrink-0 rounded-full bg-tile px-4 text-sm font-semibold text-ink transition hover:bg-hair">
             Close
           </button>
         </div>
-        <p className="tabular mt-1 text-[36px] font-semibold leading-tight text-navy">{metric.display}</p>
-        {isForecast && <p className="text-xs font-medium text-plan">Forecast, not a promise</p>}
+        <div className="mt-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
+          <p className="tabular text-[44px] font-medium leading-none tracking-[-0.05em]">{metric.display}</p>
+          {isForecast && (
+            <span className="inline-flex h-6 items-center rounded-full bg-ember-soft px-2.5 text-xs font-semibold text-ember-ink">Forecast, not a promise</span>
+          )}
+        </div>
 
-        <h3 className="mt-4 text-xs font-semibold uppercase tracking-wide text-muted">How it&apos;s worked out</h3>
-        <p className="mt-1 text-[15px] leading-snug text-navy">{m.formula}</p>
+        <h3 className="mt-[22px] text-xs font-semibold text-ink-3">How it&apos;s worked out</h3>
+        <p className="mt-1.5 text-base leading-[1.45] tracking-[-0.01em] [text-wrap:pretty]">{m.formula}</p>
 
         {m.inputs.length > 0 && (
           <>
-            <h3 className="mt-4 text-xs font-semibold uppercase tracking-wide text-muted">Inputs</h3>
-            <ul className="mt-1 divide-y divide-line rounded-xl border border-line">
+            <h3 className="mt-[22px] text-xs font-semibold text-ink-3">Inputs</h3>
+            <ul className="mt-2 rounded-[20px] bg-tile-2 px-4">
               {m.inputs.map((i, k) => (
-                <li key={k} className="flex items-baseline justify-between gap-3 px-3 py-2 text-sm">
-                  <span className="text-navy">
+                <li key={k} className={`flex min-h-12 items-center justify-between gap-3 py-2.5 text-sm ${k ? "border-t border-[#eaeaed]" : ""}`}>
+                  <span className="min-w-0">
                     {i.label}
-                    {i.source && <span className="block text-[11px] text-muted">{i.source}</span>}
+                    {i.source && <span className="mt-0.5 block text-xs text-ink-3">{i.source}</span>}
                   </span>
-                  <span className="tabular shrink-0 font-medium text-navy">{fmt(i.value, i.unit)}</span>
+                  <span className="tabular shrink-0 text-[15px] font-semibold">{fmt(i.value, i.unit)}</span>
                 </li>
               ))}
             </ul>
@@ -96,8 +100,8 @@ export function MathSheet() {
 
         {m.thresholds && (
           <>
-            <h3 className="mt-4 text-xs font-semibold uppercase tracking-wide text-muted">Thresholds</h3>
-            <p className="mt-1 text-sm text-navy">
+            <h3 className="mt-[22px] text-xs font-semibold text-ink-3">Thresholds</h3>
+            <p className="mt-1.5 text-sm leading-relaxed">
               Scores 100 at {fmt(m.thresholds.best, m.thresholds.unit)} and 0 at {fmt(m.thresholds.worst, m.thresholds.unit)}.
             </p>
           </>
@@ -105,15 +109,18 @@ export function MathSheet() {
 
         {m.assumptions.length > 0 && (
           <>
-            <h3 className="mt-4 text-xs font-semibold uppercase tracking-wide text-muted">Assumptions</h3>
-            <ul className="mt-1 list-disc space-y-1 pl-5 text-[13px] leading-snug text-muted">
+            <h3 className="mt-[22px] text-xs font-semibold text-ink-3">Assumptions</h3>
+            <ul className="mt-2 flex flex-col gap-1.5">
               {m.assumptions.map((a, k) => (
-                <li key={k}>{a}</li>
+                <li key={k} className="flex gap-2.5 text-[13px] leading-[1.45] text-ink-2">
+                  <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#a1a1aa]" />
+                  {a}
+                </li>
               ))}
             </ul>
           </>
         )}
-        <p className="mt-4 text-[11px] text-muted">
+        <p className="mt-[18px] border-t border-[#f0f0f2] pt-3.5 text-[11.5px] leading-normal text-ink-3">
           Every number comes from the forecast engine. The voice agent can only read these numbers or ask the engine for new ones.
         </p>
       </section>

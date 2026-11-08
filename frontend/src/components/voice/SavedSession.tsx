@@ -143,23 +143,25 @@ export function SavedSession({
     <div className={`flex flex-col gap-3 ${className ?? ""}`}>
       <div
         ref={captionsRef}
-        className="h-56 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-3 text-[15px] leading-snug"
+        className="phone-scroll h-56 overflow-y-auto rounded-[22px] border border-white/5 bg-black/30 p-3.5 text-sm leading-[1.42]"
         aria-live="polite"
         aria-label="Live captions"
       >
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-3">
           {captions.map((c) =>
             c.role === "system" ? (
-              <li key={c.id} className="text-center text-xs uppercase tracking-wide text-slate-400">
+              <li key={c.id} className="text-center text-[10.5px] font-semibold uppercase tracking-[0.06em] text-smoke">
                 {c.text}
               </li>
             ) : (
-              <li key={c.id} className={c.role === "user" ? "self-end text-right" : "self-start"}>
-                <span className="block text-[11px] font-medium uppercase tracking-wide text-slate-400">
+              <li key={c.id} className={`flex flex-col gap-1.5 ${c.role === "user" ? "items-end text-right" : "items-start"}`}>
+                <span className="block text-[10.5px] font-semibold uppercase tracking-[0.06em] text-smoke">
                   {c.role === "user" ? (c.typed ? "You (typed)" : "You") : `Maya 2031 · ${PATH_LABEL[c.path]}`}
                 </span>
                 <span
-                  className={`inline-block rounded-2xl px-3 py-2 ${c.role === "user" ? "bg-[#1b2a4a] text-white" : "bg-white text-[#1b2a4a] shadow-sm"}`}
+                  className={`inline-block max-w-[92%] px-3 py-2.5 text-left ${
+                    c.role === "user" ? "rounded-[18px_18px_6px_18px] bg-snow text-ink" : "rounded-[18px_18px_18px_6px] bg-white/[0.08] text-snow"
+                  }`}
                 >
                   {c.text}
                 </span>
@@ -169,7 +171,7 @@ export function SavedSession({
         </ul>
       </div>
       {busy && (
-        <p className="text-center text-sm italic text-orange-600" role="status">
+        <p className="text-center text-sm italic text-ember-text" role="status">
           Okay, let me think back…
         </p>
       )}
@@ -180,7 +182,7 @@ export function SavedSession({
             type="button"
             disabled={busy}
             onClick={() => void send(q)}
-            className="max-w-full truncate rounded-full border border-slate-300 bg-white px-3 py-1 text-xs text-[#1b2a4a] hover:border-orange-400 disabled:opacity-40"
+            className="min-h-11 max-w-full truncate rounded-full border border-white/10 bg-white/[0.06] px-3.5 text-xs font-medium text-snow transition hover:border-ember/50 hover:bg-white/10 disabled:opacity-40"
           >
             {q}
           </button>
@@ -191,15 +193,23 @@ export function SavedSession({
           value={typed}
           onChange={(e) => setTyped(e.target.value)}
           placeholder="Type to her…"
-          className="min-w-0 flex-1 rounded-full border border-slate-300 px-4 py-2 text-[15px]"
+          className="h-11 min-w-0 flex-1 rounded-full border border-white/10 bg-white/[0.06] px-4 text-sm text-snow placeholder:text-smoke focus:outline-none focus:ring-2 focus:ring-ember/50"
           aria-label="Type a message"
         />
-        <button type="submit" disabled={!typed.trim() || busy} className="rounded-full bg-orange-500 px-4 py-2 font-medium text-white disabled:opacity-40">
+        <button
+          type="submit"
+          disabled={!typed.trim() || busy}
+          className="h-11 shrink-0 rounded-full bg-ember px-[18px] text-sm font-semibold text-ink transition hover:brightness-110 disabled:opacity-40"
+        >
           Send
         </button>
       </form>
-      <label className="flex items-center gap-2 text-sm text-slate-600">
-        <input type="checkbox" checked={aloud} onChange={(e) => setAloud(e.target.checked)} />
+      <label className="flex h-11 cursor-pointer items-center gap-2.5 text-[13px] text-fog">
+        <input type="checkbox" checked={aloud} onChange={(e) => setAloud(e.target.checked)} className="peer sr-only" />
+        <span
+          aria-hidden
+          className="relative h-6 w-10 shrink-0 rounded-full bg-white/[0.14] transition after:absolute after:left-[3px] after:top-[3px] after:h-[18px] after:w-[18px] after:rounded-full after:bg-snow after:transition peer-checked:bg-ember peer-checked:after:translate-x-4 peer-focus-visible:ring-2 peer-focus-visible:ring-ember/60"
+        />
         Read answers aloud (built-in voice, works offline)
       </label>
     </div>

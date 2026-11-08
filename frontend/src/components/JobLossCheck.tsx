@@ -5,10 +5,11 @@
  * side by side. Months of no pay covered = each path's cushion at that time.
  * Asks the engine (POST /api/shock); changes nothing.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { api, type ShockResponse } from "@/lib/api";
 import { useApp } from "@/lib/store";
-import { MetricValue } from "./ui";
+import { IconChevronDown } from "./icons";
+import { MetricValue, StatusIcon } from "./ui";
 
 const MONTHS = [1, 3, 6];
 
@@ -37,45 +38,55 @@ export function JobLossCheck() {
   }, [customer, months, chosen, futures]);
 
   return (
-    <section className="rounded-2xl border border-line bg-white p-3" aria-label="Job-loss check">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Job-loss check</p>
-      <p className="mt-0.5 text-sm text-navy">
-        What if you lose your job for{" "}
-        <select value={months} onChange={(e) => setMonths(Number(e.target.value))} className="rounded border border-line bg-surface px-1 text-sm font-semibold">
+    <section className="rounded-[26px] bg-tile p-[18px]" aria-label="Job-loss check">
+      <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">Job-loss check</h2>
+      <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[15px] leading-snug text-ink">
+        <span>What if you lose your job for</span>
+        <PillSelect label="Months without pay" value={months} onChange={setMonths}>
           {MONTHS.map((m) => (
             <option key={m} value={m}>
               {m} month{m > 1 ? "s" : ""}
             </option>
           ))}
-        </select>{" "}
-        in{" "}
-        <select value={chosen} onChange={(e) => setYear(Number(e.target.value))} className="rounded border border-line bg-surface px-1 text-sm font-semibold">
+        </PillSelect>
+        <span>in</span>
+        <PillSelect label="Year" value={chosen} onChange={setYear}>
           {years.map((y) => (
             <option key={y} value={y}>
               {y}
             </option>
           ))}
-        </select>
-        ?
-      </p>
-      {error && <p className="mt-1 text-xs text-bad">{error}</p>}
+        </PillSelect>
+        <span>?</span>
+      </div>
+      {error && <p className="mt-2 text-xs text-poor-ink">{error}</p>}
       {res && (
-        <div className="mt-2 grid grid-cols-2 gap-2">
+        <div className="mt-3.5 grid grid-cols-2 gap-2.5">
           {(["same_path", "plan"] as const).map((p) => {
             const r = res.paths[p];
             const full = r.covered_months >= res.job_loss_months;
+            const isPlan = p === "plan";
             return (
-              <div key={p} className={`rounded-xl p-2 ${p === "plan" ? "bg-plan-soft" : "bg-same-soft"}`}>
-                <p className={`text-[11px] font-bold uppercase ${p === "plan" ? "text-plan" : "text-same"}`}>{p === "plan" ? "With a plan" : "Same path"}</p>
-                <p className="text-[11px] text-muted">Savings cover</p>
-                <MetricValue metric={r.runway} className="text-2xl font-semibold leading-tight text-navy" />
-                <p className={`text-xs ${full ? "text-ok" : "text-navy"}`}>
-                  {full ? "All of it" : <>On the card: <MetricValue metric={r.card} className="font-semibold" /></>}
-                </p>
-                {r.unpaid && (
-                  <p className="text-xs text-bad">
+              <div
+                key={p}
+                className={`flex min-w-0 flex-col gap-1 rounded-[20px] bg-white p-3.5 ${isPlan ? "shadow-[inset_0_0_0_1.5px_rgba(255,107,26,0.45)]" : ""}`}
+              >
+                <span className={`text-xs font-semibold ${isPlan ? "text-ember-ink" : "text-silver-ink"}`}>{isPlan ? "With a plan" : "Same path"}</span>
+                <span className="mt-1.5 text-xs text-ink-3">Savings cover</span>
+                <MetricValue metric={r.runway} className="self-start text-[24px] font-semibold leading-tight tracking-[-0.04em] text-ink" />
+                {full ? (
+                  <Line status="green">All of it</Line>
+                ) : (
+                  <span className="mt-1 text-[12.5px] text-ink-2">
+                    On the card: <MetricValue metric={r.card} className="font-semibold text-ink" />
+                  </span>
+                )}
+                {r.unpaid ? (
+                  <Line status="red">
                     Bills unpaid: <MetricValue metric={r.unpaid} className="font-semibold" />
-                  </p>
+                  </Line>
+                ) : (
+                  !full && <Line status="green">No bills unpaid</Line>
                 )}
               </div>
             );
@@ -83,5 +94,40 @@ export function JobLossCheck() {
         </div>
       )}
     </section>
+  );
+}
+
+function Line({ status, children }: { status: "green" | "red"; children: ReactNode }) {
+  return (
+    <span className={`inline-flex items-center gap-1.5 text-[12.5px] ${status === "green" ? "text-good-ink" : "text-poor-ink"}`}>
+      <StatusIcon status={status} className="h-3 w-3" />
+      <span>{children}</span>
+    </span>
+  );
+}
+
+function PillSelect({
+  label,
+  value,
+  onChange,
+  children,
+}: {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+  children: ReactNode;
+}) {
+  return (
+    <span className="relative inline-flex">
+      <select
+        aria-label={label}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="tabular h-11 cursor-pointer appearance-none rounded-full border border-hair bg-white pl-3.5 pr-8 text-sm font-semibold text-ink transition hover:border-ink-3/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ember/50"
+      >
+        {children}
+      </select>
+      <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-3" strokeWidth={2.2} />
+    </span>
   );
 }

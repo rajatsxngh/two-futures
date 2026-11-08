@@ -1,11 +1,17 @@
 @import "tailwindcss";
 
-/* Design tokens (PRD "Design rules"): orange accent, navy text, white background,
-   gray for the same path, a warm tone for the plan, and red/amber/green only
-   for indicator status (always paired with an icon). */
+/* Obsidian and Paper.
+   - Obsidian: the dark hero every screen opens on, where its one key number lives.
+   - Paper: the white sheet that holds the detail.
+   - Ember: the plan, and the buttons that commit to it. Silver: the same path.
+   - Red / amber / green only for indicator status, and always with an icon.
+   The older names (navy, muted, line, surface, accent...) stay for the internal pages
+   (/checklist, /grounding, /voice-lab, /dev). */
 :root {
   --background: #ffffff;
   --foreground: #0b2545;
+  /* Height of the floating header inside the phone; App measures it (the sandbox banner makes it taller). */
+  --header-h: 72px;
 }
 
 @theme inline {
@@ -14,6 +20,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
+  /* Legacy tokens (internal pages) */
   --color-accent: #ef6a1a;
   --color-accent-dark: #c9530c;
   --color-accent-soft: #fff1e7;
@@ -21,15 +28,218 @@
   --color-muted: #5b6b82;
   --color-line: #e3e8ef;
   --color-surface: #f6f8fb;
-
   --color-same: #8792a2;
   --color-same-soft: #f1f3f6;
   --color-plan: #d9663f;
   --color-plan-soft: #fff0e6;
-
   --color-ok: #23905a;
   --color-warn: #b7791f;
   --color-bad: #cf3e3e;
+
+  /* Obsidian (text tiers pass 4.5:1 on #0A0A0B and on glass) */
+  --color-obsidian: #0a0a0b;
+  --color-raised: #141416;
+  --color-snow: #f4f4f5;
+  --color-fog: #a1a1aa;
+  --color-smoke: #8b8b94;
+
+  /* Paper */
+  --color-ink: #0a0a0b;
+  --color-ink-2: #52525b;
+  --color-ink-3: #63636c;
+  --color-tile: #f4f4f5;
+  --color-tile-2: #f6f6f7;
+  --color-hair: #e4e4e7;
+
+  /* Signal */
+  --color-ember: #ff6b1a;
+  --color-ember-text: #ff8a4c;
+  --color-ember-ink: #c2410c;
+  --color-ember-soft: #fff3ec;
+  --color-silver: #b4b9c2;
+  --color-silver-ink: #5b616b;
+
+  /* Status: bright on obsidian; ink text, icon color and a soft tint on paper */
+  --color-good: #4ade80;
+  --color-fair: #fbbf24;
+  --color-poor: #f87171;
+  --color-good-ink: #166534;
+  --color-fair-ink: #92400e;
+  --color-poor-ink: #b91c1c;
+  --color-good-icon: #15803d;
+  --color-fair-icon: #b45309;
+  --color-poor-icon: #dc2626;
+  --color-good-soft: #eaf6ee;
+  --color-fair-soft: #fdf3e7;
+  --color-poor-soft: #fdecec;
+
+  /* Motion */
+  --animate-orb-float: tf-float 6s ease-in-out infinite;
+  --animate-orb-left: tf-left 6s ease-in-out infinite;
+  --animate-orb-right: tf-right 6s ease-in-out infinite;
+  --animate-orb-shadow: tf-shadow 6s ease-in-out infinite;
+  --animate-orb-glow: tf-glow 6s ease-in-out infinite;
+  --animate-ring: tf-ring 2s ease-out infinite;
+  --animate-wave: tf-wave 1.2s ease-in-out infinite;
+  --animate-flow: tf-flow 2.2s ease-in-out infinite;
+  --animate-breathe: tf-breathe 3.6s ease-in-out infinite;
+  --animate-live: tf-live 1.6s ease-in-out infinite;
+  --animate-indeterminate: tf-indeterminate 1.4s ease-in-out infinite;
+
+  @keyframes tf-indeterminate {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(300%);
+    }
+  }
+
+  @keyframes tf-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-2.2px);
+    }
+  }
+  @keyframes tf-left {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(-1.3px, 0.7px);
+    }
+  }
+  @keyframes tf-right {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(1.3px, -0.9px);
+    }
+  }
+  @keyframes tf-shadow {
+    0%,
+    100% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scaleX(0.84);
+      opacity: 0.7;
+    }
+  }
+  @keyframes tf-glow {
+    0%,
+    100% {
+      opacity: 0.78;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes tf-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    100% {
+      transform: scale(1.75);
+      opacity: 0;
+    }
+  }
+  @keyframes tf-wave {
+    0%,
+    100% {
+      transform: scaleY(0.3);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
+  @keyframes tf-flow {
+    0% {
+      left: 0;
+      opacity: 0;
+    }
+    15% {
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+  @keyframes tf-breathe {
+    0%,
+    100% {
+      box-shadow: 0 0 0 2px #0a0a0b, 0 0 0 3.5px #ff6b1a, 0 0 22px rgb(255 107 26 / 0.45);
+    }
+    50% {
+      box-shadow: 0 0 0 2px #0a0a0b, 0 0 0 3.5px #ff6b1a, 0 0 34px rgb(255 107 26 / 0.7);
+    }
+  }
+  @keyframes tf-live {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+}
+
+/* Glass on obsidian: a raised surface you can see through. */
+@utility glass {
+  background-color: rgb(255 255 255 / 0.06);
+  border: 1px solid rgb(255 255 255 / 0.08);
+}
+
+@utility glass-strong {
+  background-color: rgb(255 255 255 / 0.08);
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+/* Soft light on the hero: a white sheen from the top left and an ember glow on the right. */
+@utility hero-sheen {
+  background-image:
+    radial-gradient(85% 48% at 8% 0%, rgb(255 255 255 / 0.085), rgb(255 255 255 / 0) 70%),
+    radial-gradient(42% 30% at 100% 14%, rgb(255 107 26 / 0.18), rgb(255 107 26 / 0) 72%);
+}
+
+/* The white sheet that rises over the hero. */
+@utility paper-sheet {
+  position: relative;
+  background-color: #ffffff;
+  color: var(--color-ink);
+  border-radius: 32px 32px 0 0;
+  box-shadow: 0 -18px 40px -22px rgb(0 0 0 / 0.7);
+}
+
+/* "Tap any number to see its math": a dotted underline in the text's own color. */
+@utility metric-link {
+  cursor: pointer;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in oklab, currentColor 34%, transparent);
+  text-decoration-thickness: max(1px, 0.03em);
+  text-underline-offset: 0.22em;
+  &:hover {
+    text-decoration-color: var(--color-ember);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
 }
 
 body {
@@ -50,20 +260,20 @@ body {
   display: none;
 }
 
-/* highlight_metric glow */
+/* highlight_metric glow: works on obsidian and on paper. */
 @keyframes metric-glow {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgb(239 106 26 / 0);
+    box-shadow: 0 0 0 0 rgb(255 107 26 / 0);
   }
   30%,
   70% {
-    box-shadow: 0 0 0 6px rgb(239 106 26 / 0.35);
+    box-shadow: 0 0 0 6px rgb(255 107 26 / 0.35);
   }
 }
 .metric-highlight {
   border-radius: 10px;
-  background: var(--color-accent-soft);
+  background: rgb(255 107 26 / 0.18);
   animation: metric-glow 1.4s ease-in-out 2;
 }
 
@@ -74,7 +284,7 @@ body {
     opacity: 0;
   }
   70% {
-    transform: scale(1.12);
+    transform: scale(1.08);
     opacity: 1;
   }
   100% {
@@ -82,7 +292,7 @@ body {
   }
 }
 .pop-in {
-  animation: pop-in 420ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  animation: pop-in 460ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
 }
 
 @keyframes sheet-up {
@@ -94,7 +304,7 @@ body {
   }
 }
 .sheet-up {
-  animation: sheet-up 260ms ease-out both;
+  animation: sheet-up 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @keyframes fade-in {
@@ -109,11 +319,83 @@ body {
   animation: fade-in 200ms ease-out both;
 }
 
+/* SVG parts that scale around their own middle (the orb's floor shadow). */
+.origin-own-center {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* What-if sliders: a thin track filled in ember from the zero point to the value
+   (--lo / --hi set inline), and a white thumb. */
+.tf-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+.tf-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--color-hair) 0 var(--lo, 0%),
+    var(--color-ember) var(--lo, 0%) var(--hi, 0%),
+    var(--color-hair) var(--hi, 0%) 100%
+  );
+}
+.tf-range::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--color-hair) 0 var(--lo, 0%),
+    var(--color-ember) var(--lo, 0%) var(--hi, 0%),
+    var(--color-hair) var(--hi, 0%) 100%
+  );
+}
+.tf-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -11px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 1px rgb(10 10 11 / 0.08),
+    0 2px 8px rgb(10 10 11 / 0.18);
+}
+.tf-range::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 1px rgb(10 10 11 / 0.08),
+    0 2px 8px rgb(10 10 11 / 0.18);
+}
+.tf-range:focus-visible {
+  outline: none;
+}
+.tf-range:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 4px rgb(255 107 26 / 0.35),
+    0 2px 8px rgb(10 10 11 / 0.18);
+}
+.tf-range:focus-visible::-moz-range-thumb {
+  box-shadow:
+    0 0 0 4px rgb(255 107 26 / 0.35),
+    0 2px 8px rgb(10 10 11 / 0.18);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .metric-highlight,
   .pop-in,
   .sheet-up,
-  .fade-in {
-    animation: none;
+  .fade-in,
+  [class*="animate-"] {
+    animation: none !important;
   }
 }

@@ -1,13 +1,14 @@
 "use client";
 
 /**
- * Small shared pieces: the Metric renderer (with its DOM hook), the count-up
- * number, status icons and formatting helpers.
+ * Small shared pieces: the Metric renderer (with its DOM hook), the count-up number, status icons, the
+ * Obsidian-and-Paper layout bits (hero, paper sheet, disclaimer) and formatting helpers.
  */
 import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
 import type { Metric } from "@/lib/api";
 import { openMath } from "@/lib/actions";
 import { useApp } from "@/lib/store";
+import { IconChevronLeft } from "./icons";
 
 /** Props that make a number open its "show the math" sheet on tap or Enter. */
 function mathTrigger(metric: Metric | undefined) {
@@ -27,7 +28,7 @@ function mathTrigger(metric: Metric | undefined) {
         open(e);
       }
     },
-    className: "cursor-pointer underline decoration-dotted decoration-1 underline-offset-4 decoration-muted/50 hover:decoration-accent focus-visible:outline-2 focus-visible:outline-accent",
+    className: "metric-link",
   };
 }
 
@@ -175,14 +176,21 @@ export const statusText: Record<StatusKind, string> = {
   green: "Healthy",
 };
 
-export const statusColor: Record<StatusKind, string> = {
-  red: "text-bad",
-  amber: "text-warn",
-  green: "text-ok",
+const ICON_TONE: Record<"paper" | "dark", Record<StatusKind, string>> = {
+  paper: { red: "text-poor-icon", amber: "text-fair-icon", green: "text-good-icon" },
+  dark: { red: "text-poor", amber: "text-fair", green: "text-good" },
 };
 
-export function StatusIcon({ status, className = "h-4 w-4" }: { status: StatusKind; className?: string }) {
-  const common = { className: `${className} ${statusColor[status]} shrink-0`, viewBox: "0 0 20 20", fill: "currentColor", "aria-hidden": true };
+export function StatusIcon({
+  status,
+  className = "h-4 w-4",
+  tone = "paper",
+}: {
+  status: StatusKind;
+  className?: string;
+  tone?: "paper" | "dark";
+}) {
+  const common = { className: `${className} ${ICON_TONE[tone][status]} shrink-0`, viewBox: "0 0 20 20", fill: "currentColor", "aria-hidden": true };
   if (status === "green")
     return (
       <svg {...common}>
@@ -202,10 +210,17 @@ export function StatusIcon({ status, className = "h-4 w-4" }: { status: StatusKi
   );
 }
 
-export function StatusPill({ status }: { status: StatusKind }) {
+const CHIP_TONE: Record<StatusKind, string> = {
+  red: "bg-poor-soft text-poor-ink",
+  amber: "bg-fair-soft text-fair-ink",
+  green: "bg-good-soft text-good-ink",
+};
+
+/** Status on paper: a soft tinted chip with its icon. */
+export function StatusChip({ status }: { status: StatusKind }) {
   return (
-    <span className={`inline-flex items-center gap-1 text-xs font-medium ${statusColor[status]}`}>
-      <StatusIcon status={status} className="h-3.5 w-3.5" />
+    <span className={`inline-flex h-6 items-center gap-1.5 rounded-full pl-[7px] pr-2.5 text-xs font-semibold ${CHIP_TONE[status]}`}>
+      <StatusIcon status={status} className="h-[13px] w-[13px]" />
       {statusText[status]}
     </span>
   );
@@ -215,25 +230,58 @@ export function StatusPill({ status }: { status: StatusKind }) {
 // Layout bits
 // ---------------------------------------------------------------------------
 
-export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <section className={`rounded-2xl border border-line bg-white p-4 ${className}`}>{children}</section>;
+/** The dark top of a screen. Leaves room for the floating header. */
+export function Hero({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <section className={`relative flex-none px-5 pt-[calc(var(--header-h)+14px)] ${className}`}>
+      <div aria-hidden className="hero-sheen pointer-events-none absolute inset-x-0 top-0 h-[640px]" />
+      <div className="relative">{children}</div>
+    </section>
+  );
 }
 
-export function SectionTitle({ children, right }: { children: ReactNode; right?: ReactNode }) {
+/** The white sheet that rises over the hero; holds the detail and ends with the disclaimer. */
+export function PaperSheet({ children, label, className = "" }: { children: ReactNode; label?: string; className?: string }) {
   return (
-    <div className="mb-2 flex items-baseline justify-between">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">{children}</h2>
+    <section aria-label={label} className={`paper-sheet mt-7 flex-1 px-5 pb-36 pt-2.5 ${className}`}>
+      <div aria-hidden className="mx-auto h-[5px] w-10 rounded-full bg-hair" />
+      {children}
+      <Disclaimer />
+    </section>
+  );
+}
+
+export function Disclaimer() {
+  const sandbox = useApp((s) => s.customer === "sandbox");
+  return (
+    <p className="mt-8 text-center text-[11.5px] leading-normal text-ink-3">
+      {sandbox
+        ? "Educational demo · Plaid sandbox test data · not financial advice · not a credit score"
+        : "Educational demo · made-up data · not financial advice · not a credit score"}
+    </p>
+  );
+}
+
+/** A grouped block on paper. */
+export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <section className={`rounded-[24px] bg-tile p-4 ${className}`}>{children}</section>;
+}
+
+/** A section heading on paper. */
+export function SectionTitle({ children, right, className = "" }: { children: ReactNode; right?: ReactNode; className?: string }) {
+  return (
+    <div className={`flex items-center justify-between gap-3 ${className}`}>
+      <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-ink">{children}</h2>
       {right}
     </div>
   );
 }
 
+/** Back, on obsidian. */
 export function BackButton({ onClick, label = "Back" }: { onClick: () => void; label?: string }) {
   return (
-    <button onClick={onClick} className="inline-flex items-center gap-1 text-sm font-medium text-muted hover:text-navy">
-      <svg viewBox="0 0 20 20" className="h-4 w-4" fill="currentColor" aria-hidden>
-        <path d="M12.7 4.3a1 1 0 0 1 0 1.4L8.42 10l4.3 4.3a1 1 0 0 1-1.42 1.4l-5-5a1 1 0 0 1 0-1.4l5-5a1 1 0 0 1 1.4 0Z" />
-      </svg>
+    <button onClick={onClick} className="glass inline-flex h-11 items-center gap-1.5 rounded-full pl-2.5 pr-4 text-sm font-medium text-snow transition hover:bg-white/10">
+      <IconChevronLeft className="h-[18px] w-[18px]" strokeWidth={1.9} />
       {label}
     </button>
   );

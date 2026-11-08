@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import type { CustomerId } from "@/lib/api";
 import {
   goTo,
@@ -19,17 +19,19 @@ import { ForecastScreen } from "./screens/Forecast";
 import { FuturesScreen } from "./screens/Futures";
 import { NextStepScreen } from "./screens/NextStep";
 import { WhatIfDrawer } from "./WhatIfDrawer";
-import { Logo } from "./Logo";
+import { Logo, OrbScene } from "./Logo";
 import { MathSheet } from "./MathSheet";
 import { ActivityPanel } from "./ActivityPanel";
 import { TransferSheet } from "./TransferSheet";
 import { ConnectSheet, SandboxBanner } from "./ConnectBank";
+import { IconChevronDown, IconForecast, IconHome, IconNext, IconOrb, IconRefresh } from "./icons";
+import { Hero } from "./ui";
 
-const TABS: { id: Screen; label: string; icon: string }[] = [
-  { id: "today", label: "Today", icon: "M3 10.5 10 4l7 6.5V17a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1v-6.5Z" },
-  { id: "forecast", label: "Forecast", icon: "M3 15l4-5 3 3 4-6 3 4M3 18h14" },
-  { id: "futures", label: "2031", icon: "M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14Zm0 3v4l3 2" },
-  { id: "next", label: "Next step", icon: "M4 10h10m-4-5 5 5-5 5" },
+const TABS: { id: Screen; label: string; Icon: ComponentType<{ className?: string }> }[] = [
+  { id: "today", label: "Today", Icon: IconHome },
+  { id: "forecast", label: "Forecast", Icon: IconForecast },
+  { id: "futures", label: "2031", Icon: IconOrb },
+  { id: "next", label: "Next step", Icon: IconNext },
 ];
 
 export function App() {
@@ -39,9 +41,11 @@ export function App() {
   const hasData = useApp((s) => s.profile !== null && s.health !== null);
   const hasForecast = useApp((s) => s.forecast !== null);
   const hasFutures = useApp((s) => s.futures !== null);
-  const sandbox = useApp((s) => s.customer === "sandbox");
 
+  const frameRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     void loadCustomer();
@@ -52,25 +56,59 @@ export function App() {
     }
   }, []);
 
+  // The header floats over the screen; its height (taller with the sandbox banner or an error) becomes
+  // --header-h, which every hero uses as its top padding.
+  useEffect(() => {
+    const header = headerRef.current;
+    const frame = frameRef.current;
+    if (!header || !frame) return;
+    const sync = () => frame.style.setProperty("--header-h", `${header.offsetHeight}px`);
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, []);
+
   // Each screen starts at the top.
   useEffect(() => {
     mainRef.current?.scrollTo({ top: 0 });
   }, [screen]);
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center gap-8 bg-[#eef1f6] sm:p-6">
+    <div className="relative flex min-h-[100dvh] w-full items-center justify-center gap-8 bg-[#050506] sm:p-6">
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(255,255,255,0.045),transparent_70%),radial-gradient(40%_40%_at_100%_100%,rgba(255,255,255,0.025),transparent_70%)]"
+      />
+
       {/* Phone frame. On a real phone it goes full-bleed. */}
-      <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-white sm:h-[844px] sm:max-h-[calc(100dvh-3rem)] sm:w-[400px] sm:rounded-[44px] sm:border-[10px] sm:border-navy sm:shadow-2xl">
-        <Header />
-        <SandboxBanner />
-        <main ref={mainRef} id="phone-screen" className="phone-scroll flex-1 overflow-y-auto">
+      <div
+        ref={frameRef}
+        className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-obsidian text-snow antialiased sm:h-[844px] sm:max-h-[calc(100dvh-3rem)] sm:w-[400px] sm:rounded-[48px] sm:shadow-[0_0_0_10px_#000,0_0_0_11px_rgba(255,255,255,0.1),0_50px_120px_-30px_rgba(0,0,0,0.95)]"
+      >
+        <div
+          ref={headerRef}
+          className={`absolute inset-x-0 top-0 z-20 border-b transition-colors duration-200 ${
+            scrolled ? "border-white/[0.06] bg-obsidian/80 backdrop-blur-xl" : "border-transparent"
+          }`}
+        >
+          <Header />
+          <SandboxBanner />
           {error && (
-            <div role="alert" className="mx-4 mt-3 rounded-xl border border-bad/30 bg-bad/5 px-3 py-2 text-sm text-bad">
+            <div role="alert" className="mx-4 mb-3 rounded-2xl border border-poor/30 bg-poor/10 px-3.5 py-2.5 text-sm leading-snug text-[#fecaca]">
               {error}
             </div>
           )}
+        </div>
+
+        <main
+          ref={mainRef}
+          id="phone-screen"
+          onScroll={(e) => setScrolled(e.currentTarget.scrollTop > 8)}
+          className="phone-scroll flex flex-1 flex-col overflow-y-auto overflow-x-hidden"
+        >
           {!hasData ? (
-            <div className="flex h-full items-center justify-center text-muted">{loading ? "Loading your accounts..." : ""}</div>
+            <Loading busy={loading} />
           ) : (
             <>
               {screen === "today" && <TodayScreen />}
@@ -80,30 +118,39 @@ export function App() {
             </>
           )}
         </main>
-        <p className="border-t border-line bg-surface px-3 py-1 text-center text-[10.5px] leading-snug text-muted">
-          {sandbox
-            ? "Educational demo · Plaid sandbox test data · not financial advice · not a credit score"
-            : "Educational demo · made-up data · not financial advice · not a credit score"}
-        </p>
+
+        <nav
+          aria-label="Screens"
+          className="absolute bottom-[max(22px,env(safe-area-inset-bottom))] left-1/2 z-20 flex w-max -translate-x-1/2 items-center gap-1 rounded-full border border-white/[0.08] bg-raised p-1.5 shadow-[0_18px_40px_-12px_rgba(10,10,11,0.6),0_2px_8px_rgba(10,10,11,0.25)]"
+        >
+          {TABS.map(({ id, label, Icon }) =>
+            screen === id ? (
+              <button
+                key={id}
+                onClick={() => goTo(id)}
+                aria-current="page"
+                className="flex h-12 items-center gap-2 whitespace-nowrap rounded-full bg-snow pl-[15px] pr-[18px] text-sm font-semibold text-ink"
+              >
+                <Icon className="h-5 w-5" />
+                {label}
+              </button>
+            ) : (
+              <button
+                key={id}
+                onClick={() => goTo(id)}
+                aria-label={label}
+                className="flex h-12 w-12 items-center justify-center rounded-full text-fog transition hover:bg-white/[0.06] hover:text-snow"
+              >
+                <Icon className="h-5 w-5" />
+              </button>
+            ),
+          )}
+        </nav>
+
         <WhatIfDrawer />
         <MathSheet />
         <TransferSheet />
         <ConnectSheet />
-        <nav className="grid grid-cols-4 border-t border-line bg-white pb-[env(safe-area-inset-bottom)]" aria-label="Screens">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => goTo(t.id)}
-              aria-current={screen === t.id ? "page" : undefined}
-              className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${screen === t.id ? "text-accent" : "text-muted"}`}
-            >
-              <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d={t.icon} />
-              </svg>
-              {t.label}
-            </button>
-          ))}
-        </nav>
       </div>
 
       {/* Agent activity panel (M9): beside the phone on laptop screens, where judges can see it. */}
@@ -114,14 +161,35 @@ export function App() {
   );
 }
 
+function Loading({ busy }: { busy: boolean }) {
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center gap-5 px-8 text-center">
+      {busy && (
+        <>
+          <OrbScene width={150} height={132} />
+          <p className="text-sm text-fog">Loading your accounts…</p>
+        </>
+      )}
+    </div>
+  );
+}
+
 /** A screen that can't be shown for this customer (a sandbox bank with too little history). */
 function Unavailable() {
   const reason = useApp((s) => s.unavailable);
   return (
-    <div className="px-4 py-6 text-sm text-navy">
-      <p className="rounded-2xl border border-line bg-surface px-4 py-3 leading-snug">
-        {reason ?? "This screen isn't available for this customer."}
-      </p>
+    <div className="flex flex-1 flex-col">
+      <Hero className="pb-10">
+        <div className="glass rounded-[26px] px-5 py-4 text-[15px] leading-relaxed text-snow">
+          {reason ?? "This screen isn't available for this customer."}
+        </div>
+        <button
+          onClick={() => goTo("today")}
+          className="glass mt-4 inline-flex h-11 items-center rounded-full px-5 text-sm font-medium text-snow transition hover:bg-white/10"
+        >
+          Back to Today
+        </button>
+      </Hero>
     </div>
   );
 }
@@ -131,42 +199,49 @@ const CONNECT = "__connect__";
 function Header() {
   const customer = useApp((s) => s.customer);
   const plaid = useApp((s) => s.plaid);
+  const label = customer === "sandbox" ? (plaid.connection?.label ?? "Sandbox bank") : customer === "household" ? "Jordan & Priya" : "Maya";
   return (
-    <header className="flex items-center justify-between border-b border-line px-4 pb-2 pt-3">
-      <div className="flex items-center gap-2">
-        <Logo />
-        <span className="text-base font-semibold text-navy">Two Futures</span>
+    <header className="flex h-[72px] items-center justify-between gap-2 px-5">
+      <div className="flex min-w-0 items-center gap-2">
+        <Logo size={32} />
+        <span className="hidden truncate text-[15px] font-semibold tracking-[-0.015em] text-snow min-[380px]:inline">Two Futures</span>
       </div>
-      <div className="flex items-center gap-2">
-        <label className="sr-only" htmlFor="customer">
-          Customer
-        </label>
-        <select
-          id="customer"
-          value={customer}
-          onChange={(e) => {
-            if (e.target.value === CONNECT) openConnect(true);
-            else switchCustomer(e.target.value as CustomerId);
-          }}
-          className="w-[7.5rem] rounded-full border border-line bg-surface px-2 py-1 text-xs font-medium text-navy"
-        >
-          <option value="maya">Maya</option>
-          <option value="household">Jordan & Priya</option>
-          {plaid.connection && <option value="sandbox">{plaid.connection.label}</option>}
-          {plaid.configured && <option value={CONNECT}>{plaid.connection ? "Reconnect a bank (sandbox)..." : "Connect a bank (sandbox)..."}</option>}
-        </select>
+      <div className="flex shrink-0 items-center gap-2">
+        <div className="relative">
+          <label className="sr-only" htmlFor="customer">
+            Customer
+          </label>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-snow text-[13px] font-semibold text-ink"
+          >
+            {label.charAt(0)}
+          </span>
+          <select
+            id="customer"
+            value={customer}
+            onChange={(e) => {
+              if (e.target.value === CONNECT) openConnect(true);
+              else switchCustomer(e.target.value as CustomerId);
+            }}
+            className="glass h-11 w-[164px] cursor-pointer appearance-none truncate rounded-full pl-[44px] pr-7 text-[12.5px] font-medium text-snow [color-scheme:dark] focus:outline-none focus-visible:ring-2 focus-visible:ring-ember"
+          >
+            <option value="maya">Maya</option>
+            <option value="household">Jordan & Priya</option>
+            {plaid.connection && <option value="sandbox">{plaid.connection.label}</option>}
+            {plaid.configured && <option value={CONNECT}>{plaid.connection ? "Reconnect a bank (sandbox)…" : "Connect a bank (sandbox)…"}</option>}
+          </select>
+          <IconChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-fog" strokeWidth={2} />
+        </div>
         <button
           onClick={() => void resetDemo()}
           title="Reset demo"
           aria-label="Reset demo"
-          className="rounded-full border border-line p-1.5 text-muted hover:text-navy"
+          className="glass flex h-11 w-11 items-center justify-center rounded-full text-[#d4d4d8] transition hover:bg-white/10 hover:text-snow"
         >
-          <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-            <path d="M4 10a6 6 0 1 0 2-4.5M4 3v3h3" />
-          </svg>
+          <IconRefresh className="h-[18px] w-[18px]" />
         </button>
       </div>
     </header>
   );
 }
-

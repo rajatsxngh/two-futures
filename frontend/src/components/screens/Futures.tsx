@@ -21,9 +21,10 @@ import {
 import { useApp } from "@/lib/store";
 import { SavedSession, VoiceSession, type VoiceTools } from "../voice";
 import type { VoiceMode } from "@/lib/store";
-import { CountUp, MetricValue } from "../ui";
+import { CountUp, Hero, MetricValue, PaperSheet } from "../ui";
 import { JobLossCheck } from "../JobLossCheck";
-import { CarOptions } from "../WhatIfDrawer";
+import { CarOptions, WhatIfDeltas } from "../WhatIfDrawer";
+import { IconArrowRight, IconArrowUp, IconMic } from "../icons";
 
 // The agent's client tools are the same functions the buttons use, so a spoken
 // what-if changes exactly the same state as a tap. A spoken "yes" to the transfer
@@ -42,64 +43,104 @@ export function FuturesScreen() {
   const planPath = whatIf?.result ?? futures.paths.plan;
 
   return (
-    <div className="space-y-3 px-3 py-4">
-      <div className="px-1">
-        <h1 className="text-2xl font-semibold text-navy">Meet {futures.target_year}</h1>
-        <p className="text-sm text-muted">Same you, same surprises, two paths. Tap a side to talk.</p>
-      </div>
+    <div className="flex flex-1 flex-col">
+      <Hero>
+        <h1 className="text-[36px] font-semibold leading-[1.04] tracking-[-0.045em] text-snow">Meet {futures.target_year}</h1>
+        <p className="mt-2 text-sm leading-[1.45] text-fog [text-wrap:pretty]">Same you, same surprises, two paths. Tap a side to talk.</p>
 
-      <div className="grid grid-cols-2 gap-2">
-        <FutureSide id="same_path" path={futures.paths.same_path} year={futures.target_year} />
-        <FutureSide id="plan" path={planPath} year={futures.target_year} />
-      </div>
+        <div className="mt-[22px] grid grid-cols-2 gap-2.5">
+          <FutureSide id="same_path" path={futures.paths.same_path} year={futures.target_year} />
+          <FutureSide id="plan" path={planPath} year={futures.target_year} />
+        </div>
 
-      <VoicePanel />
-      {customer === "maya" && <AskBoth />}
-      <WhatIfResult />
-      <JobLossCheck />
+        <VoicePanel />
+      </Hero>
 
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          onClick={() => openWhatIf(true)}
-          className="rounded-2xl border-2 border-plan/40 bg-plan-soft py-3 text-sm font-semibold text-plan hover:border-plan"
-        >
-          Try a what-if
-        </button>
-        <button onClick={() => goTo("next")} className="rounded-2xl bg-accent py-3 text-sm font-semibold text-white shadow-md shadow-accent/25 hover:bg-accent-dark">
-          Your next step
-        </button>
-      </div>
-      <p className="px-1 text-[11px] leading-snug text-muted">{futures.assumptions.slice(1).join(" ")}</p>
+      <PaperSheet label="Ask, test and decide">
+        <div className="mt-[18px] flex flex-col gap-4">
+          {customer === "maya" && <AskBoth />}
+          <WhatIfResult />
+          <JobLossCheck />
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-2.5">
+          <button
+            onClick={() => openWhatIf(true)}
+            className="h-14 rounded-full bg-ember-soft text-[15px] font-semibold text-ember-ink shadow-[inset_0_0_0_1px_rgba(255,107,26,0.3)] transition hover:shadow-[inset_0_0_0_1.5px_rgba(255,107,26,0.55)] active:scale-[0.99]"
+          >
+            Try a what-if
+          </button>
+          <button
+            onClick={() => goTo("next")}
+            className="flex h-14 items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-semibold text-snow transition hover:bg-black active:scale-[0.99]"
+          >
+            Your next step
+            <IconArrowRight className="h-4 w-4" strokeWidth={2} />
+          </button>
+        </div>
+
+        <h2 className="mt-[26px] text-[13px] font-semibold text-ink-2">Assumptions</h2>
+        <p className="mt-2 text-[11.5px] leading-[1.6] text-ink-3 [text-wrap:pretty]">{futures.assumptions.slice(1).join(" ")}</p>
+      </PaperSheet>
     </div>
   );
 }
 
 function FutureSide({ id, path, year }: { id: PathId; path: PathResult; year: number }) {
   const active = useApp((s) => s.activePath === id);
+  const name = useApp((s) => s.profile?.customer.name ?? "You");
   const isPlan = id === "plan";
   const last = path.snapshots[path.snapshots.length - 1];
+  const rule = isPlan ? "bg-ember/[0.22]" : "bg-white/[0.08]";
 
   return (
     <section
       onClick={() => selectFuture(id)}
       aria-label={path.label}
-      className={`flex min-w-0 cursor-pointer flex-col rounded-2xl border-2 p-2.5 transition ${
-        isPlan ? "border-plan/30 bg-plan-soft shadow-[0_0_28px_-6px_rgba(217,102,63,0.45)]" : "border-same/25 bg-same-soft"
-      } ${active ? (isPlan ? "ring-2 ring-plan" : "ring-2 ring-same") : ""}`}
+      className={`flex min-w-0 cursor-pointer flex-col rounded-[26px] px-3 pb-3 pt-3.5 transition ${
+        isPlan
+          ? "border border-ember/40 bg-[linear-gradient(180deg,rgba(255,107,26,0.17)_0%,rgba(255,107,26,0.06)_38%,rgba(255,107,26,0.035)_100%)] shadow-[0_30px_70px_-30px_rgba(255,107,26,0.6)]"
+          : "glass"
+      } ${active ? (isPlan ? "ring-2 ring-ember" : "ring-2 ring-silver/70") : ""}`}
     >
-      <p className={`text-center text-xs font-bold uppercase tracking-wide ${isPlan ? "text-plan" : "text-same"}`}>{path.label}</p>
-      <div className="mt-1 flex justify-center">
-        <Avatar warm={isPlan} />
-      </div>
-      <p className="text-center text-xs text-muted">
+      <p className={`text-center text-[12.5px] font-semibold tracking-[0.01em] ${isPlan ? "text-ember-text" : "text-fog"}`}>{path.label}</p>
+
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          selectFuture(id);
+        }}
+        aria-label={`Talk to ${name} ${year}, ${path.label}`}
+        className={`relative mx-auto mt-3 block h-[72px] w-[72px] rounded-full ${
+          isPlan
+            ? "animate-breathe shadow-[0_0_0_2px_#0a0a0b,0_0_0_3.5px_#ff6b1a,0_0_26px_rgba(255,107,26,0.55)]"
+            : "shadow-[0_0_0_1px_rgba(255,255,255,0.14)]"
+        }`}
+      >
+        <span className="block h-full w-full overflow-hidden rounded-full">
+          <Avatar warm={isPlan} size={72} />
+        </span>
+        <span
+          aria-hidden
+          className={`absolute -bottom-0.5 -right-1 flex h-[26px] w-[26px] items-center justify-center rounded-full ${
+            isPlan ? "bg-ember text-ink shadow-[0_0_0_2.5px_#1d120c]" : "bg-[#3f3f46] text-snow shadow-[0_0_0_2.5px_#121213]"
+          }`}
+        >
+          <IconMic className="h-[13px] w-[13px]" strokeWidth={2} />
+        </span>
+      </button>
+      <p className="tabular mt-2.5 text-center text-xs text-smoke">
         {last ? `Age ${last.age}` : ""} · {year}
       </p>
 
-      <div className="mt-2 space-y-2">
+      <div aria-hidden className={`mb-1.5 mt-3.5 h-px ${rule}`} />
+      <div className="flex flex-col gap-1">
         {path.key_numbers.map((m) => (
           <KeyNumber key={m.id} metric={m} warm={isPlan} />
         ))}
       </div>
+      <div aria-hidden className={`mb-4 mt-2.5 h-px ${rule}`} />
 
       <Timeline events={path.events} warm={isPlan} />
       <AskBox path={id} warm={isPlan} />
@@ -108,24 +149,29 @@ function FutureSide({ id, path, year }: { id: PathId; path: PathResult; year: nu
 }
 
 function KeyNumber({ metric, warm }: { metric: Metric; warm: boolean }) {
-  // "6.0 months" -> big "6.0" + small "months", so the number stays 32px in a half-width column.
+  // "6.0 months" -> big "6.0" + small "months", so the number stays big in a half-width column.
   const months = metric.unit === "months" ? metric.display.match(/^([\d.,-]+)\s+(.*)$/) : null;
   return (
-    <div>
-      <p className="text-[11px] font-medium text-muted">{metric.label}</p>
-      <MetricValue metric={metric} className={`font-semibold leading-none ${warm ? "text-navy" : "text-navy/70"}`}>
-        {months ? (
-          <>
-            <span className="text-[32px]">
-              <CountUp text={months[1]} />
-            </span>{" "}
-            <span className="text-sm font-medium">{months[2]}</span>
-          </>
-        ) : (
-          <span className={metric.unit === "date" ? "text-[26px]" : "text-[32px]"}>
-            <CountUp text={metric.display} />
-          </span>
-        )}
+    <div className="flex flex-col">
+      <span className="text-[11.5px] text-smoke">{metric.label}</span>
+      <MetricValue
+        metric={metric}
+        className={`inline-flex min-h-11 items-center self-start font-semibold leading-none tracking-[-0.045em] ${warm ? "text-white" : "text-[#d4d4d8]"}`}
+      >
+        <span className="inline-flex items-baseline">
+          {months ? (
+            <>
+              <span className="text-[30px]">
+                <CountUp text={months[1]} />
+              </span>
+              <span className="ml-1 text-[13px] font-medium tracking-normal text-fog">{months[2]}</span>
+            </>
+          ) : (
+            <span className={metric.unit === "date" ? "text-[24px]" : "text-[30px]"}>
+              <CountUp text={metric.display} />
+            </span>
+          )}
+        </span>
       </MetricValue>
     </div>
   );
@@ -133,19 +179,30 @@ function KeyNumber({ metric, warm }: { metric: Metric; warm: boolean }) {
 
 function Timeline({ events, warm }: { events: LifeEvent[]; warm: boolean }) {
   const sorted = [...events].sort((a, b) => a.date.localeCompare(b.date));
+  if (!sorted.length) return null;
   return (
-    <ol className={`mt-3 space-y-1.5 border-l-2 pl-2.5 ${warm ? "border-plan/40" : "border-same/40"}`}>
-      {sorted.map((e, i) => (
-        <li key={`${e.date}-${i}`} className="relative">
-          <span className={`absolute -left-[15px] top-1 h-2 w-2 rounded-full ${e.shared ? "bg-navy" : warm ? "bg-plan" : "bg-same"}`} />
-          <p className="text-[11px] font-semibold leading-tight text-navy">
-            {e.date.slice(0, 4)} · {e.title}
-            {e.shared && <span className="ml-1 rounded bg-navy/10 px-1 text-[9px] font-medium uppercase text-navy">both</span>}
-          </p>
-          <p className="text-[10px] leading-snug text-muted">{e.description}</p>
-        </li>
-      ))}
-    </ol>
+    <div className="relative">
+      <span aria-hidden className={`absolute bottom-1.5 left-[3px] top-1.5 w-[1.5px] rounded-full ${warm ? "bg-ember/40" : "bg-white/[0.12]"}`} />
+      <ol aria-label="Along the way" className="flex flex-col gap-3.5 pl-4">
+        {sorted.map((e, i) => (
+          <li key={`${e.date}-${i}`} className="relative">
+            <span
+              aria-hidden
+              className={`absolute -left-4 top-1 h-2 w-2 rounded-full ${e.shared ? "bg-snow" : warm ? "bg-ember" : "bg-smoke"}`}
+            />
+            <p className="text-xs font-semibold leading-[1.35] text-snow">
+              <span className="tabular text-smoke">{e.date.slice(0, 4)}</span> · {e.title}
+              {e.shared && (
+                <span className="ml-1 inline-block rounded-full bg-white/[0.12] px-1.5 py-px align-[1px] text-[9.5px] font-semibold uppercase tracking-[0.05em] text-[#e4e4e7]">
+                  Both
+                </span>
+              )}
+            </p>
+            <p className="mt-[3px] text-[11px] leading-[1.4] text-fog">{e.description}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
@@ -163,13 +220,13 @@ function AskBox({ path, warm }: { path: PathId; warm: boolean }) {
   };
 
   return (
-    <div className="mt-auto pt-3" onClick={(e) => e.stopPropagation()}>
+    <div className="mt-auto pt-[18px]" onClick={(e) => e.stopPropagation()}>
       {lastQuestion && (
-        <p className="mb-1.5 rounded-lg bg-white/70 px-2 py-1 text-[11px] leading-snug text-navy" aria-live="polite">
+        <p className="mb-2 rounded-xl bg-black/30 px-2.5 py-1.5 text-[11px] leading-snug text-snow" aria-live="polite">
           <span className="font-semibold">You:</span> {lastQuestion.text}
         </p>
       )}
-      <form onSubmit={submit} className="flex gap-1">
+      <form onSubmit={submit} className="relative">
         <label className="sr-only" htmlFor={`ask-${path}`}>
           Ask this future self
         </label>
@@ -178,17 +235,19 @@ function AskBox({ path, warm }: { path: PathId; warm: boolean }) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           onFocus={() => selectFuture(path)}
-          placeholder="Ask me..."
-          className="min-w-0 flex-1 rounded-full border border-line bg-white px-2.5 py-1.5 text-xs text-navy placeholder:text-muted focus:border-accent focus:outline-none"
+          placeholder="Ask me…"
+          className={`h-11 w-full rounded-full border pl-3.5 pr-12 text-[13px] text-snow placeholder:text-smoke focus:outline-none focus:ring-2 ${
+            warm ? "border-ember/30 bg-black/35 focus:ring-ember/60" : "border-white/10 bg-white/[0.06] focus:ring-white/30"
+          }`}
         />
         <button
           type="submit"
           aria-label="Send question"
-          className={`shrink-0 rounded-full p-1.5 text-white ${warm ? "bg-plan" : "bg-same"}`}
+          className={`absolute bottom-1 right-1 flex h-9 w-9 items-center justify-center rounded-full transition hover:brightness-110 ${
+            warm ? "bg-ember text-ink" : "bg-[#3f3f46] text-snow"
+          }`}
         >
-          <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor" aria-hidden>
-            <path d="M3.4 2.6a.75.75 0 0 1 .82-.1l13 6.75a.75.75 0 0 1 0 1.33l-13 6.75A.75.75 0 0 1 3.15 16.5L5 10 3.15 3.5a.75.75 0 0 1 .25-.9ZM6.3 10.75l-1.2 4.1L14.86 10 5.1 5.15l1.2 4.1H11a.75.75 0 0 1 0 1.5H6.3Z" />
-          </svg>
+          <IconArrowUp className="h-[15px] w-[15px]" strokeWidth={2} />
         </button>
       </form>
     </div>
@@ -204,6 +263,7 @@ function VoicePanel() {
   const name = useApp((s) => s.profile?.customer.name ?? "You");
   const customer = useApp((s) => s.customer);
   const mode = useApp((s) => s.voiceMode);
+  const status = useApp((s) => s.voiceStatus);
   const [configured, setConfigured] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -229,16 +289,16 @@ function VoicePanel() {
   if (customer !== "maya") {
     // The agent's persona is written for Maya; a couple's future self would get a confused voice.
     return (
-      <section className="fade-in rounded-2xl border-2 border-line bg-white p-3 text-sm text-navy">
-        <div className="mb-1 flex items-center justify-between gap-2">
-          <p className="text-xs font-bold uppercase tracking-wide text-muted">Talking to 2031</p>
-          <button onClick={() => selectFuture(null)} className="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted hover:text-navy">
+      <section className="glass fade-in mt-3.5 rounded-[28px] p-4 text-sm text-snow">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-[12.5px] font-semibold text-fog">Talking to 2031</p>
+          <button onClick={() => selectFuture(null)} className="glass h-11 rounded-full px-4 text-[13px] font-medium text-snow hover:bg-white/10">
             Close
           </button>
         </div>
-        <p className="leading-snug">
-          The future-self conversation is set up for Maya, the demo customer. Switch the customer to Maya at the top to talk to her
-          two futures. Everything else on this screen works for {name}.
+        <p className="mt-2 leading-relaxed text-fog">
+          The future-self conversation is set up for Maya, the demo customer. Switch the customer to Maya at the top to talk to her two
+          futures. Everything else on this screen works for {name}.
         </p>
       </section>
     );
@@ -247,49 +307,56 @@ function VoicePanel() {
   return (
     <section
       aria-label={`Talking to ${name} 2031`}
-      className={`fade-in rounded-2xl border-2 bg-white p-3 ${warm ? "border-plan/40" : "border-same/30"}`}
+      className={`fade-in mt-3.5 flex flex-col rounded-[30px] bg-white/[0.045] px-3.5 pb-3.5 pt-3 ${
+        warm ? "border border-ember/[0.36] shadow-[0_40px_80px_-40px_rgba(255,107,26,0.45)]" : "border border-white/10"
+      }`}
     >
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <p className={`text-xs font-bold uppercase tracking-wide ${warm ? "text-plan" : "text-same"}`}>
-          Talking to {name} 2031 · {PATH_LABEL[path]}
+      <div className="flex items-center justify-between gap-2.5">
+        <p className={`flex min-w-0 items-center gap-2 text-[12.5px] font-semibold ${warm ? "text-ember-text" : "text-fog"}`}>
+          <span aria-hidden className={`h-[7px] w-[7px] shrink-0 rounded-full ${status === "connected" ? "animate-live bg-good" : "bg-smoke"}`} />
+          <span className="truncate">
+            Talking to {name} 2031 · {PATH_LABEL[path]}
+          </span>
         </p>
-        <button onClick={() => selectFuture(null)} className="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted hover:text-navy">
+        <button onClick={() => selectFuture(null)} className="glass h-11 shrink-0 rounded-full px-3.5 text-[13px] font-medium text-snow hover:bg-white/10">
           Close
         </button>
       </div>
       <ModeSwitch mode={mode} />
       {configured === false && mode !== "saved" && (
-        <p className="mb-2 rounded-lg bg-amber-50 px-2.5 py-1.5 text-xs leading-snug text-amber-800">
+        <p className="mt-2 rounded-2xl border border-fair/25 bg-fair/10 px-3 py-2 text-xs leading-snug text-[#fde68a]">
           Live voice is off: add ELEVENLABS_API_KEY and ELEVENLABS_AGENT_ID to frontend/.env.local, then restart. Saved answers work without it.
         </p>
       )}
-      {mode === "saved" ? (
-        <SavedSession
-          path={path}
-          factSheet={sheets[path]}
-          tools={VOICE_TOOLS}
-          onToolEvent={recordToolEvent}
-          onStatusChange={setVoiceStatus}
-          queued={queue && queue.path === path ? queue : null}
-          onQueuedSent={queuedQuestionSent}
-          onAgentReply={agentReplied}
-        />
-      ) : (
-        <VoiceSession
-          key={mode}
-          path={path}
-          factSheet={sheets[path]}
-          tools={VOICE_TOOLS}
-          onToolEvent={recordToolEvent}
-          onStatusChange={setVoiceStatus}
-          queued={queue && queue.path === path ? queue : null}
-          notice={notice}
-          onQueuedSent={queuedQuestionSent}
-          onAgentReply={agentReplied}
-          onError={voiceFailed}
-          hideMic={mode === "text"}
-        />
-      )}
+      <div className="mt-3">
+        {mode === "saved" ? (
+          <SavedSession
+            path={path}
+            factSheet={sheets[path]}
+            tools={VOICE_TOOLS}
+            onToolEvent={recordToolEvent}
+            onStatusChange={setVoiceStatus}
+            queued={queue && queue.path === path ? queue : null}
+            onQueuedSent={queuedQuestionSent}
+            onAgentReply={agentReplied}
+          />
+        ) : (
+          <VoiceSession
+            key={mode}
+            path={path}
+            factSheet={sheets[path]}
+            tools={VOICE_TOOLS}
+            onToolEvent={recordToolEvent}
+            onStatusChange={setVoiceStatus}
+            queued={queue && queue.path === path ? queue : null}
+            notice={notice}
+            onQueuedSent={queuedQuestionSent}
+            onAgentReply={agentReplied}
+            onError={voiceFailed}
+            hideMic={mode === "text"}
+          />
+        )}
+      </div>
     </section>
   );
 }
@@ -302,7 +369,7 @@ const MODES: { id: VoiceMode; label: string; hint: string }[] = [
 
 function ModeSwitch({ mode }: { mode: VoiceMode }) {
   return (
-    <div role="radiogroup" aria-label="How she talks" className="mb-2 grid grid-cols-3 gap-1 rounded-full bg-surface p-1">
+    <div role="radiogroup" aria-label="How she talks" className="mt-2 grid grid-cols-3 gap-1 rounded-full bg-white/[0.06] p-1">
       {MODES.map((m) => (
         <button
           key={m.id}
@@ -310,7 +377,7 @@ function ModeSwitch({ mode }: { mode: VoiceMode }) {
           aria-checked={mode === m.id}
           title={m.hint}
           onClick={() => setVoiceMode(m.id)}
-          className={`rounded-full px-2 py-1 text-[11px] font-semibold ${mode === m.id ? "bg-white text-navy shadow-sm" : "text-muted hover:text-navy"}`}
+          className={`h-11 rounded-full text-[13px] font-semibold transition ${mode === m.id ? "bg-snow text-ink" : "text-fog hover:text-snow"}`}
         >
           {m.label}
         </button>
@@ -329,7 +396,11 @@ function AskBoth() {
     setText("");
   };
   return (
-    <form onSubmit={submit} className="flex gap-2">
+    <form onSubmit={submit} className="flex items-center gap-2 rounded-full bg-tile py-1.5 pl-2.5 pr-1.5 focus-within:ring-2 focus-within:ring-ember/40">
+      <span aria-hidden className="flex shrink-0">
+        <span className="h-[22px] w-[22px] rounded-full bg-[#71717a] shadow-[0_0_0_2px_#f4f4f5]" />
+        <span className="-ml-[7px] h-[22px] w-[22px] rounded-full bg-ember shadow-[0_0_0_2px_#f4f4f5]" />
+      </span>
       <label className="sr-only" htmlFor="ask-both">
         Ask both futures
       </label>
@@ -338,12 +409,12 @@ function AskBoth() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Ask both, e.g. Was buying the car worth it?"
-        className="min-w-0 flex-1 rounded-full border border-line bg-white px-3 py-2 text-sm text-navy placeholder:text-muted focus:border-accent focus:outline-none"
+        className="h-11 min-w-0 flex-1 bg-transparent text-sm text-ink placeholder:text-ink-3 focus:outline-none"
       />
       <button
         type="submit"
         disabled={!text.trim() || pending !== null}
-        className="shrink-0 rounded-full bg-navy px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+        className="h-11 shrink-0 rounded-full bg-ink px-[18px] text-sm font-semibold text-snow transition hover:bg-black disabled:opacity-40"
       >
         {pending ? "Asking…" : "Ask both"}
       </button>
@@ -354,17 +425,13 @@ function AskBoth() {
 function WhatIfResult() {
   const whatIf = useApp((s) => s.whatIf);
   const pending = useApp((s) => s.whatIfPending);
-  if (pending && !whatIf) return <p className="px-1 text-sm text-muted">Working it out...</p>;
+  if (pending && !whatIf) return <p className="text-sm text-ink-3">Working it out…</p>;
   if (!whatIf) return null;
   return (
-    <div className="fade-in rounded-2xl border border-plan/30 bg-white p-3" aria-live="polite">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-plan">What-if on the plan</p>
-      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
-        {whatIf.deltas.map((d) => (
-          <MetricValue key={d.id} metric={d} animate className="text-lg font-semibold text-navy" />
-        ))}
-      </div>
-      <p className="mt-1 text-sm leading-snug text-navy/85">{whatIf.sentence}</p>
+    <div className="fade-in rounded-[22px] bg-ember-soft p-4" aria-live="polite">
+      <p className="text-xs font-semibold text-ember-ink">What-if on the plan</p>
+      <WhatIfDeltas deltas={whatIf.deltas} />
+      <p className="mt-3 text-sm leading-[1.45] text-ink-2 [text-wrap:pretty]">{whatIf.sentence}</p>
       <CarOptions options={whatIf.car_options} />
     </div>
   );
@@ -373,22 +440,22 @@ function WhatIfResult() {
 /** One simple illustrated avatar, used on both sides. Never a photo or an aged face. */
 export function Avatar({ warm, size = 64 }: { warm: boolean; size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" role="img" aria-label="Future you" className={warm ? "drop-shadow-[0_0_10px_rgba(239,106,26,0.45)]" : ""}>
-      <circle cx="32" cy="32" r="31" fill={warm ? "#ffe2cf" : "#e4e8ee"} />
+    <svg width={size} height={size} viewBox="0 0 64 64" role="img" aria-label="Future you">
+      <rect width="64" height="64" fill={warm ? "#2A1409" : "#1F1F23"} />
       {/* hair back */}
-      <path d="M17 31c0-11 6.5-18 15-18s15 7 15 18v9H17z" fill="#3b2a24" />
+      <path d="M15.5 33c0-11.6 7.2-19 16.5-19s16.5 7.4 16.5 19v12h-33z" fill="#2B1D17" />
       {/* shoulders (scrubs) */}
-      <path d="M12 62c1.5-11 9.5-16 20-16s18.5 5 20 16z" fill={warm ? "#d9663f" : "#8792a2"} />
-      <path d="M27 46l5 6 5-6" fill="none" stroke="white" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M9 66c1.8-12 10.6-18 23-18s21.2 6 23 18z" fill={warm ? "#FF6B1A" : "#71717A"} />
+      <path d="M26.5 48.6 32 55l5.5-6.4" fill="none" stroke="#0A0A0B" strokeOpacity="0.3" strokeWidth="2" strokeLinejoin="round" />
       {/* neck + face */}
-      <rect x="28" y="38" width="8" height="8" rx="3" fill="#c98e6b" />
-      <ellipse cx="32" cy="30" rx="11" ry="12.5" fill="#dca681" />
+      <path d="M28 40h8v7.5a4 4 0 0 1-8 0z" fill="#C68B67" />
+      <ellipse cx="32" cy="30.5" rx="10.8" ry="12.2" fill="#DCA681" />
       {/* fringe */}
-      <path d="M21 27c3-7 8-9.5 13-9.5 4.5 0 8 2.5 9 8-5-1-10-3.5-12.5-6.5-2 3.5-5.5 6.5-9.5 8z" fill="#3b2a24" />
+      <path d="M21 28.2c2.2-7.4 7.2-10.6 12.6-10.6 5 0 9 3 10.4 8.6-5.6-.8-10.6-3.6-13.2-6.8-2.2 4-6 7.4-9.8 8.8z" fill="#2B1D17" />
       {/* face */}
-      <circle cx="27.5" cy="31" r="1.4" fill="#2a1d18" />
-      <circle cx="36.5" cy="31" r="1.4" fill="#2a1d18" />
-      <path d="M28.5 36.5c2 1.8 5 1.8 7 0" fill="none" stroke="#2a1d18" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="27.6" cy="31.2" r="1.25" fill="#2A1D18" />
+      <circle cx="36.4" cy="31.2" r="1.25" fill="#2A1D18" />
+      <path d="M29 36.2c1.8 1.5 4.2 1.5 6 0" fill="none" stroke="#2A1D18" strokeWidth="1.25" strokeLinecap="round" />
     </svg>
   );
 }
