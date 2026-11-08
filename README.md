@@ -6,6 +6,10 @@ Two Futures is a money app that shows your whole financial picture now, then let
 
 Every number comes from a forecast engine, not from the AI, and every number can show its math.
 
+**[Try it live → two-futures-k6kf.vercel.app](https://two-futures-k6kf.vercel.app)**
+
+<sub>The free server sleeps when idle, so the first load can take up to a minute. To try the bank connection, pick any test bank in Plaid and sign in with `user_good` / `pass_good` (code `1234` if asked).</sub>
+
 <p align="center">
   <img src="docs/screenshots/4-two-futures.png" alt="Two future selves side by side: same path and with a plan" width="820">
 </p>

@@ -92,4 +92,5 @@ Next.js, React, TypeScript, Tailwind CSS, Recharts, Python, FastAPI, NumPy, Pyda
 - [ ] Public demo video, 2 minutes or less (script: [DEMO_SCRIPT.md](DEMO_SCRIPT.md))
 - [ ] Screenshots uploaded (list above)
 - [ ] Public repo with the README
+- [ ] "Try it out" links: https://two-futures-k6kf.vercel.app and https://github.com/rajatsxngh/two-futures
 - [ ] Final edits before 12:00 PM Sunday
