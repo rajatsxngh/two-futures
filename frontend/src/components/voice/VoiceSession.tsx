@@ -23,7 +23,7 @@ import {
 } from "@elevenlabs/react";
 import { useCallback, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import type { PathId } from "@/lib/api";
-import { REPLY, toTransferInput, toUpdatePlanInput, transferReply, updatePlanReply } from "./toolReplies";
+import { REPLY, toTransferInput, toUpdatePlanInput, updatePlanReply } from "./toolReplies";
 import type { Caption, ToolEvent, VoiceSessionProps, VoiceStatus, VoiceToolName } from "./types";
 import { Waveform } from "./Waveform";
 
@@ -117,6 +117,7 @@ function VoiceSessionInner({
   onToolEvent,
   onStatusChange,
   queued,
+  notice,
   onQueuedSent,
   onAgentReply,
   onError,
@@ -274,8 +275,9 @@ function VoiceSessionInner({
         runTool("start_transfer", params, async () => {
           const input = toTransferInput(params);
           if (!input) return { phase: "refused", reply: REPLY.needsYes };
-          const res = await latest.current.tools.startTransfer(input);
-          return { phase: "ok", reply: transferReply(res), result: res };
+          // Agents only propose: this opens the on-screen confirm sheet. Nothing moves until the user taps Yes.
+          const res = await latest.current.tools.proposeTransfer(input);
+          return { phase: res.status === "awaiting_tap" ? "proposed" : "refused", reply: res.reply, result: res };
         }),
       highlight_metric: (params: Record<string, unknown>) => {
         void runTool(
@@ -466,6 +468,20 @@ function VoiceSessionInner({
     }, 0);
     return () => clearTimeout(t);
   }, [queued, connected, connecting, controls, begin, mode, hideMic, pushCaption, onQueuedSent]);
+
+  // ---- what the user tapped (confirm sheet, Stop): tell the agent quietly --
+  const sentNotice = useRef<number | null>(notice?.id ?? null);
+  useEffect(() => {
+    if (!notice || sentNotice.current === notice.id) return;
+    sentNotice.current = notice.id;
+    // Only live sessions hear it; a session started later gets the current state from the screen instead.
+    if (!connected) return;
+    try {
+      controls.sendContextualUpdate(notice.text);
+    } catch {
+      // The session ended between the tap and now; the agent will see the new state next time.
+    }
+  }, [notice, connected, controls]);
 
   // Keep the newest caption in view.
   const captionsRef = useRef<HTMLDivElement>(null);

@@ -6,6 +6,6 @@
   "to_account_id": "reserve",
   "frequency": "payday",
   "first_date": "2026-11-13",
-  "sentence": "Done. $150 moves from Spend to Reserve every payday, starting Friday, November 13.",
+  "sentence": "Done. $150 moves from Spend to Reserve every payday, starting Friday, November 13. This is a simulation: no real money moves.",
   "simulated": true
 }

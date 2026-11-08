@@ -32,6 +32,8 @@ export type FactSheet = S["FactSheet"];
 export type FuturesResponse = S["FuturesResponse"];
 export type WhatIfRequest = S["WhatIfRequest"];
 export type UpdatePlanResponse = S["UpdatePlanResponse"];
+export type CarLoanOption = S["CarLoanOption"];
+export type CarPurchase = S["CarPurchase"];
 export type TransferRequest = S["TransferRequest"];
 export type TransferResponse = S["TransferResponse"];
 export type ResetResponse = S["ResetResponse"];
@@ -79,6 +81,11 @@ export const api = {
     call<UpdatePlanResponse>("/api/update_plan", { method: "POST", body: JSON.stringify(body) }),
   startTransfer: (body: TransferRequest) =>
     call<TransferResponse>("/api/start_transfer", { method: "POST", body: JSON.stringify(body) }),
+  stopTransfer: (customer: CustomerId, transferId: string) =>
+    call<TransferResponse>("/api/stop_transfer", {
+      method: "POST",
+      body: JSON.stringify({ customer, transfer_id: transferId }),
+    }),
   reset: (c: CustomerId = "maya") => call<ResetResponse>(`/api/reset${q(c)}`, { method: "POST" }),
   shock: (body: ShockRequest) => call<ShockResponse>("/api/shock", { method: "POST", body: JSON.stringify(body) }),
   setup: (customer: CustomerId, setup: SetupAnswers) =>

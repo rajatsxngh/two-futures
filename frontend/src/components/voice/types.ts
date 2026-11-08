@@ -2,40 +2,54 @@ import type {
   FactSheet,
   PathId,
   TransferRequest,
-  TransferResponse,
   UpdatePlanResponse,
   WhatIfRequest,
 } from "@/lib/api";
 
 /** What the agent can send to update_plan. The app fills in `customer`. */
 export type UpdatePlanInput = Omit<WhatIfRequest, "customer">;
-/** What the agent can send to start_transfer. The app fills in `customer`. */
-export type TransferInput = Omit<TransferRequest, "customer">;
+
+/**
+ * What the agent can propose with start_transfer. The app fills in `customer`, and `confirmed`
+ * is only ever sent by the on-screen "Yes, schedule it" tap, never by an agent.
+ */
+export type TransferProposal = Omit<TransferRequest, "customer" | "confirmed">;
+
+/** What proposing a transfer did. Agents never schedule: they only open the confirm sheet. */
+export type ProposalResult = {
+  status: "awaiting_tap" | "already_scheduled" | "refused";
+  /** The string handed back to the agent. Never says the transfer is done. */
+  reply: string;
+};
 
 /**
  * The app-side functions the agent's client tools call.
- * M8's wire step passes the screens lane's `updatePlan` / `startTransfer` /
+ * M8's wire step passes the screens lane's `updatePlan` / `proposeTransfer` /
  * `highlightMetric` here, so a voice what-if updates the same state as a tap.
  */
 export interface VoiceTools {
   updatePlan: (input: UpdatePlanInput) => Promise<UpdatePlanResponse>;
-  startTransfer: (input: TransferInput) => Promise<TransferResponse>;
+  /** Opens the "Confirm your transfer" sheet. Money moves only if the user taps Yes there. */
+  proposeTransfer: (input: TransferProposal) => ProposalResult | Promise<ProposalResult>;
   highlightMetric?: (metricId: string) => void;
 }
 
 export type VoiceToolName = "update_plan" | "start_transfer" | "highlight_metric";
+/** Everything the activity panel logs: the agent's tools plus the user's own Stop tap. */
+export type ToolEventName = VoiceToolName | "stop_transfer";
 
 /** One client-tool call, reported to `onToolEvent` (for the activity panel in M9). */
 export interface ToolEvent {
   /** Same id for the "called" event and its outcome. */
   id: string;
-  name: VoiceToolName;
+  name: ToolEventName;
   path: PathId;
-  phase: "called" | "ok" | "refused" | "error";
+  /** "proposed": the confirm sheet is open, waiting for a tap. "declined": the user tapped Not now. */
+  phase: "called" | "ok" | "proposed" | "declined" | "refused" | "error";
   params: Record<string, unknown>;
   /** The string handed back to the agent (absent for "called" and highlight_metric). */
   reply?: string;
-  /** The raw app result (UpdatePlanResponse / TransferResponse), for "ok". */
+  /** The raw app result (UpdatePlanResponse / TransferResponse / ProposalResult), for "ok" and "proposed". */
   result?: unknown;
   error?: string;
   ms?: number;
@@ -71,6 +85,8 @@ export interface VoiceSessionProps {
   defaultPushToTalk?: boolean;
   /** A question to send as if typed. Starts a text session if none is live. Send a new id for each question. */
   queued?: { id: number; text: string } | null;
+  /** A note for the agent about what the user tapped (confirm sheet, Stop). Sent once per id if a session is live. */
+  notice?: { id: number; text: string } | null;
   /** Called once `queued` has been sent (or handed to a starting session). */
   onQueuedSent?: (id: number) => void;
   /** Called when the agent finishes answering a user message (not for her opening line). */

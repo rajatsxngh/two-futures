@@ -8,7 +8,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { VoiceSession, type ToolEvent, type VoiceTools } from "@/components/voice";
-import { toTransferInput, toUpdatePlanInput, transferReply, updatePlanReply } from "@/components/voice/toolReplies";
+import { proposalReply, toTransferInput, toUpdatePlanInput, updatePlanReply } from "@/components/voice/toolReplies";
 import { api, type FactSheet, type FuturesResponse, type Metric, type PathId } from "@/lib/api";
 
 type Config = { configured: boolean; missing: string[] } | null;
@@ -74,7 +74,11 @@ export default function VoiceLabPage() {
         setPlanNumbers(res.result.key_numbers);
         return res;
       },
-      startTransfer: (input) => api.startTransfer({ ...input, customer: "maya" }),
+      // Agents only propose. The lab has no confirm sheet, so nothing is ever scheduled from here.
+      proposeTransfer: (input) => ({
+        status: "awaiting_tap",
+        reply: proposalReply(input, { from: input.from_account_id, to: input.to_account_id }),
+      }),
       highlightMetric: (id) => {
         setHighlight(id);
         clearTimeout(highlightTimer.current);
@@ -102,8 +106,8 @@ export default function VoiceLabPage() {
       } else if (name === "start_transfer") {
         const input = toTransferInput(params);
         if (!input) return onToolEvent({ ...base, phase: "refused" });
-        const res = await tools.startTransfer(input);
-        onToolEvent({ ...base, phase: "ok", reply: transferReply(res), result: res, ms: Math.round(performance.now() - t0) });
+        const res = await tools.proposeTransfer(input);
+        onToolEvent({ ...base, phase: "proposed", reply: res.reply, result: res, ms: Math.round(performance.now() - t0) });
       } else {
         tools.highlightMetric?.(String(params.metric_id));
         onToolEvent({ ...base, phase: "ok" });
@@ -267,6 +271,8 @@ function PhaseBadge({ phase }: { phase: ToolEvent["phase"] }) {
   const tone = {
     called: "bg-sky-100 text-sky-800",
     ok: "bg-green-100 text-green-800",
+    proposed: "bg-orange-100 text-orange-800",
+    declined: "bg-slate-100 text-slate-700",
     refused: "bg-amber-100 text-amber-800",
     error: "bg-red-100 text-red-800",
   }[phase];

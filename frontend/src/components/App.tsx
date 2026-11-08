@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { CustomerId } from "@/lib/api";
-import { goTo, highlightMetric, loadCustomer, resetDemo, startTransfer, switchCustomer, updatePlan } from "@/lib/actions";
+import { goTo, highlightMetric, loadCustomer, proposeTransfer, resetDemo, switchCustomer, updatePlan } from "@/lib/actions";
 import { useApp, type Screen } from "@/lib/store";
 import { TodayScreen } from "./screens/Today";
 import { ForecastScreen } from "./screens/Forecast";
@@ -12,6 +12,7 @@ import { WhatIfDrawer } from "./WhatIfDrawer";
 import { Logo } from "./Logo";
 import { MathSheet } from "./MathSheet";
 import { ActivityPanel } from "./ActivityPanel";
+import { TransferSheet } from "./TransferSheet";
 
 const TABS: { id: Screen; label: string; icon: string }[] = [
   { id: "today", label: "Today", icon: "M3 10.5 10 4l7 6.5V17a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1v-6.5Z" },
@@ -32,7 +33,7 @@ export function App() {
     void loadCustomer();
     // Dev handle for trying the agent tools from the console, e.g. futureYou.highlightMetric("health.credit_health").
     if (process.env.NODE_ENV !== "production") {
-      (window as unknown as { futureYou: unknown }).futureYou = { updatePlan, startTransfer, highlightMetric };
+      (window as unknown as { futureYou: unknown }).futureYou = { updatePlan, proposeTransfer, highlightMetric };
     }
   }, []);
 
@@ -63,8 +64,12 @@ export function App() {
             </>
           )}
         </main>
+        <p className="border-t border-line bg-surface px-3 py-1 text-center text-[10.5px] leading-snug text-muted">
+          Educational demo · made-up data · not financial advice · not a credit score
+        </p>
         <WhatIfDrawer />
         <MathSheet />
+        <TransferSheet />
         <nav className="grid grid-cols-4 border-t border-line bg-white pb-[env(safe-area-inset-bottom)]" aria-label="Screens">
           {TABS.map((t) => (
             <button

@@ -4,8 +4,10 @@ Each route serves the real engine once its milestone lands and falls back to
 fixture JSON (same shape) until then, or always when USE_FIXTURES=1.
 """
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from . import config
 from .engine import actions
@@ -23,6 +25,7 @@ from .models import (
     SetupRequest,
     ShockRequest,
     ShockResponse,
+    StopTransferRequest,
     TransferRequest,
     TransferResponse,
     UpdatePlanResponse,
@@ -41,6 +44,36 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def _plain(err: dict) -> str:
+    """One validation error in plain words, e.g. 'home.rate: must be 35 or less'."""
+    loc = ".".join(str(x) for x in err.get("loc", ()) if x not in ("body", "query"))
+    ctx = {k: (f"{v:,.0f}" if isinstance(v, float) and v.is_integer() else v) for k, v in (err.get("ctx") or {}).items()
+           if isinstance(v, (int, float, str))}
+    msg = {
+        "less_than_equal": f"must be {ctx.get('le')} or less",
+        "greater_than_equal": f"must be {ctx.get('ge')} or more",
+        "greater_than": f"must be more than {ctx.get('gt')}",
+        "multiple_of": f"must be a multiple of {ctx.get('multiple_of')}",
+        "finite_number": "must be a real number (not NaN or infinity)",
+        "bool_type": "must be exactly true or false",
+        "missing": "is required",
+    }.get(err.get("type", ""), err.get("msg", "is not valid"))
+    return f"{loc}: {msg}" if loc else msg
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(_: Request, exc: RequestValidationError) -> JSONResponse:
+    # Plain-words detail, and never echo the input back (NaN/infinity can't be written as JSON).
+    errors = exc.errors()
+    detail = "; ".join(_plain(e) for e in errors) or "The request isn't valid."
+    return JSONResponse(status_code=422, content={
+        "detail": detail,
+        "errors": [{"loc": [str(x) for x in e.get("loc", ())], "type": e.get("type"), "msg": e.get("msg")}
+                   for e in errors],
+    })
+
 
 CustomerParam = Query("maya", description="Customer id: 'maya' or 'household'")
 
@@ -103,9 +136,10 @@ def update_plan(req: WhatIfRequest):
 
 @app.post("/api/start_transfer", response_model=TransferResponse)
 def start_transfer(req: TransferRequest):
-    """Schedule a simulated transfer. Refused without confirmed=true: nothing moves without a clear yes."""
+    """Schedule a simulated transfer (no real money moves). Refused unless confirmed is exactly true, the amount is a
+    $25 step up to $1,000, and it goes from the customer's checking account to their savings account."""
     check_customer(req.customer)
-    if not req.confirmed:
+    if req.confirmed is not True:
         raise HTTPException(status_code=400, detail="Transfer needs a clear yes (confirmed=true). Nothing moved.")
     if config.USE_FIXTURES:
         return load(req.customer, "start_transfer")
@@ -113,6 +147,19 @@ def start_transfer(req: TransferRequest):
         return actions.schedule_transfer(req, config.DEMO_TODAY)
     except actions.TransferError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@app.post("/api/stop_transfer", response_model=TransferResponse)
+def stop_transfer(req: StopTransferRequest):
+    """Stop a scheduled (simulated) transfer. 404 if there's no such transfer."""
+    check_customer(req.customer)
+    if config.USE_FIXTURES:
+        t = load(req.customer, "start_transfer")
+        return {**t, "status": "stopped", "sentence": "Stopped. This is a simulation: no real money moves."}
+    try:
+        return actions.stop_transfer(req)
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
 
 
 @app.post("/api/reset", response_model=ResetResponse)

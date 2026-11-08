@@ -2,13 +2,13 @@
 
 Fourteen likely questions with short answers, updated to match the current build. Practice each until it comes out in one breath. Where a number appears, it's the engine's.
 
-1. **How accurate is the forecast?** It's a range, not a promise. I simulate the year 1,000 times from her real bills and spending patterns; Maya's typical balance in a year is $1,375, with a range of $379 to $2,327. Tap any number for its assumptions. In production PNC would check forecasts against what actually happened.
+1. **How accurate is the forecast?** It's a range, not a promise. I simulate the year 1,000 times from her bills and spending patterns (made-up demo data); Maya's typical balance in a year is $1,375, with a range of $379 to $2,327. Tap any number for its assumptions. In production PNC would check forecasts against what actually happened.
 
 2. **Isn't this just a chatbot?** The chat is the front door. Underneath, an engine scores 8 indicators, forecasts every account and builds two paths. She can change a number only by calling that engine, and the panel shows every call.
 
 3. **How do you stop the AI making up numbers?** Her facts come only from an engine-written fact sheet, and new numbers only from tools that return a ready-made sentence. The prompt bans math and guessing. My grounding test checks every dollar amount and year she says: 10 of 10 with the live agent.
 
-4. **Is this financial advice?** No. She shows options and trade-offs, never names a stock or fund, and sends bigger questions to a PNC banker. The one step she suggests is moving your own money to savings, and only after a clear yes.
+4. **Is this financial advice?** No. She shows options and trade-offs, never names a stock or fund, and sends bigger questions to a PNC banker. The one step she suggests is moving your own money to savings, and only after a clear yes and a tap on the confirm sheet. It's simulated: no real money moves.
 
 5. **What data goes to the AI?** Only a short fact sheet: no raw transactions, no account numbers. The demo uses made-up data. In production: consent-based account linking and minimal data.
 

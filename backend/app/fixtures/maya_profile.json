@@ -257,7 +257,8 @@
         "day": 1,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "gym",
@@ -269,7 +270,8 @@
         "day": 3,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "car",
@@ -281,7 +283,8 @@
         "day": 5,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "stream1",
@@ -293,7 +296,8 @@
         "day": 9,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "insurance",
@@ -305,7 +309,8 @@
         "day": 15,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "phone",
@@ -317,7 +322,8 @@
         "day": 18,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "card_pay",
@@ -329,7 +335,8 @@
         "day": 22,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "stream2",
@@ -341,7 +348,8 @@
         "day": 27,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "renters",
@@ -353,7 +361,8 @@
         "day": null,
         "date": "2027-01-12"
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "cd_maturity",
@@ -365,7 +374,8 @@
         "day": null,
         "date": "2027-04-15"
       },
-      "account_id": "cd"
+      "account_id": "cd",
+      "unused": false
     }
   ],
   "bills_next_90": [
@@ -666,5 +676,6 @@
         "thresholds": null
       }
     }
-  ]
+  ],
+  "account_metrics": []
 }

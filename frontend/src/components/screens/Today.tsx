@@ -93,7 +93,10 @@ function ScoreCard({ health, onOpen }: { health: HealthResponse; onOpen: () => v
           </div>
         </div>
         <div className="min-w-0 flex-1 space-y-2">
-          <p className="text-sm font-semibold text-navy">Financial health</p>
+          <p className="text-sm font-semibold leading-tight text-navy">
+            Financial health
+            <span className="block text-[11px] font-normal text-muted">Not a credit score</span>
+          </p>
           {health.pillars.map((p) => {
             const v = Number(p.score.value ?? 0);
             return (
@@ -124,7 +127,7 @@ function IndicatorTiles({ health, onBack }: { health: HealthResponse; onBack: ()
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-xl font-semibold text-navy">8 health indicators</h1>
-          <p className="text-sm text-muted">Spend, Save, Borrow and Plan, two each.</p>
+          <p className="text-sm text-muted">Spend, Save, Borrow and Plan, two each. Not a credit score.</p>
         </div>
         <MetricValue metric={health.score} className="text-[36px] font-semibold leading-none text-navy" />
       </div>

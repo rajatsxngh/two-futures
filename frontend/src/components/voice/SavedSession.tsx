@@ -92,11 +92,12 @@ export function SavedSession({
     setCaptions((c) => [...c, { id: cid(), role: "user", path: p, text: q, typed: typedIn }]);
     setBusy(true);
     try {
-      const futures = getState().futures;
+      const { futures, transfer } = getState();
       if (!futures) throw new Error("No futures loaded");
       const { reply } = await savedReply(q, {
         path: p,
         futures,
+        scheduled: transfer?.status === "scheduled",
         tools: latest.current.tools,
         emit: latest.current.onToolEvent,
         memory: memories.current[p],

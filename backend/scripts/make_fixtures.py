@@ -464,7 +464,8 @@ def maya_transfer() -> M.TransferResponse:
     return M.TransferResponse(
         id="tr_demo_1", status="scheduled", amount=150, from_account_id="spend", to_account_id="reserve",
         frequency="payday", first_date=NEXT_PAYDAY,
-        sentence="Done. $150 moves from Spend to Reserve every payday, starting Friday, November 13.",
+        sentence=("Done. $150 moves from Spend to Reserve every payday, starting Friday, November 13. "
+                  "This is a simulation: no real money moves."),
     )
 
 

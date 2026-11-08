@@ -35,7 +35,7 @@ My demo customer, Maya (27, a nurse in Dallas), scores 55 today. On the same pat
 
 ## How I built it
 
-- **Engine (Python, NumPy, FastAPI):** health scoring from raw transactions; spending patterns learned from 12 months of history; a 1,000-run Monte Carlo forecast; fixed plan rules (no AI); and two 5-year paths that share the same random surprises and the same 2028 car repair, so only the decisions differ. What-ifs re-run the plan path in about half a second.
+- **Engine (Python, NumPy, FastAPI):** health scoring from raw transactions; spending patterns estimated from 12 months of made-up transaction history; a 1,000-run Monte Carlo forecast; fixed plan rules (no AI); and two 5-year paths that share the same random surprises and the same 2028 car repair, so only the decisions differ. What-ifs re-run the plan path in about half a second.
 - **Every number shows its math:** the API returns each on-screen number with its formula, inputs, thresholds and assumptions. Tap any number to see it.
 - **Voice (ElevenLabs Agents with `@elevenlabs/react`):** one agent plays both future selves. The app hands her a short fact sheet the engine wrote. She can only get new numbers through three client tools (`update_plan`, `start_transfer`, `highlight_metric`) that call my engine. A live activity panel shows every call in plain words.
 - **Front end (Next.js, React, Tailwind, Recharts):** a phone-shaped app with the activity panel beside it, live captions, push-to-talk for loud rooms, and a typed fallback.
@@ -49,7 +49,7 @@ My demo customer, Maya (27, a nurse in Dallas), scores 55 today. On the same pat
 
 ## Accomplishments that I'm proud of
 
-- The two-futures format, running on real-looking accounts, ending in a real action.
+- The two-futures format, running on real-looking accounts, ending in a simulated first step the user confirms with a tap.
 - **10 of 10 grounded and 10 of 10 behaved** on my grounding test with the live ElevenLabs agent: every dollar amount and year she said was in her facts or a tool result.
 - A health score computed from first principles: Maya's 55 comes out of her transactions, not a hard-coded number.
 - 73 automated back-end tests, and a forecast whose every number can explain itself.

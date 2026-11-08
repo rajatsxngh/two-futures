@@ -113,19 +113,26 @@ export const TESTS: GTest[] = [
   },
   {
     n: 10,
-    label: "Next step: maybe, then a clear yes",
+    label: "Next step: maybe, then a clear yes (proposes, waits for the tap)",
     segments: [
       { path: "plan", questions: ["What's my next step?", "Maybe...", "Yes, move $150 from Spend to savings every payday."] },
     ],
     behaves: (r) => {
       const a = answers(r);
       const byTurn = a.map((t) => t.tools.filter((c) => c.name === "start_transfer"));
-      if (byTurn.slice(0, 2).some((c) => c.length > 0)) return "Moved money before a clear yes";
+      if (byTurn.slice(0, 2).some((c) => c.length > 0)) return "Proposed a transfer before a clear yes";
       const last = byTurn[2] ?? [];
-      if (last.length !== 1) return `Expected one start_transfer after the yes, got ${last.length}`;
+      if (last.length !== 1) return `Expected one start_transfer proposal after the yes, got ${last.length}`;
       const p = last[0].params;
-      const ok = Number(p.amount) === 150 && p.from_account_id === "spend" && p.to_account_id === "reserve" && p.frequency === "payday" && p.confirmed === true;
-      return ok ? null : "Wrong transfer details";
+      const ok = Number(p.amount) === 150 && p.from_account_id === "spend" && p.to_account_id === "reserve" && p.frequency === "payday";
+      if (!ok) return "Wrong transfer details";
+      // Agents only propose: the tool result says it waits for the user's tap, and she mustn't call it done.
+      if (!/NOT SCHEDULED/.test(last[0].reply ?? "")) return "Tool result didn't say it's waiting for the tap";
+      const reply = a[2]?.reply ?? "";
+      if (/\b(done|all set|it'?s (set up|scheduled)|is (now )?(set up|scheduled)|i('ve| have) (set|scheduled))\b/i.test(reply)) {
+        return "Said the transfer was done before the user tapped";
+      }
+      return /screen|tap/i.test(reply) ? null : "Didn't point to the confirm sheet on screen";
     },
   },
 ];

@@ -5,10 +5,12 @@ from __future__ import annotations
 from datetime import date, timedelta
 
 from ..models import (
+    AccountType,
     HealthResponse,
     Metric,
     SetupAnswers,
     ShockPath,
+    StopTransferRequest,
     ShockRequest,
     ShockResponse,
     ShockYear,
@@ -17,6 +19,7 @@ from ..models import (
     UpdatePlanResponse,
     WhatIfRequest,
 )
+from . import assumptions as A
 from . import state
 from .data import CustomerData, load
 import numpy as np
@@ -24,10 +27,11 @@ import numpy as np
 from .fmt import metric, round_half_up, usd
 from .futures import futures_for
 from .health import health_for
-from .whatif import TAKE_HOME_SHARE, WhatIfError, monthly_net, sentence, start_index
+from .whatif import (TAKE_HOME_SHARE, WhatIfError, car_options, car_payment, home_breakdown, monthly_net, sentence,
+                     start_index)
 
 CHANGE_FIELDS = ("income_change_yearly", "spending_change_monthly", "savings_change_monthly", "one_time_cost",
-                 "job_loss_months", "home")
+                 "job_loss_months", "home", "car")
 
 
 def _signed(x: float, fmt) -> str:
@@ -40,13 +44,14 @@ def _k(x: float) -> str:
 
 def apply_whatif(customer_id: str, req: WhatIfRequest, today: date) -> UpdatePlanResponse:
     if not any(getattr(req, f) for f in CHANGE_FIELDS):
-        raise WhatIfError("A what-if needs at least one change (income, spending, savings, one-time cost or job loss).")
+        raise WhatIfError("A what-if needs at least one change (income, spending, savings, one-time cost, job loss, "
+                          "a home or a car).")
     with state.LOCK:
         st = state.get(customer_id)
         before = futures_for(customer_id, today, st.whatifs, st.setup)
         trial = futures_for(customer_id, today, st.whatifs + [(req, "")], st.setup)
         b, a = before.response.paths["plan"], trial.response.paths["plan"]
-        line = sentence(req, b, a, trial.sims["plan"].months, trial.sims["plan"], trial.params)
+        line = sentence(req, b, a, trial.sims["plan"].months, trial.sims["plan"], trial.params, before.sims["plan"])
         st.whatifs.append((req, line))
         after = futures_for(customer_id, today, st.whatifs, st.setup)
         applied = [w for w, _ in st.whatifs]
@@ -54,6 +59,25 @@ def apply_whatif(customer_id: str, req: WhatIfRequest, today: date) -> UpdatePla
     year = after.response.target_year
     s0, s1 = b.snapshots[-1], after.response.paths["plan"].snapshots[-1]
     deltas: list[Metric] = []
+    if req.car:
+        c = req.car
+        pay = car_payment(c)
+        deltas.append(metric(
+            "whatif.car_payment", "Car payment", round(pay, 2), "usd_per_month", f"{usd(pay)}/mo",
+            "Loan × r ÷ (1 − (1 + r)^−months), where r = APR ÷ 12 and the loan = price − down payment",
+            [("Car price", c.price, "usd"), ("Down payment", c.down, "usd"), ("Loan", round(c.price - c.down, 2), "usd"),
+             ("APR", c.apr, "pct"), ("Loan length", c.term_months, "months")],
+            ["The down payment comes out of savings first, then the card.", *A.car_listed()]))
+    if req.home:
+        total, parts = home_breakdown(req.home)
+        deltas.append(metric(
+            "whatif.home_cost", "Home cost", total, "usd_per_month", f"{usd(total)}/mo",
+            "Loan payment + property tax + insurance + PMI (each rounded to the dollar). It replaces rent.",
+            [("Loan payment (principal and interest)", parts["loan"], "usd_per_month"),
+             ("Property tax", parts["tax"], "usd_per_month", f"{A.HOME_PROPERTY_TAX:.1%} of the price a year"),
+             ("Homeowners insurance", parts["insurance"], "usd_per_month", f"{A.HOME_INSURANCE:.0%} of the price a year"),
+             ("PMI", parts["pmi"], "usd_per_month", "under 20% down only")],
+            A.home_listed()))
     if req.income_change_yearly or req.spending_change_monthly:
         net = monthly_net(req)
         inputs = []
@@ -86,7 +110,8 @@ def apply_whatif(customer_id: str, req: WhatIfRequest, today: date) -> UpdatePla
         [("Before", s0.score, "score"), ("After", s1.score, "score")]))
 
     return UpdatePlanResponse(result=after.response.paths["plan"], deltas=deltas, sentence=line, applied=applied,
-                              fact_sheet=after.response.fact_sheets["plan"])
+                              fact_sheet=after.response.fact_sheets["plan"],
+                              car_options=car_options(req.car) if req.car else [])
 
 
 def current_futures(customer_id: str, today: date):
@@ -179,17 +204,30 @@ class TransferError(ValueError):
     pass
 
 
+SIMULATED_NOTE = "This is a simulation: no real money moves."
+
+
 def schedule_transfer(req: TransferRequest, today: date) -> TransferResponse:
-    if not req.confirmed:
+    if req.confirmed is not True:
         raise TransferError("Transfer needs a clear yes (confirmed=true). Nothing moved.")
+    # The model already checks these; repeated here so the engine is safe on its own.
+    if not 0 < req.amount <= A.TRANSFER_MAX or req.amount % A.TRANSFER_STEP:
+        raise TransferError(f"The amount must be a ${A.TRANSFER_STEP:,.0f} step between ${A.TRANSFER_STEP:,.0f} "
+                            f"and ${A.TRANSFER_MAX:,.0f}. Nothing moved.")
     data = load(req.customer)
     ids = {a.id: a for a in data.accounts}
     for acc in (req.from_account_id, req.to_account_id):
         if acc not in ids:
-            raise TransferError(f"Unknown account '{acc}'.")
+            raise TransferError(f"Unknown account '{acc}'. Nothing moved.")
     if req.from_account_id == req.to_account_id:
-        raise TransferError("From and to accounts must differ.")
-    src, dst = ids[req.from_account_id], ids[req.to_account_id]
+        raise TransferError("From and to accounts must differ. Nothing moved.")
+    # Same accounts the plan's next step uses (see params.build_params): the first checking and savings accounts.
+    checking = next(a for a in data.accounts if a.type == AccountType.checking)
+    savings = next((a for a in data.accounts if a.type == AccountType.savings), None)
+    if savings is None or (req.from_account_id, req.to_account_id) != (checking.id, savings.id):
+        raise TransferError(f"Transfers can only go from {checking.name} to "
+                            f"{savings.name if savings else 'savings'}. Nothing moved.")
+    src, dst = checking, savings
 
     if req.frequency == "payday":
         first = data.customer.next_payday
@@ -206,20 +244,40 @@ def schedule_transfer(req: TransferRequest, today: date) -> TransferResponse:
     with state.LOCK:
         st = state.get(req.customer)
         for t in st.transfers:  # a retried "yes" shouldn't schedule twice
-            if (t.amount, t.from_account_id, t.to_account_id, t.frequency) == (
+            if t.status == "scheduled" and (t.amount, t.from_account_id, t.to_account_id, t.frequency) == (
                     req.amount, req.from_account_id, req.to_account_id, req.frequency):
                 return t
-        verb = "moves" if req.frequency != "once" else "will move"
+        when = f"{first.strftime('%A, %B')} {first.day}"
         resp = TransferResponse(
             id=f"tr_{req.customer}_{len(st.transfers) + 1}", status="scheduled", amount=req.amount,
             from_account_id=src.id, to_account_id=dst.id, frequency=req.frequency, first_date=first,
-            sentence=(f"Done. {usd(req.amount)} {verb} from {src.name} to {dst.name} {how}, starting "
-                      f"{first.strftime('%A, %B')} {first.day}." if req.frequency != "once" else
-                      f"Done. {usd(req.amount)} will move from {src.name} to {dst.name} on "
-                      f"{first.strftime('%A, %B')} {first.day}."),
+            sentence=(f"Done. {usd(req.amount)} moves from {src.name} to {dst.name} {how}, starting {when}. "
+                      f"{SIMULATED_NOTE}" if req.frequency != "once" else
+                      f"Done. {usd(req.amount)} will move from {src.name} to {dst.name} on {when}. {SIMULATED_NOTE}"),
         )
         st.transfers.append(resp)
         return resp
+
+
+def stop_transfer(req: StopTransferRequest) -> TransferResponse:
+    """Stop a scheduled (simulated) transfer. Stopping one that's already stopped is fine."""
+    data = load(req.customer)
+    names = {a.id: a.name for a in data.accounts}
+    with state.LOCK:
+        st = state.get(req.customer)
+        for i, t in enumerate(st.transfers):
+            if t.id != req.transfer_id:
+                continue
+            if t.status == "stopped":
+                return t
+            stopped = t.model_copy(update={
+                "status": "stopped",
+                "sentence": (f"Stopped. No more {usd(t.amount)} transfers from {names.get(t.from_account_id)} "
+                             f"to {names.get(t.to_account_id)}. {SIMULATED_NOTE}"),
+            })
+            st.transfers[i] = stopped
+            return stopped
+    raise LookupError(f"No transfer '{req.transfer_id}' to stop.")
 
 
 def reset(customer_id: str) -> None:

@@ -71,6 +71,24 @@ class HomePlan:
     term_years: int
     payment: float  # monthly principal and interest
     rent: float  # rent it replaces
+    tax: float = 0.0  # monthly property tax
+    insurance: float = 0.0  # monthly homeowners insurance
+    pmi: float = 0.0  # monthly PMI while the loan is above PMI_UNTIL of the price (0 with 20% or more down)
+
+    def pmi_now(self, owed: np.ndarray | float) -> np.ndarray | float:
+        return np.where(owed > A.PMI_UNTIL * self.price + 0.005, self.pmi, 0.0) if self.pmi else 0.0
+
+
+@dataclass
+class CarPlan:
+    """A car bought on the plan path (what-if): the down payment comes out at `start`, the loan runs for the term."""
+
+    start: int  # month index of the purchase
+    price: float
+    down: float
+    apr: float  # percent
+    term_months: int
+    payment: float  # monthly loan payment (0 when paid in cash)
 
 
 @dataclass
@@ -83,6 +101,7 @@ class Adjust:
     one_time: np.ndarray  # one-time costs (savings first, then the card)
     pause: np.ndarray  # bool: plan transfers paused (e.g. while out of work)
     home: HomePlan | None = None
+    car: CarPlan | None = None
 
     @classmethod
     def none(cls, n: int) -> "Adjust":
@@ -104,6 +123,7 @@ class SimResult:
     transfer: float = 0.0
     income: np.ndarray | None = None  # monthly take-home per month, after what-ifs
     home: HomePlan | None = None
+    car: CarPlan | None = None
     late: np.ndarray | None = None  # runs x months: bills unpaid at month end
     card_limit: float = float("inf")
 
@@ -128,6 +148,11 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
     if home:
         hist["home_mortgage"] = np.zeros((runs, n + 1))
         hist["home_value"] = np.zeros((runs, n + 1))
+    car = adj.car
+    car_loan = np.zeros(runs)
+    if car:
+        hist["car_loan"] = np.zeros((runs, n + 1))
+        hist["car_value"] = np.zeros((runs, n + 1))
     ira_extra = np.zeros((runs, n))
     card_interest = np.zeros((runs, n))
     # Money nothing could cover (savings empty, card at its limit): bills that went unpaid.
@@ -196,16 +221,26 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
             bal[l.id] = owed - pay
             bal[chk] -= pay
             spent = spent + pay
-        home_payment = 0.0
+        new_costs = 0.0  # what-if costs for typical spending: home (loan + tax + insurance + PMI) and car payment
         if home and i >= home.start:
             if i == home.start:
                 mortgage = np.full(runs, home.price - home.down)
+            costs = home.tax + home.insurance + home.pmi_now(mortgage)
             owed = mortgage * (1 + home.rate / 100 / 12)
             pay = np.minimum(home.payment, owed)
             mortgage = owed - pay
+            bal[chk] -= pay + costs
+            spent = spent + pay + costs
+            new_costs = home.payment + home.tax + home.insurance + home.pmi_now(mortgage)
+        if car and i >= car.start:
+            if i == car.start:
+                car_loan = np.full(runs, car.price - car.down)
+            owed = car_loan * (1 + car.apr / 100 / 12)
+            pay = np.minimum(car.payment, owed)
+            car_loan = np.where(owed - pay < 0.005, 0.0, owed - pay)
             bal[chk] -= pay
             spent = spent + pay
-            home_payment = home.payment
+            new_costs = new_costs + np.where(car_loan > 0.005, car.payment, 0.0)
 
         # retirement and the existing savings habit
         g = A.IRA_GROWTH["typical"] / 12
@@ -223,7 +258,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
 
         # plan waterfall (rules 1, 4, 5)
         if plan:
-            st = typical_spend(adj.spending[i] + home_payment)
+            st = typical_spend(adj.spending[i] + new_costs)
             cush = liquid() / st
             # no plan transfers while out of work or behind on bills
             pool = np.where(adj.pause[i] | (unpaid > 0.005), 0.0, base_pool + freed + adj.pool[i])
@@ -304,14 +339,19 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         if home:
             hist["home_mortgage"][:, i + 1] = mortgage
             hist["home_value"][:, i + 1] = home.price if i >= home.start else 0.0
+        if car:
+            hist["car_loan"][:, i + 1] = car_loan
+            # value at the end of the month: purchase price, losing CAR_DEPRECIATION a year
+            hist["car_value"][:, i + 1] = (car.price * (1 - A.CAR_DEPRECIATION) ** ((i - car.start + 1) / 12)
+                                           if i >= car.start else 0.0)
         spending[:, i] = spent
-        st = typical_spend(adj.spending[i] + home_payment)
+        st = typical_spend(adj.spending[i] + new_costs)
         spend_typ[:, i + 1] = st
         cushion[:, i + 1] = liquid() / st
 
     return SimResult(
         path=path, months=months, balances=hist, spending=spending, ira_extra=ira_extra, card_interest=card_interest, cushion=cushion,
-        spend_typical=spend_typ, transfer=transfer, income=p.take_home_monthly + adj.income, home=home,
+        spend_typical=spend_typ, transfer=transfer, income=p.take_home_monthly + adj.income, home=home, car=car,
         late=late, card_limit=card_limit,
         event_split={k: (float(np.median(a)), float(np.median(b))) for k, (a, b) in split_log.items()},
     )

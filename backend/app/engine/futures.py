@@ -90,8 +90,12 @@ def state_for_year(p: Params, sim: SimResult, year: int, today: date) -> Financi
     plan = sim.path == "plan"
     debts = [(l.name, l.min_payment or 0) for l in p.loans if bal[l.id] > 0.005]
     debts += [(c.name, c.min_payment or 0) for c in p.cards if bal[c.id] > 0.005 and c.min_payment]
+    # Debt load counts loan payments only: a new mortgage's principal and interest (its tax, insurance and PMI
+    # are housing costs, counted in spending) and a new car loan's payment.
     if sim.home and bal.get("home_mortgage", 0) > 0.005:
         debts.append(("New mortgage", round(sim.home.payment, 2)))
+    if sim.car and bal.get("car_loan", 0) > 0.005:
+        debts.append(("New car loan", round(sim.car.payment, 2)))
     auto = [f"IRA ${p.ira_contrib:,.0f}/month"] if p.ira_contrib else []
     if plan and sim.transfer:
         auto.insert(0, f"Payday transfer ${sim.transfer:,.0f}")
@@ -136,6 +140,9 @@ def _snapshots(p: Params, sim: SimResult, health_today: HealthResponse, today: d
         if sim.home:  # the home counts at its purchase price (today's dollars), the mortgage as debt
             assets = assets + sim.balances["home_value"][:, j]
             debts = debts + sim.balances["home_mortgage"][:, j]
+        if sim.car:  # the car counts at its value (losing CAR_DEPRECIATION a year), the loan as debt
+            assets = assets + sim.balances["car_value"][:, j]
+            debts = debts + sim.balances["car_loan"][:, j]
         snaps.append(YearSnapshot(
             year=year, age=p.data.customer.age + (year - today.year),
             balances={k: round(med(v[:, j]), 2) for k, v in sim.balances.items()},
@@ -152,7 +159,7 @@ def _snapshots(p: Params, sim: SimResult, health_today: HealthResponse, today: d
 def _key_numbers(p: Params, sim: SimResult, snap: YearSnapshot, health: HealthResponse,
                  car_paid: date | None) -> list[Metric]:
     pre = f"{sim.path}.{snap.year}"
-    note = A.listed(plan=sim.path == "plan")
+    note = A.listed(plan=sim.path == "plan", home=sim.home is not None, car=sim.car is not None)
     cushion_ind = next(i for i in health.indicators if i.id == "savings_cushion")
     out = [
         metric(f"{pre}.cushion_months", "Savings cushion", snap.cushion_months, "months",
@@ -201,8 +208,19 @@ def _events(p: Params, sim: SimResult, shared: list[dict], car_paid: date | None
         h = sim.home
         ev.append(LifeEvent(
             date=sim.months[h.start], title="Bought a home", amount=h.price, shared=False,
-            description=(f"A {usd(h.price)} home with {usd(h.down)} down. The {usd(h.payment)} mortgage payment "
-                         f"replaces {usd(h.rent)} rent.")))
+            description=(f"A {usd(h.price)} home with {usd(h.down)} down. The "
+                         f"{usd(sum(round_half_up(x) for x in (h.payment, h.tax, h.insurance, h.pmi)))} monthly cost "
+                         f"(loan, tax, insurance{' and PMI' if h.pmi else ''}) replaces {usd(h.rent)} rent.")))
+    if sim.car:
+        c = sim.car
+        ev.append(LifeEvent(
+            date=sim.months[c.start], title="Bought a car", amount=c.price, shared=False,
+            description=(f"A {usd(c.price)} car with {usd(c.down)} down. The {usd(c.payment)} payment runs for "
+                         f"{c.term_months} months." if c.payment > 0 else f"A {usd(c.price)} car, paid in cash.")))
+        last = c.start + c.term_months - 1  # month of the last payment
+        if c.payment > 0 and last < len(sim.months):
+            ev.append(LifeEvent(date=sim.months[last], title="Car loan paid off", shared=False,
+                                description=f"The last {usd(c.payment)} car payment."))
     unpaid = sim.balances["unpaid_bills"]
     behind = first_month(sim, unpaid > 50)
     if behind:
@@ -321,7 +339,8 @@ def _fact_sheet(path: PathId, p: Params, health_today: HealthResponse, snap: Yea
             paid = next((v for k, v in how.items() if k.startswith(e.title)), None)
             facts.append(f"In {mon(e.date)}: {e.title.lower()}, {usd(e.amount or 0)}. "
                          f"{paid.description if paid else ''}".strip())
-        elif e.title in ("Card paid off", "Car paid off", "Bought a home", "Fell behind on bills") or e.title.startswith("Cushion reaches"):
+        elif e.title in ("Card paid off", "Car paid off", "Bought a home", "Bought a car", "Car loan paid off",
+                         "Fell behind on bills") or e.title.startswith("Cushion reaches"):
             facts.append(f"{e.title} in {mon(e.date)}. {e.description}")
     facts.append(f"In {y}: cushion about {fmt_months(snap.cushion_months)}, card debt {usd(snap.card_debt)}, "
                  f"IRA about {usd(snap.ira_balance)}, net worth about {usd(snap.net_worth)}.")

@@ -10,7 +10,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { api, type FuturesResponse, type PathId } from "@/lib/api";
 import { baseCorpus, judge, TESTS, type GResult, type GTest, type TestRun, type ToolCall, type Turn } from "@/lib/grounding";
 import { newMemory, savedReply } from "@/components/voice/savedAgent";
-import { toTransferInput, toUpdatePlanInput, transferReply, updatePlanReply } from "@/components/voice/toolReplies";
+import { proposalReply, REPLY, toTransferInput, toUpdatePlanInput, updatePlanReply } from "@/components/voice/toolReplies";
 import type { VoiceTools } from "@/components/voice";
 
 type Mode = "saved" | "live";
@@ -23,10 +23,11 @@ function recordingTools(log: ToolCall[]): VoiceTools {
       log.push({ name: "update_plan", params: input as Record<string, unknown>, reply: updatePlanReply(res) });
       return res;
     },
-    startTransfer: async (input) => {
-      const res = await api.startTransfer({ ...input, customer: "maya" });
-      log.push({ name: "start_transfer", params: input as Record<string, unknown>, reply: transferReply(res) });
-      return res;
+    // Agents only propose. The bench has no screen to tap, so nothing is ever scheduled here.
+    proposeTransfer: (input) => {
+      const reply = proposalReply(input, { from: input.from_account_id, to: input.to_account_id });
+      log.push({ name: "start_transfer", params: input as Record<string, unknown>, reply });
+      return { status: "awaiting_tap", reply };
     },
     highlightMetric: (metricId) => {
       log.push({ name: "highlight_metric", params: { metric_id: metricId } });
@@ -234,13 +235,8 @@ function useLiveRunner() {
             },
             start_transfer: async (p: Record<string, unknown>) => {
               const input = toTransferInput(p);
-              if (!input) return "Not scheduled. You need a clear yes first.";
-              pendingTools.current++;
-              try {
-                return transferReply(await tools.startTransfer(input));
-              } finally {
-                pendingTools.current--;
-              }
+              if (!input) return REPLY.needsYes;
+              return (await tools.proposeTransfer(input)).reply;
             },
             highlight_metric: (p: Record<string, unknown>) => {
               tools.highlightMetric?.(String(p.metric_id ?? ""));

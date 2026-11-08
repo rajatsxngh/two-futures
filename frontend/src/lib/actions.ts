@@ -3,14 +3,16 @@
  *
  * The screens call these on taps, and the voice lane (M8) registers the first
  * three as ElevenLabs client tools (`update_plan`, `start_transfer`,
- * `highlight_metric`). So:
+ * `highlight_metric`). `start_transfer` only proposes: it opens the confirm
+ * sheet, and money moves only after the user taps Yes there. So:
  * - signatures stay close to the API contract (`WhatIfRequest`, `TransferRequest`),
  * - each returns plain data the agent can read back (the API response, or a short status),
  * - none of them needs React; they write to the shared store in `store.ts`.
  */
-import { api, type CustomerId, type Metric, type PathId, type TransferRequest, type TransferResponse, type UpdatePlanResponse, type WhatIfRequest } from "./api";
+import { api, type CustomerId, type Metric, type PathId, type TransferResponse, type UpdatePlanResponse, type WhatIfRequest } from "./api";
 import { getState, initialState, setState, type Screen, type VoiceMode } from "./store";
-import type { ToolEvent, VoiceStatus } from "@/components/voice/types";
+import type { ProposalResult, ToolEvent, ToolEventName, TransferProposal, VoiceStatus } from "@/components/voice/types";
+import { decisionNote, proposalReply, REPLY } from "@/components/voice/toolReplies";
 
 // ---------------------------------------------------------------------------
 // Agent-facing tools (M8 registers these)
@@ -41,32 +43,96 @@ export async function updatePlan(input: UpdatePlanInput, source: "tap" | "voice"
   }
 }
 
-/** Transfer input: `TransferRequest` with `customer` optional. `confirmed` must be true or the API refuses. */
-export type StartTransferInput = Omit<TransferRequest, "customer"> & { customer?: CustomerId };
+/**
+ * Propose a (simulated) transfer: opens the "Confirm your transfer" sheet over whatever screen is showing.
+ * Nothing moves here. Agents (voice, text, saved answers) and the "Start this" button all come through this;
+ * only `confirmTransfer`, run by the sheet's "Yes, schedule it" tap, ever calls the API.
+ */
+export function proposeTransfer(input: TransferProposal, source: "tap" | "voice" = "voice"): ProposalResult {
+  const s = getState();
+  if (s.transfer?.status === "scheduled") return { status: "already_scheduled", reply: REPLY.alreadyScheduled };
+  if (s.transferProposal) return { status: "awaiting_tap", reply: REPLY.pending };
+  const accounts = s.profile?.accounts ?? [];
+  // Agents sometimes say the account's name ("Spend") instead of its id ("spend").
+  const idOf = (v: string) => accounts.find((a) => a.id === v || a.name.toLowerCase() === v.toLowerCase())?.id ?? v;
+  const nameOf = (id: string) => accounts.find((a) => a.id === id)?.name ?? id;
+  const step = s.futures?.next_step;
+  const proposal: TransferProposal = { ...input, from_account_id: idOf(input.from_account_id), to_account_id: idOf(input.to_account_id) };
+  if (step && (proposal.from_account_id !== step.from_account_id || proposal.to_account_id !== step.to_account_id)) {
+    return {
+      status: "refused",
+      reply: `Not proposed. The only transfer you can offer goes from ${nameOf(step.from_account_id)} to ${nameOf(step.to_account_id)}. Restate it and ask again.`,
+    };
+  }
+  setState({ transferProposal: { input: proposal, source, path: s.activePath ?? "plan" }, error: null });
+  return {
+    status: "awaiting_tap",
+    reply: proposalReply(proposal, { from: nameOf(proposal.from_account_id), to: nameOf(proposal.to_account_id) }),
+  };
+}
 
-/** Schedule a (simulated) transfer. Only call after a clear yes from the user. */
-export async function startTransfer(input: StartTransferInput, source: "tap" | "voice" = "tap"): Promise<TransferResponse> {
-  const customer = input.customer ?? getState().customer;
+/** The user tapped "Yes, schedule it" on the confirm sheet: the only place a transfer is ever scheduled. */
+export async function confirmTransfer(): Promise<TransferResponse | null> {
+  const proposal = getState().transferProposal;
+  if (!proposal || getState().transferPending) return null;
+  const customer = getState().customer;
   setState({ transferPending: true, error: null });
-  const done = source === "tap" ? tapEvent("start_transfer", input as Record<string, unknown>) : null;
+  const done = tapEvent("start_transfer", proposal.input as Record<string, unknown>, proposal.path);
   try {
-    const res = await api.startTransfer({ ...input, customer });
+    const res = await api.startTransfer({ ...proposal.input, customer, confirmed: true });
+    setState({ transfer: res, transferPending: false, transferProposal: null });
+    done({ phase: "ok", result: res, reply: res.sentence });
+    notifyAgent(decisionNote("confirmed", res.sentence));
+    return res;
+  } catch (e) {
+    // Keep the sheet open so the error shows there.
+    setState({ transferPending: false, error: errorText(e) });
+    done({ phase: "error", error: errorText(e) });
+    return null;
+  }
+}
+
+/** The user tapped "Not now" (or outside the sheet). Nothing is scheduled. */
+export function declineTransfer() {
+  const proposal = getState().transferProposal;
+  if (!proposal) return;
+  setState({ transferProposal: null, error: null });
+  tapEvent("start_transfer", proposal.input as Record<string, unknown>, proposal.path)({ phase: "declined" });
+  // A "Start this" tap the user backs out of is between them and the screen; only tell an agent that asked.
+  if (proposal.source === "voice") notifyAgent(decisionNote("declined"));
+}
+
+/** The user tapped Stop on a scheduled (simulated) transfer. */
+export async function stopTransfer(): Promise<TransferResponse | null> {
+  const t = getState().transfer;
+  if (!t || t.status !== "scheduled" || getState().transferPending) return null;
+  setState({ transferPending: true, error: null });
+  const done = tapEvent("stop_transfer", { amount: t.amount, from_account_id: t.from_account_id, to_account_id: t.to_account_id, frequency: t.frequency, transfer_id: t.id });
+  try {
+    const res = await api.stopTransfer(getState().customer, t.id);
     setState({ transfer: res, transferPending: false });
-    done?.({ phase: "ok", result: res, reply: res.sentence });
+    done({ phase: "ok", result: res, reply: res.sentence });
+    notifyAgent(decisionNote("stopped", res.sentence));
     return res;
   } catch (e) {
     setState({ transferPending: false, error: errorText(e) });
-    done?.({ phase: "error", error: errorText(e) });
-    throw e;
+    done({ phase: "error", error: errorText(e) });
+    return null;
   }
+}
+
+let noticeId = 0;
+/** Queue a note for the live agent (VoiceSession sends it as a contextual update if a session is live). */
+function notifyAgent(text: string) {
+  setState({ transferNotice: { id: ++noticeId, text } });
 }
 
 let tapId = 0;
 /** Log a tapped action in the activity panel, the same way the agent's tool calls are logged. */
-function tapEvent(name: "update_plan" | "start_transfer", params: Record<string, unknown>) {
+function tapEvent(name: ToolEventName, params: Record<string, unknown>, onPath?: PathId) {
   const id = `tap_${++tapId}`;
   const t0 = Date.now();
-  const path = name === "update_plan" ? "plan" : (getState().activePath ?? "plan");
+  const path = name === "update_plan" ? "plan" : (onPath ?? getState().activePath ?? "plan");
   recordToolEvent({ id, name, path, phase: "called", params, at: t0, source: "tap" });
   return (e: Pick<ToolEvent, "phase"> & Partial<ToolEvent>) =>
     recordToolEvent({ id, name, path, params, at: Date.now(), ms: Date.now() - t0, source: "tap", ...e });

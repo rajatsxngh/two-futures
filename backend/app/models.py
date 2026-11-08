@@ -17,7 +17,10 @@ import datetime as dt
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, model_validator
+from pydantic_core import PydanticCustomError
+
+from .engine.assumptions import TRANSFER_MAX, TRANSFER_STEP
 
 
 # ---------------------------------------------------------------------------
@@ -365,26 +368,62 @@ class FuturesResponse(BaseModel):
 # POST /api/update_plan
 # ---------------------------------------------------------------------------
 
-WhatIfPreset = Literal["new_job", "move", "big_purchase", "save_more", "job_loss", "buy_home", "custom"]
+WhatIfPreset = Literal["new_job", "move", "big_purchase", "save_more", "job_loss", "buy_home", "buy_car", "custom"]
 
 
 class HomePurchase(BaseModel):
-    price: float
-    down_payment: float
-    rate: float = Field(description="Mortgage APR in percent")
-    term_years: int = 30
+    model_config = ConfigDict(allow_inf_nan=False)
+
+    price: float = Field(ge=10_000, le=5_000_000, description="Home price in dollars, $10,000 to $5,000,000")
+    down_payment: float = Field(ge=0, le=5_000_000, description="Down payment in dollars; must be below the price")
+    rate: float = Field(ge=0, le=35, description="Mortgage APR in percent, 0 to 35")
+    term_years: int = Field(default=30, ge=5, le=40, description="Loan length in years, 5 to 40")
+
+
+class CarPurchase(BaseModel):
+    """Buy a car with a loan (what-if). The down payment comes out of savings at the start; the loan runs for the term."""
+
+    model_config = ConfigDict(allow_inf_nan=False)
+
+    price: float = Field(ge=1_000, le=150_000, description="Car price in dollars, $1,000 to $150,000")
+    down: float = Field(ge=0, le=150_000, description="Down payment in dollars, 0 up to the price")
+    apr: float = Field(ge=0, le=35, description="Loan APR in percent, 0 to 35")
+    term_months: int = Field(ge=12, le=84, description="Loan length in months, 12 to 84")
+
+    @model_validator(mode="after")
+    def _down_within_price(self) -> "CarPurchase":
+        if self.down > self.price:
+            raise PydanticCustomError("down_over_price", "the down payment can't be more than the price")
+        return self
+
+
+class CarLoanOption(BaseModel):
+    """One row of the car loan comparison: same loan amount, a different term or APR."""
+
+    term_months: int
+    apr: float = Field(description="Percent")
+    payment: float = Field(description="Monthly payment")
+    total_interest: float = Field(description="Interest paid over the whole loan")
+    chosen: bool = Field(description="True for the term and APR in the what-if")
 
 
 class WhatIfRequest(BaseModel):
+    model_config = ConfigDict(allow_inf_nan=False)
+
     customer: str = "maya"
-    description: str = Field(description="The change in the user's own words")
+    description: str = Field(max_length=1000, description="The change in the user's own words")
     preset: WhatIfPreset = "custom"
-    income_change_yearly: float | None = Field(default=None, description="Gross yearly change, e.g. 8000")
-    spending_change_monthly: float | None = None
-    savings_change_monthly: float | None = None
-    one_time_cost: float | None = None
-    job_loss_months: int | None = None
+    income_change_yearly: float | None = Field(default=None, ge=-250_000, le=250_000,
+                                               description="Gross yearly change, e.g. 8000 (-250,000 to 250,000)")
+    spending_change_monthly: float | None = Field(default=None, ge=-10_000, le=10_000,
+                                                  description="Monthly spending change (-10,000 to 10,000)")
+    savings_change_monthly: float | None = Field(default=None, ge=-10_000, le=10_000,
+                                                 description="Extra monthly saving (-10,000 to 10,000)")
+    one_time_cost: float | None = Field(default=None, ge=-1_000_000, le=1_000_000,
+                                        description="A single cost in dollars (-1,000,000 to 1,000,000)")
+    job_loss_months: int | None = Field(default=None, ge=0, le=24, description="Months with no income, 0 to 24")
     home: HomePurchase | None = None
+    car: CarPurchase | None = None
     start_month: str | None = Field(default=None, description="YYYY-MM; defaults to next month")
 
 
@@ -395,6 +434,8 @@ class UpdatePlanResponse(BaseModel):
     sentence: str = Field(description="One ready-made sentence the agent can say")
     applied: list[WhatIfRequest] = Field(description="All what-ifs active on the plan path, in order")
     fact_sheet: FactSheet
+    car_options: list[CarLoanOption] = Field(default=[], description="Car what-if only: payment and total interest "
+                                                                      "at other terms and APRs, same loan amount")
 
 
 # ---------------------------------------------------------------------------
@@ -402,17 +443,26 @@ class UpdatePlanResponse(BaseModel):
 # ---------------------------------------------------------------------------
 
 class TransferRequest(BaseModel):
+    model_config = ConfigDict(allow_inf_nan=False)
+
     customer: str = "maya"
-    amount: float = Field(gt=0)
-    from_account_id: str
-    to_account_id: str
+    amount: float = Field(gt=0, le=TRANSFER_MAX, multiple_of=TRANSFER_STEP,
+                          description="Dollars per transfer, in $25 steps, at most $1,000")
+    from_account_id: str = Field(description="Must be the customer's checking account")
+    to_account_id: str = Field(description="Must be the customer's savings account")
     frequency: Literal["payday", "monthly", "once"]
-    confirmed: bool = Field(description="Must be true: nothing moves without a clear yes")
+    confirmed: StrictBool = Field(description="Must be exactly true (sent after the user taps Yes): nothing moves "
+                                              "without a clear yes")
+
+
+class StopTransferRequest(BaseModel):
+    customer: str = "maya"
+    transfer_id: str
 
 
 class TransferResponse(BaseModel):
     id: str
-    status: Literal["scheduled"]
+    status: Literal["scheduled", "stopped"]
     amount: float
     from_account_id: str
     to_account_id: str

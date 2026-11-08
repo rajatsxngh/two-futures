@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { baseCorpus, judge, TESTS, type ToolCall, type Turn } from "@/lib/grounding";
 import { newMemory, savedReply } from "@/components/voice/savedAgent";
-import { transferReply, updatePlanReply } from "@/components/voice/toolReplies";
+import { proposalReply, updatePlanReply } from "@/components/voice/toolReplies";
 import type { VoiceTools } from "@/components/voice";
 
 type Status = "pending" | "ok" | "warn" | "fail";
@@ -32,10 +32,11 @@ function tools(log: ToolCall[]): VoiceTools {
       log.push({ name: "update_plan", params: i as Record<string, unknown>, reply: updatePlanReply(r) });
       return r;
     },
-    startTransfer: async (i) => {
-      const r = await api.startTransfer({ ...i, customer: "maya" });
-      log.push({ name: "start_transfer", params: i as Record<string, unknown>, reply: transferReply(r) });
-      return r;
+    // Agents only propose; nothing is scheduled without a tap on screen.
+    proposeTransfer: (i) => {
+      const reply = proposalReply(i, { from: i.from_account_id, to: i.to_account_id });
+      log.push({ name: "start_transfer", params: i as Record<string, unknown>, reply });
+      return { status: "awaiting_tap", reply };
     },
     highlightMetric: (id) => {
       log.push({ name: "highlight_metric", params: { metric_id: id } });

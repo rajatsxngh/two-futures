@@ -2258,7 +2258,8 @@
           "month": "2027-11",
           "balance": 1676.0
         }
-      ]
+      ],
+      "end": null
     },
     {
       "account_id": "reserve",
@@ -2317,7 +2318,8 @@
           "month": "2027-11",
           "balance": 4750.0
         }
-      ]
+      ],
+      "end": null
     },
     {
       "account_id": "cd",
@@ -2376,7 +2378,8 @@
           "month": "2027-11",
           "balance": 2000.0
         }
-      ]
+      ],
+      "end": null
     },
     {
       "account_id": "ira",
@@ -2435,7 +2438,8 @@
           "month": "2027-11",
           "balance": 8336.0
         }
-      ]
+      ],
+      "end": null
     },
     {
       "account_id": "auto",
@@ -2494,7 +2498,8 @@
           "month": "2027-11",
           "balance": 10316.0
         }
-      ]
+      ],
+      "end": null
     },
     {
       "account_id": "card",
@@ -2553,7 +2558,8 @@
           "month": "2027-11",
           "balance": 3420.0
         }
-      ]
+      ],
+      "end": null
     }
   ],
   "markers": [
@@ -3143,5 +3149,6 @@
     "Everyday spending varies around its 12-month average by as much as it has in the past.",
     "The line is the typical (middle) result; the band runs from the 10th to the 90th percentile."
   ],
-  "label": "Forecast, not a promise"
+  "label": "Forecast, not a promise",
+  "headline": []
 }

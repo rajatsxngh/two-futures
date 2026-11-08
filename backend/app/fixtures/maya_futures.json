@@ -549,7 +549,8 @@
           "thresholds": null
         }
       }
-    ]
+    ],
+    "amount_metric": null
   },
   "fact_sheets": {
     "same_path": {

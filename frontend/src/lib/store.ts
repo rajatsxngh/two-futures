@@ -18,7 +18,7 @@ import type {
   TransferResponse,
   UpdatePlanResponse,
 } from "./api";
-import type { ToolEvent, VoiceStatus } from "@/components/voice/types";
+import type { ToolEvent, TransferProposal, VoiceStatus } from "@/components/voice/types";
 
 export type Screen = "today" | "forecast" | "futures" | "next";
 
@@ -40,8 +40,13 @@ export type AppState = {
   whatIf: UpdatePlanResponse | null;
   whatIfPending: boolean;
   whatIfDrawerOpen: boolean;
+  /** The latest scheduled (or stopped) simulated transfer. */
   transfer: TransferResponse | null;
   transferPending: boolean;
+  /** A transfer waiting for the user's tap on the "Confirm your transfer" sheet (shown over any screen). */
+  transferProposal: TransferProposalState | null;
+  /** The user's latest tap on the sheet or Stop, for the live agent to hear about (id changes per tap). */
+  transferNotice: { id: number; text: string } | null;
   /** Metric id currently glowing (highlight_metric). */
   highlighted: string | null;
   /** Today: the 8 indicator tiles are open (drill-down from the score). */
@@ -67,6 +72,13 @@ export type AppState = {
 
 export type VoiceMode = "live" | "text" | "saved";
 
+export type TransferProposalState = {
+  input: TransferProposal;
+  /** Who opened the sheet: the user's own tap on "Start this", or an agent (voice, text or saved). */
+  source: "tap" | "voice";
+  path: PathId;
+};
+
 export const initialState: AppState = {
   customer: "maya",
   screen: "today",
@@ -81,6 +93,8 @@ export const initialState: AppState = {
   whatIfDrawerOpen: false,
   transfer: null,
   transferPending: false,
+  transferProposal: null,
+  transferNotice: null,
   highlighted: null,
   showIndicators: false,
   activePath: null,

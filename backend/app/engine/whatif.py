@@ -8,6 +8,10 @@ Rules (from the PRD):
   spending drops by the same amount (moving money between your own accounts creates none).
 - One-time cost: paid from savings first, then the card.
 - Job loss: income drops to $0 for the chosen months; plan transfers pause meanwhile.
+- Buy a home: the down payment is paid like a one-time cost; the full housing cost (loan + Texas property
+  tax + insurance + PMI under 20% down) replaces rent. Upkeep isn't included.
+- Buy a car: the down payment is paid like a one-time cost; the loan payment runs for the term. The loan
+  counts as debt; the car counts as an asset losing 15% a year. Insurance, gas and repairs aren't included.
 What-ifs apply to the plan path only, and they stack in the order given.
 """
 
@@ -17,15 +21,17 @@ from datetime import date
 
 import numpy as np
 
-from ..models import PathResult, WhatIfRequest
+from ..models import CarLoanOption, CarPurchase, HomePurchase, PathResult, WhatIfRequest
+from . import assumptions as A
 from .fmt import round_half_up, usd
+from .params import Params
+from .sim import Adjust, CarPlan, HomePlan, SimResult
 
 
 def _mo(x: float) -> str:
     """Months with the same rounding as the on-screen numbers (half up)."""
     return f"{round_half_up(x, 1):.1f}"
-from .params import Params
-from .sim import Adjust, HomePlan, SimResult
+
 
 FEDERAL_TAX = 0.22
 PAYROLL_TAX = 0.0765
@@ -49,10 +55,60 @@ def start_index(months: list[date], wi: WhatIfRequest) -> int:
     raise WhatIfError(f"start_month {wi.start_month} is after {months[-1]:%B %Y}")
 
 
+def loan_payment(principal: float, apr: float, n_months: int) -> float:
+    """Standard amortized monthly payment: L x r / (1 - (1 + r)^-n), r = APR / 12. At 0% APR it's L / n."""
+    if principal <= 0:
+        return 0.0
+    r = apr / 100 / 12
+    return principal / n_months if r == 0 else principal * r / (1 - (1 + r) ** -n_months)
+
+
 def mortgage_payment(principal: float, rate: float, years: int) -> float:
-    """Monthly principal and interest: L x r / (1 - (1 + r)^-n)."""
-    r, n = rate / 100 / 12, years * 12
-    return principal / n if r == 0 else principal * r / (1 - (1 + r) ** -n)
+    """Monthly principal and interest."""
+    return loan_payment(principal, rate, years * 12)
+
+
+def home_costs(h: HomePurchase) -> dict[str, float]:
+    """The full monthly cost of a home: loan (principal and interest), property tax, insurance, and PMI
+    (only with under 20% down; the sim drops it once the loan falls to 80% of the price)."""
+    loan = h.price - h.down_payment
+    return {
+        "loan": mortgage_payment(loan, h.rate, h.term_years),
+        "tax": h.price * A.HOME_PROPERTY_TAX / 12,
+        "insurance": h.price * A.HOME_INSURANCE / 12,
+        "pmi": loan * A.HOME_PMI / 12 if h.down_payment < 0.20 * h.price else 0.0,
+    }
+
+
+def home_breakdown(h: HomePurchase) -> tuple[float, dict[str, float]]:
+    """The home costs rounded to whole dollars, and their total (the sum of the rounded parts, so it adds up)."""
+    parts = {k: round_half_up(v) for k, v in home_costs(h).items()}
+    return sum(parts.values()), parts
+
+
+def car_payment(c: CarPurchase) -> float:
+    return loan_payment(c.price - c.down, c.apr, c.term_months)
+
+
+def car_options(c: CarPurchase) -> list[CarLoanOption]:
+    """Same loan amount at 36/48/60/72 months (chosen APR), then the chosen term at APR -2 and +2 points."""
+    loan = c.price - c.down
+    if loan <= 0:
+        return []  # paid in cash: no loan to compare
+    combos = [(t, float(c.apr)) for t in A.CAR_OPTION_TERMS]
+    for d in (-A.CAR_OPTION_APR_STEP, A.CAR_OPTION_APR_STEP):
+        combos.append((c.term_months, min(35.0, max(0.0, c.apr + d))))
+    out: list[CarLoanOption] = []
+    seen: set[tuple[int, float]] = set()
+    for term, apr in combos:
+        if (term, apr) in seen:
+            continue
+        seen.add((term, apr))
+        pay = loan_payment(loan, apr, term)
+        out.append(CarLoanOption(term_months=term, apr=round(apr, 2), payment=round(pay, 2),
+                                 total_interest=round(max(pay * term - loan, 0.0), 2),
+                                 chosen=(term, apr) == (c.term_months, c.apr)))
+    return out
 
 
 def take_home_change(wi: WhatIfRequest) -> float:
@@ -76,8 +132,17 @@ def to_adjust(p: Params, months: list[date], whatifs: list[WhatIfRequest]) -> Ad
             rent = sum(b.amount for b in p.fixed_bills if b.category == "housing" and b.due_rule.kind == "monthly")
             adj.spending[s:] -= rent
             adj.one_time[s] += h.down_payment
+            costs = home_costs(h)
             adj.home = HomePlan(start=s, price=h.price, down=h.down_payment, rate=h.rate, term_years=h.term_years,
-                                payment=mortgage_payment(h.price - h.down_payment, h.rate, h.term_years), rent=rent)
+                                payment=costs["loan"], rent=rent, tax=costs["tax"], insurance=costs["insurance"],
+                                pmi=costs["pmi"])
+        if wi.car:
+            c = wi.car
+            if not (0 < c.price and 0 <= c.down <= c.price and c.apr >= 0 and c.term_months > 0):
+                raise WhatIfError("A car needs a price, a down payment no more than the price, an APR and a term.")
+            adj.one_time[s] += c.down
+            adj.car = CarPlan(start=s, price=c.price, down=c.down, apr=c.apr, term_months=c.term_months,
+                              payment=car_payment(c))
         if wi.income_change_yearly:
             adj.income[s:] += take_home_change(wi)
         if wi.spending_change_monthly:
@@ -104,8 +169,69 @@ def _about(x: float) -> str:
     return usd(round_half_up(abs(x) / step) * step)
 
 
+def _down_short(p: Params, sim: SimResult, start: int, down: float) -> str:
+    """Can savings cover the down payment at `start`? If not, say so plainly: an unmet need, not affordable."""
+    liquid = sim.balances[p.checking.id][:, start] + (sim.balances[p.savings.id][:, start] if p.savings else 0)
+    short = float(np.median(np.maximum(down - liquid, 0)))
+    card = p.card
+    room = (float(np.median(np.maximum(card.limit - sim.balances[card.id][:, start], 0)))
+            if card and card.limit else (short if card else 0.0))
+    if short >= 50 and short - room >= 50:
+        return (f" You'd be about {_about(short)} short for the down payment then: more than the card's "
+                f"{usd(room)} of room, so about {_about(short - room)} of bills would go unpaid.")
+    if short >= 50:
+        return f" You'd be about {_about(short)} short for the down payment then, so that part would go on the card."
+    return ""
+
+
+def _leftover(sim: SimResult, i: int) -> float:
+    """Take-home minus typical monthly spending (bills, everyday spending, loan payments) at the end of month i."""
+    return float(sim.income[i] - np.median(sim.spend_typical[:, i + 1])) if sim.income is not None else 0.0
+
+
+def _left_text(after: float, before: float) -> str:
+    def say(x: float) -> str:
+        return f"about {_about(x)} left" if x >= 0 else f"about {_about(x)} short"
+    if after >= 0:
+        return f"you'd have {say(after)} each month instead of {say(before)}"
+    return f"you'd come up {say(after)} each month instead of having {say(before)}"
+
+
+def car_sentence(p: Params, before_sim: SimResult | None, after_sim: SimResult, months: list[date]) -> str:
+    c = after_sim.car
+    s = c.start
+    when = months[s]
+    if c.payment > 0:
+        out = (f"Buying a {usd(c.price)} car in {when:%B %Y} with {usd(c.down)} down means a {usd(c.payment)} "
+               f"payment every month for {c.term_months} months.")
+    else:
+        out = f"Buying a {usd(c.price)} car in {when:%B %Y} with cash means no loan payment."
+    if before_sim is not None:
+        k = min(s + 1, len(months))
+        c0, c1 = float(np.median(before_sim.cushion[:, k])), float(np.median(after_sim.cushion[:, k]))
+        out += (f" Right after, your cushion would be {_mo(c1)} months instead of {_mo(c0)}, and "
+                f"{_left_text(_leftover(after_sim, s), _leftover(before_sim, s))}.")
+    out += _down_short(p, after_sim, s, c.down)
+    # When would checking come up short (savings gone, so the card or unpaid bills cover the gap)?
+    liquid = after_sim.balances[p.checking.id] + (after_sim.balances[p.savings.id] if p.savings else 0)
+    dry = np.median(liquid, axis=0) < 50
+    unpaid = np.median(after_sim.balances["unpaid_bills"], axis=0) >= 50
+    if before_sim is not None:
+        liquid0 = before_sim.balances[p.checking.id] + (before_sim.balances[p.savings.id] if p.savings else 0)
+        dry &= np.median(liquid0, axis=0) >= 50  # only gaps the car causes
+        unpaid &= np.median(before_sim.balances["unpaid_bills"], axis=0) < 50
+    late = next((j for j in range(s + 2, len(months) + 1) if unpaid[j]), None)
+    gap = next((j for j in range(s + 2, len(months) + 1) if dry[j]), None)
+    if late is not None:
+        out += f" From {months[late - 1]:%B %Y}, bills would start going unpaid."
+    elif gap is not None:
+        out += (f" Checking would come up short around {months[gap - 1]:%B %Y}, "
+                "so the card would have to cover the gap.")
+    return out + " Insurance, gas and repairs aren't included."
+
+
 def sentence(wi: WhatIfRequest, before: PathResult, after: PathResult, months: list[date],
-             after_sim: SimResult, p: Params | None = None) -> str:
+             after_sim: SimResult, p: Params | None = None, before_sim: SimResult | None = None) -> str:
     """One ready-made sentence the agent can say. Every number in it comes from the engine."""
     year = after.snapshots[-1].year
     c0, c1 = before.snapshots[-1].cushion_months, after.snapshots[-1].cushion_months
@@ -118,24 +244,19 @@ def sentence(wi: WhatIfRequest, before: PathResult, after: PathResult, months: l
         tail = f"By {year}, it barely changes your numbers."
     net = monthly_net(wi)
 
+    if wi.car and after_sim.car and p is not None:
+        return car_sentence(p, before_sim, after_sim, months)
     if wi.home and after_sim.home:
         h = after_sim.home
         when = months[h.start]
-        out = (f"Buying a {usd(h.price)} home in {when:%B %Y} with {usd(h.down)} down means a {usd(h.payment)} "
-               f"mortgage payment instead of {usd(h.rent)} rent. {tail}")
+        total, parts = home_breakdown(wi.home)
+        pmi = f" + {usd(parts['pmi'])} PMI" if parts["pmi"] else ""
+        out = (f"Buying a {usd(h.price)} home in {when:%B %Y} with {usd(h.down)} down means {usd(total)} a month: "
+               f"{usd(parts['loan'])} loan + {usd(parts['tax'])} tax + {usd(parts['insurance'])} insurance{pmi} "
+               f"instead of {usd(h.rent)} rent. {tail}")
         if p is not None:
-            liquid = after_sim.balances[p.checking.id][:, h.start] + (
-                after_sim.balances[p.savings.id][:, h.start] if p.savings else 0)
-            short = float(np.median(np.maximum(h.down - liquid, 0)))
-            card = p.card
-            room = (float(np.median(np.maximum(card.limit - after_sim.balances[card.id][:, h.start], 0)))
-                    if card and card.limit else (short if card else 0.0))
-            if short >= 50 and short - room >= 50:
-                out += (f" You'd be about {_about(short)} short for the down payment then: more than the card's "
-                        f"{usd(room)} of room, so about {_about(short - room)} of bills would go unpaid.")
-            elif short >= 50:
-                out += f" You'd be about {_about(short)} short for the down payment then, so that part would go on the card."
-        return out
+            out += _down_short(p, after_sim, h.start, h.down)
+        return out + " Upkeep isn't included."
     if wi.job_loss_months:
         s = start_index(months, wi)
         e = min(len(months), s + wi.job_loss_months)

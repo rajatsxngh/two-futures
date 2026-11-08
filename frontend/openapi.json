@@ -236,13 +236,52 @@
     "/api/start_transfer": {
       "post": {
         "summary": "Start Transfer",
-        "description": "Schedule a simulated transfer. Refused without confirmed=true: nothing moves without a clear yes.",
+        "description": "Schedule a simulated transfer (no real money moves). Refused unless confirmed is exactly true, the amount is a\n$25 step up to $1,000, and it goes from the customer's checking account to their savings account.",
         "operationId": "start_transfer_api_start_transfer_post",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TransferRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransferResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stop_transfer": {
+      "post": {
+        "summary": "Stop Transfer",
+        "description": "Stop a scheduled (simulated) transfer. 404 if there's no such transfer.",
+        "operationId": "stop_transfer_api_stop_transfer_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StopTransferRequest"
               }
             }
           },
@@ -683,6 +722,85 @@
           "account_id"
         ],
         "title": "Bill"
+      },
+      "CarLoanOption": {
+        "properties": {
+          "term_months": {
+            "type": "integer",
+            "title": "Term Months"
+          },
+          "apr": {
+            "type": "number",
+            "title": "Apr",
+            "description": "Percent"
+          },
+          "payment": {
+            "type": "number",
+            "title": "Payment",
+            "description": "Monthly payment"
+          },
+          "total_interest": {
+            "type": "number",
+            "title": "Total Interest",
+            "description": "Interest paid over the whole loan"
+          },
+          "chosen": {
+            "type": "boolean",
+            "title": "Chosen",
+            "description": "True for the term and APR in the what-if"
+          }
+        },
+        "type": "object",
+        "required": [
+          "term_months",
+          "apr",
+          "payment",
+          "total_interest",
+          "chosen"
+        ],
+        "title": "CarLoanOption",
+        "description": "One row of the car loan comparison: same loan amount, a different term or APR."
+      },
+      "CarPurchase": {
+        "properties": {
+          "price": {
+            "type": "number",
+            "maximum": 150000.0,
+            "minimum": 1000.0,
+            "title": "Price",
+            "description": "Car price in dollars, $1,000 to $150,000"
+          },
+          "down": {
+            "type": "number",
+            "maximum": 150000.0,
+            "minimum": 0.0,
+            "title": "Down",
+            "description": "Down payment in dollars, 0 up to the price"
+          },
+          "apr": {
+            "type": "number",
+            "maximum": 35.0,
+            "minimum": 0.0,
+            "title": "Apr",
+            "description": "Loan APR in percent, 0 to 35"
+          },
+          "term_months": {
+            "type": "integer",
+            "maximum": 84.0,
+            "minimum": 12.0,
+            "title": "Term Months",
+            "description": "Loan length in months, 12 to 84"
+          }
+        },
+        "type": "object",
+        "required": [
+          "price",
+          "down",
+          "apr",
+          "term_months"
+        ],
+        "title": "CarPurchase",
+        "description": "Buy a car with a loan (what-if). The down payment comes out of savings at the start; the loan runs for the term."
       },
       "Customer": {
         "properties": {
@@ -1140,20 +1258,31 @@
         "properties": {
           "price": {
             "type": "number",
-            "title": "Price"
+            "maximum": 5000000.0,
+            "minimum": 10000.0,
+            "title": "Price",
+            "description": "Home price in dollars, $10,000 to $5,000,000"
           },
           "down_payment": {
             "type": "number",
-            "title": "Down Payment"
+            "maximum": 5000000.0,
+            "minimum": 0.0,
+            "title": "Down Payment",
+            "description": "Down payment in dollars; must be below the price"
           },
           "rate": {
             "type": "number",
+            "maximum": 35.0,
+            "minimum": 0.0,
             "title": "Rate",
-            "description": "Mortgage APR in percent"
+            "description": "Mortgage APR in percent, 0 to 35"
           },
           "term_years": {
             "type": "integer",
+            "maximum": 40.0,
+            "minimum": 5.0,
             "title": "Term Years",
+            "description": "Loan length in years, 5 to 40",
             "default": 30
           }
         },
@@ -2004,6 +2133,24 @@
         ],
         "title": "ShockYear"
       },
+      "StopTransferRequest": {
+        "properties": {
+          "customer": {
+            "type": "string",
+            "title": "Customer",
+            "default": "maya"
+          },
+          "transfer_id": {
+            "type": "string",
+            "title": "Transfer Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transfer_id"
+        ],
+        "title": "StopTransferRequest"
+      },
       "Thresholds": {
         "properties": {
           "best": {
@@ -2048,16 +2195,21 @@
           },
           "amount": {
             "type": "number",
+            "multipleOf": 25.0,
+            "maximum": 1000.0,
             "exclusiveMinimum": 0.0,
-            "title": "Amount"
+            "title": "Amount",
+            "description": "Dollars per transfer, in $25 steps, at most $1,000"
           },
           "from_account_id": {
             "type": "string",
-            "title": "From Account Id"
+            "title": "From Account Id",
+            "description": "Must be the customer's checking account"
           },
           "to_account_id": {
             "type": "string",
-            "title": "To Account Id"
+            "title": "To Account Id",
+            "description": "Must be the customer's savings account"
           },
           "frequency": {
             "type": "string",
@@ -2071,7 +2223,7 @@
           "confirmed": {
             "type": "boolean",
             "title": "Confirmed",
-            "description": "Must be true: nothing moves without a clear yes"
+            "description": "Must be exactly true (sent after the user taps Yes): nothing moves without a clear yes"
           }
         },
         "type": "object",
@@ -2092,7 +2244,10 @@
           },
           "status": {
             "type": "string",
-            "const": "scheduled",
+            "enum": [
+              "scheduled",
+              "stopped"
+            ],
             "title": "Status"
           },
           "amount": {
@@ -2222,6 +2377,15 @@
           },
           "fact_sheet": {
             "$ref": "#/components/schemas/FactSheet"
+          },
+          "car_options": {
+            "items": {
+              "$ref": "#/components/schemas/CarLoanOption"
+            },
+            "type": "array",
+            "title": "Car Options",
+            "description": "Car what-if only: payment and total interest at other terms and APRs, same loan amount",
+            "default": []
           }
         },
         "type": "object",
@@ -2283,6 +2447,7 @@
           },
           "description": {
             "type": "string",
+            "maxLength": 1000,
             "title": "Description",
             "description": "The change in the user's own words"
           },
@@ -2295,6 +2460,7 @@
               "save_more",
               "job_loss",
               "buy_home",
+              "buy_car",
               "custom"
             ],
             "title": "Preset",
@@ -2303,63 +2469,87 @@
           "income_change_yearly": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "maximum": 250000.0,
+                "minimum": -250000.0
               },
               {
                 "type": "null"
               }
             ],
             "title": "Income Change Yearly",
-            "description": "Gross yearly change, e.g. 8000"
+            "description": "Gross yearly change, e.g. 8000 (-250,000 to 250,000)"
           },
           "spending_change_monthly": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "maximum": 10000.0,
+                "minimum": -10000.0
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Spending Change Monthly"
+            "title": "Spending Change Monthly",
+            "description": "Monthly spending change (-10,000 to 10,000)"
           },
           "savings_change_monthly": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "maximum": 10000.0,
+                "minimum": -10000.0
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Savings Change Monthly"
+            "title": "Savings Change Monthly",
+            "description": "Extra monthly saving (-10,000 to 10,000)"
           },
           "one_time_cost": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "number",
+                "maximum": 1000000.0,
+                "minimum": -1000000.0
               },
               {
                 "type": "null"
               }
             ],
-            "title": "One Time Cost"
+            "title": "One Time Cost",
+            "description": "A single cost in dollars (-1,000,000 to 1,000,000)"
           },
           "job_loss_months": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "maximum": 24.0,
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Job Loss Months"
+            "title": "Job Loss Months",
+            "description": "Months with no income, 0 to 24"
           },
           "home": {
             "anyOf": [
               {
                 "$ref": "#/components/schemas/HomePurchase"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "car": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CarPurchase"
               },
               {
                 "type": "null"

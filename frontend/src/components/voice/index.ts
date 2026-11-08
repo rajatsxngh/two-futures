@@ -4,7 +4,9 @@ export { Waveform } from "./Waveform";
 export type {
   Caption,
   ToolEvent,
-  TransferInput,
+  ProposalResult,
+  ToolEventName,
+  TransferProposal,
   UpdatePlanInput,
   VoiceSessionProps,
   VoiceStatus,

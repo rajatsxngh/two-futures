@@ -50,13 +50,36 @@ function words({ first, last }: Entry): { title: string; detail?: string; tone: 
     const lead = res?.deltas.find((d) => d.id === "whatif.monthly_change") ?? res?.deltas.find((d) => d.id === "whatif.net_worth_2031");
     return { title: `Checked: ${what}${lead ? ` → ${lead.display}` : ""}`, detail: res?.sentence, tone: "ok" };
   }
-  if (first.name === "start_transfer") {
+  if (first.name === "start_transfer" || first.name === "stop_transfer") {
     const what = `${typeof p.amount === "number" ? usd(p.amount) : "?"} ${p.from_account_id ?? "?"} → ${p.to_account_id ?? "?"} ${freq(p.frequency)}`;
-    if (last.phase === "called") return { title: `Setting up: ${what}`, tone: "run" };
-    if (last.phase === "refused") return { title: "Waiting for a clear yes before moving money", detail: what, tone: "warn" };
-    if (last.phase === "error") return { title: `Couldn't schedule: ${what}`, detail: last.error, tone: "warn" };
     const res = last.result as TransferResponse | undefined;
-    return { title: `Scheduled: ${what}`, detail: res ? `First transfer ${res.first_date} (simulated)` : undefined, tone: "ok" };
+    if (first.name === "stop_transfer") {
+      if (last.phase === "called") return { title: `Stopping: ${what}`, tone: "run" };
+      if (last.phase === "error") return { title: `Couldn't stop: ${what}`, detail: last.error, tone: "warn" };
+      return { title: `You stopped it: ${what}`, detail: "Simulated: no real money moved.", tone: "ok" };
+    }
+    if (first.source === "tap") {
+      // The user's own tap on the confirm sheet.
+      if (last.phase === "declined") return { title: `You said no: ${what}`, detail: "Nothing was scheduled.", tone: "warn" };
+      if (last.phase === "called") return { title: `You confirmed: ${what}`, detail: "Scheduling…", tone: "run" };
+      if (last.phase === "error") return { title: `Couldn't schedule: ${what}`, detail: last.error, tone: "warn" };
+      return {
+        title: `You confirmed: ${what}`,
+        detail: `Scheduled${res ? `, first transfer ${res.first_date}` : ""}. Simulated: no real money moves.`,
+        tone: "ok",
+      };
+    }
+    // An agent (voice, text or saved answers): it can only propose.
+    if (last.phase === "called") return { title: `Proposing: ${what}`, tone: "run" };
+    if (last.phase === "proposed") return { title: `Proposed: ${what}`, detail: "Waiting for your tap on screen. Nothing moves without it.", tone: "ok" };
+    if (last.phase === "refused") {
+      const why = (last.result as { status?: string } | undefined)?.status;
+      const title =
+        why === "already_scheduled" ? "Not proposed: already scheduled (simulated)" : why ? "Not proposed: only the plan's transfer" : "Not proposed: waiting for a clear yes";
+      return { title, detail: what, tone: "warn" };
+    }
+    if (last.phase === "error") return { title: `Couldn't propose: ${what}`, detail: last.error, tone: "warn" };
+    return { title: `Proposed: ${what}`, tone: "ok" };
   }
   const id = typeof p.metric_id === "string" ? p.metric_id : "";
   return { title: `Pointed at: ${metricLabel(id)}`, tone: last.phase === "ok" ? "ok" : "warn" };

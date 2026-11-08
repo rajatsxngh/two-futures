@@ -268,7 +268,8 @@
         "day": 1,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "auto1",
@@ -280,7 +281,8 @@
         "day": 10,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "personal",
@@ -292,7 +294,8 @@
         "day": 12,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "auto2",
@@ -304,7 +307,8 @@
         "day": 20,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     },
     {
       "id": "card_pay",
@@ -316,7 +320,8 @@
         "day": 25,
         "date": null
       },
-      "account_id": "spend"
+      "account_id": "spend",
+      "unused": false
     }
   ],
   "bills_next_90": [
@@ -497,5 +502,6 @@
       "kind": "income"
     }
   ],
-  "totals": []
+  "totals": [],
+  "account_metrics": []
 }

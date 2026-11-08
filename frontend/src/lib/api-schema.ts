@@ -120,9 +120,30 @@ export interface paths {
         put?: never;
         /**
          * Start Transfer
-         * @description Schedule a simulated transfer. Refused without confirmed=true: nothing moves without a clear yes.
+         * @description Schedule a simulated transfer (no real money moves). Refused unless confirmed is exactly true, the amount is a
+         *     $25 step up to $1,000, and it goes from the customer's checking account to their savings account.
          */
         post: operations["start_transfer_api_start_transfer_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/stop_transfer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Stop Transfer
+         * @description Stop a scheduled (simulated) transfer. 404 if there's no such transfer.
+         */
+        post: operations["stop_transfer_api_stop_transfer_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -297,6 +318,60 @@ export interface components {
              * @default false
              */
             unused: boolean;
+        };
+        /**
+         * CarLoanOption
+         * @description One row of the car loan comparison: same loan amount, a different term or APR.
+         */
+        CarLoanOption: {
+            /** Term Months */
+            term_months: number;
+            /**
+             * Apr
+             * @description Percent
+             */
+            apr: number;
+            /**
+             * Payment
+             * @description Monthly payment
+             */
+            payment: number;
+            /**
+             * Total Interest
+             * @description Interest paid over the whole loan
+             */
+            total_interest: number;
+            /**
+             * Chosen
+             * @description True for the term and APR in the what-if
+             */
+            chosen: boolean;
+        };
+        /**
+         * CarPurchase
+         * @description Buy a car with a loan (what-if). The down payment comes out of savings at the start; the loan runs for the term.
+         */
+        CarPurchase: {
+            /**
+             * Price
+             * @description Car price in dollars, $1,000 to $150,000
+             */
+            price: number;
+            /**
+             * Down
+             * @description Down payment in dollars, 0 up to the price
+             */
+            down: number;
+            /**
+             * Apr
+             * @description Loan APR in percent, 0 to 35
+             */
+            apr: number;
+            /**
+             * Term Months
+             * @description Loan length in months, 12 to 84
+             */
+            term_months: number;
         };
         /** Customer */
         Customer: {
@@ -497,17 +572,24 @@ export interface components {
         };
         /** HomePurchase */
         HomePurchase: {
-            /** Price */
+            /**
+             * Price
+             * @description Home price in dollars, $10,000 to $5,000,000
+             */
             price: number;
-            /** Down Payment */
+            /**
+             * Down Payment
+             * @description Down payment in dollars; must be below the price
+             */
             down_payment: number;
             /**
              * Rate
-             * @description Mortgage APR in percent
+             * @description Mortgage APR in percent, 0 to 35
              */
             rate: number;
             /**
              * Term Years
+             * @description Loan length in years, 5 to 40
              * @default 30
              */
             term_years: number;
@@ -863,6 +945,16 @@ export interface components {
             /** Plan */
             plan: number;
         };
+        /** StopTransferRequest */
+        StopTransferRequest: {
+            /**
+             * Customer
+             * @default maya
+             */
+            customer: string;
+            /** Transfer Id */
+            transfer_id: string;
+        };
         /** Thresholds */
         Thresholds: {
             /**
@@ -888,11 +980,20 @@ export interface components {
              * @default maya
              */
             customer: string;
-            /** Amount */
+            /**
+             * Amount
+             * @description Dollars per transfer, in $25 steps, at most $1,000
+             */
             amount: number;
-            /** From Account Id */
+            /**
+             * From Account Id
+             * @description Must be the customer's checking account
+             */
             from_account_id: string;
-            /** To Account Id */
+            /**
+             * To Account Id
+             * @description Must be the customer's savings account
+             */
             to_account_id: string;
             /**
              * Frequency
@@ -901,7 +1002,7 @@ export interface components {
             frequency: "payday" | "monthly" | "once";
             /**
              * Confirmed
-             * @description Must be true: nothing moves without a clear yes
+             * @description Must be exactly true (sent after the user taps Yes): nothing moves without a clear yes
              */
             confirmed: boolean;
         };
@@ -911,9 +1012,9 @@ export interface components {
             id: string;
             /**
              * Status
-             * @constant
+             * @enum {string}
              */
-            status: "scheduled";
+            status: "scheduled" | "stopped";
             /** Amount */
             amount: number;
             /** From Account Id */
@@ -985,6 +1086,12 @@ export interface components {
              */
             applied: components["schemas"]["WhatIfRequest"][];
             fact_sheet: components["schemas"]["FactSheet"];
+            /**
+             * Car Options
+             * @description Car what-if only: payment and total interest at other terms and APRs, same loan amount
+             * @default []
+             */
+            car_options: components["schemas"]["CarLoanOption"][];
         };
         /** ValidationError */
         ValidationError: {
@@ -1016,21 +1123,34 @@ export interface components {
              * @default custom
              * @enum {string}
              */
-            preset: "new_job" | "move" | "big_purchase" | "save_more" | "job_loss" | "buy_home" | "custom";
+            preset: "new_job" | "move" | "big_purchase" | "save_more" | "job_loss" | "buy_home" | "buy_car" | "custom";
             /**
              * Income Change Yearly
-             * @description Gross yearly change, e.g. 8000
+             * @description Gross yearly change, e.g. 8000 (-250,000 to 250,000)
              */
             income_change_yearly?: number | null;
-            /** Spending Change Monthly */
+            /**
+             * Spending Change Monthly
+             * @description Monthly spending change (-10,000 to 10,000)
+             */
             spending_change_monthly?: number | null;
-            /** Savings Change Monthly */
+            /**
+             * Savings Change Monthly
+             * @description Extra monthly saving (-10,000 to 10,000)
+             */
             savings_change_monthly?: number | null;
-            /** One Time Cost */
+            /**
+             * One Time Cost
+             * @description A single cost in dollars (-1,000,000 to 1,000,000)
+             */
             one_time_cost?: number | null;
-            /** Job Loss Months */
+            /**
+             * Job Loss Months
+             * @description Months with no income, 0 to 24
+             */
             job_loss_months?: number | null;
             home?: components["schemas"]["HomePurchase"] | null;
+            car?: components["schemas"]["CarPurchase"] | null;
             /**
              * Start Month
              * @description YYYY-MM; defaults to next month
@@ -1272,6 +1392,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["TransferRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransferResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stop_transfer_api_stop_transfer_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StopTransferRequest"];
             };
         };
         responses: {

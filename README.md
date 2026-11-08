@@ -55,7 +55,7 @@ flowchart LR
 **Code does the math, AI does the talking.** The voice agent never touches the engine. It starts with a short fact sheet the engine wrote, and it can only get a new number by asking the browser to run a tool, which calls the engine. The prompt bans math and guessing, and the activity panel shows every call.
 
 - **Health score** ([health.py](backend/app/engine/health.py)): 8 indicators, each scored on a straight line between two thresholds, aligned with the Financial Health Network's Spend / Save / Borrow / Plan framework. Computed from raw transactions, so Maya's 55 comes out of her data rather than being typed in.
-- **Forecast** ([forecast.py](backend/app/engine/forecast.py), [sim.py](backend/app/engine/sim.py)): spending patterns learned from 12 months of history; 1,000 simulated runs; a 10% monthly chance of a $300–$2,000 surprise; the same random draws and the same 2028 car repair on both paths, so only the decisions differ.
+- **Forecast** ([forecast.py](backend/app/engine/forecast.py), [sim.py](backend/app/engine/sim.py)): spending patterns estimated from 12 months of made-up transaction history; 1,000 simulated runs; a 10% monthly chance of a $300–$2,000 surprise; the same random draws and the same 2028 car repair on both paths, so only the decisions differ.
 - **Plan rules** (no AI): an automatic payday transfer builds a 2-month starter cushion, then the same money pays debts highest-rate first (the 25% card is gone by September 2028, the car is paid off 8 months early), windfalls are split with the card, unused subscriptions are cancelled and flexible spending is trimmed 20%, then savings fill to 6 months and the rest goes to the IRA.
 - **Real limits:** the card can't go past its $5,000 limit. When savings and the card run out (say, a long job loss), the rest shows up honestly as unpaid bills, which count as late payments in the score.
 - **What-ifs** ([whatif.py](backend/app/engine/whatif.py)): pay changes after 22% federal and 7.65% payroll tax (no Texas state tax), spending, saving more (which means spending less), one-time costs, job loss, buying a home. Each returns the new numbers and one ready-made sentence.
@@ -64,7 +64,7 @@ flowchart LR
 ## Trust and safety
 
 - **No made-up numbers:** engine-only facts, tool results with ready-made sentences, and an automatic grounding test (below).
-- **Nothing moves without a clear yes:** the API refuses a transfer without `confirmed: true`, and a retried "yes" doesn't schedule twice.
+- **Nothing moves without a tap:** the agent can only propose the transfer, which opens a confirm sheet; it's scheduled only when the user taps Yes. The API refuses anything but `confirmed: true`, a $25 step up to $1,000, from checking to savings, and a retried "yes" doesn't schedule twice. A Stop button cancels it. Every transfer is simulated: no real money moves.
 - **No advice or product pushing:** she names no stock, fund or product and points to a PNC banker. Both futures get the same surprises, so there are no scare tactics.
 - **Honest AI:** no voice cloning or aged photos. She says she's an AI version of you, refuses a PIN, and points to 988 in a crisis.
 - **Privacy:** made-up data only. The model gets a short fact sheet, never raw transactions. API keys stay on the server.

@@ -9,12 +9,12 @@ import {
   goTo,
   highlightMetric,
   openWhatIf,
+  proposeTransfer,
   queuedQuestionSent,
   recordToolEvent,
   selectFuture,
   setVoiceMode,
   setVoiceStatus,
-  startTransfer,
   updatePlan,
   voiceFailed,
 } from "@/lib/actions";
@@ -23,12 +23,14 @@ import { SavedSession, VoiceSession, type VoiceTools } from "../voice";
 import type { VoiceMode } from "@/lib/store";
 import { CountUp, MetricValue } from "../ui";
 import { JobLossCheck } from "../JobLossCheck";
+import { CarOptions } from "../WhatIfDrawer";
 
 // The agent's client tools are the same functions the buttons use, so a spoken
-// what-if or "yes" changes exactly the same state as a tap.
+// what-if changes exactly the same state as a tap. A spoken "yes" to the transfer
+// only opens the same confirm sheet as the "Start this" button: money moves on a tap.
 const VOICE_TOOLS: VoiceTools = {
   updatePlan: (input) => updatePlan(input, "voice"),
-  startTransfer: (input) => startTransfer(input, "voice"),
+  proposeTransfer: (input) => proposeTransfer(input, "voice"),
   highlightMetric,
 };
 const PATH_LABEL: Record<PathId, string> = { same_path: "Same path", plan: "With a plan" };
@@ -198,6 +200,7 @@ function VoicePanel() {
   const path = useApp((s) => s.activePath);
   const sheets = useApp((s) => s.futures?.fact_sheets);
   const queue = useApp((s) => s.voiceQueue);
+  const notice = useApp((s) => s.transferNotice);
   const name = useApp((s) => s.profile?.customer.name ?? "You");
   const customer = useApp((s) => s.customer);
   const mode = useApp((s) => s.voiceMode);
@@ -280,6 +283,7 @@ function VoicePanel() {
           onToolEvent={recordToolEvent}
           onStatusChange={setVoiceStatus}
           queued={queue && queue.path === path ? queue : null}
+          notice={notice}
           onQueuedSent={queuedQuestionSent}
           onAgentReply={agentReplied}
           onError={voiceFailed}
@@ -361,6 +365,7 @@ function WhatIfResult() {
         ))}
       </div>
       <p className="mt-1 text-sm leading-snug text-navy/85">{whatIf.sentence}</p>
+      <CarOptions options={whatIf.car_options} />
     </div>
   );
 }
