@@ -36,6 +36,12 @@ export function Waveform({
       const dpr = window.devicePixelRatio || 1;
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
+      // Hidden (e.g. Text mode hides the mic) or not laid out yet: nothing to draw.
+      // Drawing anyway gives negative bar sizes, and roundRect throws on a negative radius.
+      if (w <= 0 || h <= 0) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
       if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
         canvas.width = w * dpr;
         canvas.height = h * dpr;
@@ -52,7 +58,7 @@ export function Waveform({
         }
       }
       const gap = 3;
-      const barW = (w - gap * (BARS - 1)) / BARS;
+      const barW = Math.max(1, (w - gap * (BARS - 1)) / BARS);
       ctx.fillStyle = color;
       for (let i = 0; i < BARS; i++) {
         let v = 0;
@@ -66,7 +72,7 @@ export function Waveform({
         const y = (h - barH) / 2;
         ctx.globalAlpha = active ? 0.9 : 0.3;
         ctx.beginPath();
-        ctx.roundRect(x, y, barW, barH, barW / 2);
+        ctx.roundRect(x, y, barW, barH, Math.max(0, Math.min(barW, barH) / 2));
         ctx.fill();
       }
       frame = requestAnimationFrame(draw);
