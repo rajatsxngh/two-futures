@@ -9,6 +9,7 @@ import { ForecastScreen } from "./screens/Forecast";
 import { FuturesScreen } from "./screens/Futures";
 import { NextStepScreen } from "./screens/NextStep";
 import { WhatIfDrawer } from "./WhatIfDrawer";
+import { Logo } from "./Logo";
 import { MathSheet } from "./MathSheet";
 import { ActivityPanel } from "./ActivityPanel";
 
@@ -125,13 +126,3 @@ function Header() {
   );
 }
 
-function Logo() {
-  // Our own mark: two arcs (today and the future) meeting.
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-      <circle cx="12" cy="12" r="11" fill="var(--color-accent)" />
-      <path d="M6 15a6 6 0 0 1 12 0" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
-      <circle cx="12" cy="8" r="2" fill="white" />
-    </svg>
-  );
-}

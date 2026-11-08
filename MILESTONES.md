@@ -123,7 +123,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M8: Future You voice agent (F5) ── P0 complete · 🟡 wired, live voice untested (needs ElevenLabs key)
+## M8: Future You voice agent (F5) ── P0 complete ✅ done (live agent 10/10 grounded in text mode; spoken voice not yet tested with a mic)
 **Depends on:** M7 (client tools and screens), M4 (fact sheets)
 **Goal:** talk out loud to either future self, with only engine numbers.
 

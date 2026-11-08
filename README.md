@@ -82,7 +82,7 @@ npm run dev
 
 Open http://localhost:3000. The API runs at http://localhost:8000 (docs at `/docs`); the browser only talks to Next, which forwards `/api/*`.
 
-**Voice (optional):** create the agent by following [agent/future-maya-setup.md](agent/future-maya-setup.md), then put `ELEVENLABS_API_KEY` and `ELEVENLABS_AGENT_ID` in `frontend/.env.local` and restart. Without keys the app uses **saved answers**: the same rules and the engine's numbers, read aloud by the browser, fully offline.
+**Voice (optional):** paste your ElevenLabs API key into `frontend/.env.local` (`ELEVENLABS_API_KEY=`), run `npm run agent:create` (creates the agent and its tools from `agent/` and saves `ELEVENLABS_AGENT_ID`), then restart. After editing the prompt, `npm run agent:update` pushes it to the agent. Without keys the app uses **saved answers**: the same rules and the engine's numbers, read aloud by the browser, fully offline.
 
 | Page | What it's for |
 |---|---|
@@ -97,7 +97,7 @@ Open http://localhost:3000. The API runs at http://localhost:8000 (docs at `/doc
 | What | Result |
 |---|---|
 | Back-end tests (`npm test`) | **71 passing**: the 8 indicators and score 55 from raw data, forecast shape, rule 1 picks $150, both paths share the 2028 repair, what-ifs (Austin ≈ +$170/month), transfers need a yes, reset, job-loss check, buy a home, setup answers |
-| Grounding test (`/grounding`) | **Saved answers: 10 of 10 grounded, 10 of 10 behaved.** Live ElevenLabs agent: run it once keys are in |
+| Grounding test (`/grounding`) | **Live ElevenLabs agent: 10 of 10 grounded, 10 of 10 behaved.** Saved answers: 10 of 10, 10 of 10. The checker reads digits and spoken numbers ("twenty-four thousand…", "twenty thirty-one") |
 | Speed | Both 5-year paths in about 0.2 s; a what-if in about 0.5 s; reset in one click |
 
 `npm run check` runs the back-end tests, the front-end type check and lint.

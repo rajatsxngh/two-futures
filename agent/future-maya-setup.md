@@ -14,6 +14,15 @@ Code that uses the agent: `frontend/src/components/voice/VoiceSession.tsx` (the 
 
 ---
 
+## Quick path (one command)
+
+1. Get an API key: ElevenLabs → **Developers → API keys → Create**. If you restrict it, allow **ElevenAgents (Conversational AI)** with write access.
+2. Open `frontend/.env.local` and paste the key after `ELEVENLABS_API_KEY=` (no quotes, no spaces). Leave `ELEVENLABS_AGENT_ID=` empty.
+3. From the repo root, run `npm run agent:create`. It creates the three client tools and the agent (prompt, first message `{{opening_line}}`, dynamic variables, voice, authentication on, text-only override allowed) and writes the agent id into `frontend/.env.local`.
+4. Restart `npm run dev`, then open `http://localhost:3000/checklist`: "ElevenLabs configured" should be green.
+
+Then tune in the dashboard if you like (voice, LLM, latency; sections 2–6), and run section 8's test or `/grounding` with the live agent. The manual steps below do the same thing by hand.
+
 ## 1. Create the agent
 
 1. Sign in at [elevenlabs.io](https://elevenlabs.io), open **ElevenAgents** (Agents platform), and click **New agent** → **Blank template**.

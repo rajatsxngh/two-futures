@@ -1,6 +1,6 @@
 # Devpost draft
 
-Paste each section into the matching Devpost field. Everything here is true of the current build. Before submitting, check the two lines marked **[confirm]**.
+Paste each section into the matching Devpost field. Everything here is true of the current build. Before submitting, check the line marked **[confirm]**.
 
 **Tracks:** PNC 360° Financial Health Navigator · MLH Best Use of ElevenLabs (separate from the sponsor limit) · general prizes.
 
@@ -48,7 +48,7 @@ Our demo customer, Maya (27, a nurse in Dallas), scores 55 today. On the same pa
 ## Accomplishments that we're proud of
 
 - The two-futures format, running on real-looking accounts, ending in a real action.
-- **10 of 10 grounded** on our grounding test with saved answers **[confirm: add the live-agent result once you run `/grounding` with keys]**.
+- **10 of 10 grounded and 10 of 10 behaved** on our grounding test with the live ElevenLabs agent: every dollar amount and year she said was in her facts or a tool result.
 - A health score computed from first principles: Maya's 55 comes out of her transactions, not a hard-coded number.
 - 71 automated back-end tests, and a forecast whose every number can explain itself.
 

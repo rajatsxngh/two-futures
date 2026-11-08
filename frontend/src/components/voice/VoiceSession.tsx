@@ -32,6 +32,18 @@ type SessionMode = "voice" | "text";
 const PATH_LABEL: Record<PathId, string> = { same_path: "Same path", plan: "With a plan" };
 
 let idCounter = 0;
+
+/** Streamed parts and the final message can both arrive, in either order: never show the same line twice in a row. */
+function collapse(list: Caption[]): Caption[] {
+  const n = list.length;
+  if (n < 2) return list;
+  const a = list[n - 2];
+  const b = list[n - 1];
+  if (a.role === "agent" && b.role === "agent" && a.path === b.path && !b.live && a.text.trim() === b.text.trim()) {
+    return [...list.slice(0, n - 2), { ...a, live: false }];
+  }
+  return list;
+}
 const nextId = (p: string) => `${p}_${Date.now().toString(36)}_${(idCounter++).toString(36)}`;
 
 export function VoiceSession(props: VoiceSessionProps) {
@@ -40,6 +52,10 @@ export function VoiceSession(props: VoiceSessionProps) {
   const [activeMode, setActiveMode] = useState<SessionMode | null>(null);
   const [pushToTalk, setPushToTalk] = useState(props.defaultPushToTalk ?? false);
   const [micMuted, setMicMuted] = useState(props.defaultPushToTalk ?? false);
+  // The SDK mutes the mic whenever isMuted is a boolean, and a text session throws on that.
+  // So text sessions get no isMuted at all; the inner part reports its mode before connecting.
+  const [startingMode, setStartingMode] = useState<SessionMode | null>(null);
+  const textSession = props.hideMic || startingMode === "text";
 
   // Path switch: remember whether a session was live so the new provider
   // (keyed by path) starts the other future right away.
@@ -57,7 +73,7 @@ export function VoiceSession(props: VoiceSessionProps) {
   }
 
   return (
-    <ConversationProvider key={path} isMuted={micMuted} onMutedChange={setMicMuted}>
+    <ConversationProvider key={path} isMuted={textSession ? undefined : micMuted} onMutedChange={setMicMuted}>
       <VoiceSessionInner
         {...props}
         captions={captions}
@@ -68,6 +84,7 @@ export function VoiceSession(props: VoiceSessionProps) {
         setPushToTalk={setPushToTalk}
         micMuted={micMuted}
         setMicMuted={setMicMuted}
+        onBeginMode={setStartingMode}
       />
     </ConversationProvider>
   );
@@ -82,6 +99,7 @@ type InnerProps = VoiceSessionProps & {
   setPushToTalk: (v: boolean) => void;
   micMuted: boolean;
   setMicMuted: (v: boolean) => void;
+  onBeginMode: (m: SessionMode) => void;
 };
 
 function VoiceSessionInner({
@@ -105,6 +123,7 @@ function VoiceSessionInner({
   setPushToTalk,
   micMuted,
   setMicMuted,
+  onBeginMode,
 }: InnerProps) {
   const controls = useConversationControls();
   const { status } = useConversationStatus();
@@ -173,9 +192,9 @@ function VoiceSessionInner({
         const streamedId = streamedIdRef.current;
         streamedIdRef.current = null;
         if (last && last.role === "agent" && (last.live || last.id === streamedId)) {
-          return [...list.slice(0, -1), { ...last, text: message, live: false }];
+          return collapse([...list.slice(0, -1), { ...last, text: message, live: false }]);
         }
-        return [...list, { id: nextId("cap"), role: "agent", path, text: message }];
+        return collapse([...list, { id: nextId("cap"), role: "agent", path, text: message }]);
       });
     },
     [path, pushCaption, setCaptions],
@@ -197,7 +216,7 @@ function VoiceSessionInner({
           const last = list[list.length - 1];
           if (!last || !last.live) return list;
           streamedIdRef.current = last.id;
-          return [...list.slice(0, -1), { ...last, live: false }];
+          return collapse([...list.slice(0, -1), { ...last, live: false }]);
         });
       }
     },
@@ -286,6 +305,7 @@ function VoiceSessionInner({
       }
       setFetching(false);
       setMode(m);
+      onBeginMode(m);
       const fs = latest.current.factSheet;
       controls.startSession({
         signedUrl,
@@ -317,7 +337,7 @@ function VoiceSessionInner({
         },
       });
     },
-    [clientTools, controls, onActiveModeChange, onAgentChatResponsePart, onMessage, setError, signedUrlEndpoint],
+    [clientTools, controls, onActiveModeChange, onAgentChatResponsePart, onBeginMode, onMessage, setError, signedUrlEndpoint],
   );
 
   const end = useCallback(() => {

@@ -134,7 +134,56 @@ export const TESTS: GTest[] = [
 // grounding check
 // ---------------------------------------------------------------------------
 
-/** Dollar amounts ("$1,556", "$11.2k") and years ("2031") in a text, normalized. */
+const UNITS: Record<string, number> = {
+  zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+  eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
+};
+const TENS: Record<string, number> = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+const SCALES: Record<string, number> = { hundred: 100, thousand: 1000, million: 1_000_000 };
+const UNIT_WORDS = "one|two|three|four|five|six|seven|eight|nine";
+
+/** Spoken numbers ("twenty-four thousand one hundred forty-six dollars", "twenty thirty-one") as tokens. */
+function spokenTokens(text: string): string[] {
+  const out: string[] = [];
+  let t = text.toLowerCase();
+  // years said as "twenty thirty-one" / "twenty-twenty-nine" / "twenty thirty"
+  t = t.replace(new RegExp(`\\btwenty[\\s-]+(twenty|thirty|forty)(?:[\\s-]+(${UNIT_WORDS}))?\\b`, "g"), (_, tens: string, unit?: string) => {
+    out.push(String(2000 + TENS[tens] + (unit ? UNITS[unit] : 0)));
+    return " ";
+  });
+  const words = t.replace(/[^a-z\s-]/g, " ").split(/[\s-]+/).filter(Boolean);
+  let i = 0;
+  while (i < words.length) {
+    const isNum = (w: string) => w in UNITS || w in TENS || w in SCALES;
+    if (!isNum(words[i]) && !(words[i] === "a" && words[i + 1] in SCALES)) {
+      i++;
+      continue;
+    }
+    let total = 0;
+    let current = 0;
+    let j = i;
+    for (; j < words.length; j++) {
+      const w = words[j];
+      if (w === "a" && words[j + 1] in SCALES) current = 1;
+      else if (w in UNITS) current += UNITS[w];
+      else if (w in TENS) current += TENS[w];
+      else if (w === "hundred") current = (current || 1) * 100;
+      else if (w in SCALES) {
+        total += (current || 1) * SCALES[w];
+        current = 0;
+      } else if (w === "and" && j > i && j + 1 < words.length && isNum(words[j + 1])) continue;
+      else break;
+    }
+    const value = total + current;
+    const next = words[j];
+    if (next === "dollars" || next === "dollar" || next === "bucks") out.push(`$${value}`);
+    else if (value >= 2020 && value <= 2049) out.push(String(value));
+    i = Math.max(j, i + 1);
+  }
+  return out;
+}
+
+/** Dollar amounts ("$1,556", "$11.2k", "a hundred and fifty dollars") and years ("2031", "twenty thirty-one"), normalized. */
 export function numberTokens(text: string): string[] {
   const out: string[] = [];
   for (const m of text.matchAll(/\$\s?(\d[\d,]*(?:\.\d+)?)\s?(k)?/gi)) {
@@ -142,7 +191,7 @@ export function numberTokens(text: string): string[] {
     out.push(`$${Math.round(v)}`);
   }
   for (const m of text.matchAll(/\b(20[2-4]\d)\b/g)) out.push(m[1]);
-  return out;
+  return [...out, ...spokenTokens(text)];
 }
 
 /** Everything she was allowed to know: both fact sheets, the next step, and the questions asked. */

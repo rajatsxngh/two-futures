@@ -11,7 +11,9 @@
     "gen:types": "uv --directory backend run python scripts/export_openapi.py && npm --prefix frontend run gen:types",
     "check": "npm test && npm --prefix frontend run typecheck && npm --prefix frontend run lint",
     "data": "uv --directory backend run python scripts/generate_data.py",
-    "dev:api:watch": "uv --directory backend run uvicorn app.main:app --reload --reload-dir app --port 8000"
+    "dev:api:watch": "uv --directory backend run uvicorn app.main:app --reload --reload-dir app --port 8000",
+    "agent:create": "uv --directory backend run python scripts/create_elevenlabs_agent.py",
+    "agent:update": "uv --directory backend run python scripts/create_elevenlabs_agent.py --update"
   },
   "devDependencies": {
     "concurrently": "^10.0.7"

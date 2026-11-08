@@ -160,6 +160,7 @@ function Bench() {
 // ---------------------------------------------------------------------------
 
 const REPLY_TIMEOUT_MS = 25000;
+const QUIET_MS = 3500; // she's done when nothing new arrives for this long
 
 function useLiveRunner() {
   const controls = useConversationControls();
@@ -167,15 +168,19 @@ function useLiveRunner() {
   const backlog = useRef<string[]>([]);
   const log = useRef<ToolCall[]>([]);
 
+  const pendingTools = useRef(0);
+
+  /** Next agent message. With `soft`, resolves null on timeout instead of failing. */
   const nextAgentMessage = useCallback(
-    () =>
-      new Promise<string>((resolve, reject) => {
+    (timeoutMs = REPLY_TIMEOUT_MS, soft = false) =>
+      new Promise<string | null>((resolve, reject) => {
         const queued = backlog.current.shift();
         if (queued !== undefined) return resolve(queued);
         const t = setTimeout(() => {
           waiter.current = null;
-          reject(new Error("No reply within 25 s"));
-        }, REPLY_TIMEOUT_MS);
+          if (soft) resolve(null);
+          else reject(new Error(`No reply within ${Math.round(timeoutMs / 1000)} s`));
+        }, timeoutMs);
         waiter.current = (text) => {
           clearTimeout(t);
           waiter.current = null;
@@ -184,6 +189,17 @@ function useLiveRunner() {
       }),
     [],
   );
+
+  /** Her whole turn: every message until she's been quiet for a few seconds and no tool is still running. */
+  const fullReply = useCallback(async () => {
+    const parts = [(await nextAgentMessage()) as string];
+    for (;;) {
+      const more = await nextAgentMessage(QUIET_MS, true);
+      if (more !== null) parts.push(more);
+      else if (pendingTools.current === 0) break;
+    }
+    return parts.join(" ");
+  }, [nextAgentMessage]);
 
   return useCallback(
     async (test: GTest): Promise<{ run: TestRun; futures: FuturesResponse }> => {
@@ -209,13 +225,22 @@ function useLiveRunner() {
           clientTools: {
             update_plan: async (p: Record<string, unknown>) => {
               if (path !== "plan") return "Not available: you are the same-path future.";
-              const r = await tools.updatePlan(toUpdatePlanInput(p));
-              return updatePlanReply(r);
+              pendingTools.current++;
+              try {
+                return updatePlanReply(await tools.updatePlan(toUpdatePlanInput(p)));
+              } finally {
+                pendingTools.current--;
+              }
             },
             start_transfer: async (p: Record<string, unknown>) => {
               const input = toTransferInput(p);
               if (!input) return "Not scheduled. You need a clear yes first.";
-              return transferReply(await tools.startTransfer(input));
+              pendingTools.current++;
+              try {
+                return transferReply(await tools.startTransfer(input));
+              } finally {
+                pendingTools.current--;
+              }
             },
             highlight_metric: (p: Record<string, unknown>) => {
               tools.highlightMetric?.(String(p.metric_id ?? ""));
@@ -229,18 +254,18 @@ function useLiveRunner() {
           },
         });
         await ready;
-        const opening = await nextAgentMessage();
+        const opening = (await nextAgentMessage()) as string;
         turns.push({ path, question: null, reply: opening, tools: [] });
         for (const q of seg.questions) {
           const before = log.current.length;
           controls.sendUserMessage(q);
-          const reply = await nextAgentMessage();
+          const reply = await fullReply();
           turns.push({ path, question: q, reply, tools: log.current.slice(before) });
         }
         controls.endSession();
       }
       return { run: { turns }, futures: first };
     },
-    [controls, nextAgentMessage],
+    [controls, nextAgentMessage, fullReply],
   );
 }

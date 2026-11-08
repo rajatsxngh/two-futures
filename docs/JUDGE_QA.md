@@ -6,7 +6,7 @@ Fourteen likely questions with short answers, updated to match the current build
 
 2. **Isn't this just a chatbot?** The chat is the front door. Underneath, an engine scores 8 indicators, forecasts every account and builds two paths. She can change a number only by calling that engine, and the panel shows every call.
 
-3. **How do you stop the AI making up numbers?** Her facts come only from an engine-written fact sheet, and new numbers only from tools that return a ready-made sentence. The prompt bans math and guessing. Our grounding test checks every dollar amount and year she says: 10 of 10 with saved answers.
+3. **How do you stop the AI making up numbers?** Her facts come only from an engine-written fact sheet, and new numbers only from tools that return a ready-made sentence. The prompt bans math and guessing. Our grounding test checks every dollar amount and year she says: 10 of 10 with the live agent.
 
 4. **Is this financial advice?** No. She shows options and trade-offs, never names a stock or fund, and sends bigger questions to a PNC banker. The one step she suggests is moving your own money to savings, and only after a clear yes.
 
