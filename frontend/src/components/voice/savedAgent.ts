@@ -86,12 +86,10 @@ function carAnswer(ctx: SavedContext): string {
     return `The car itself? ${car && car !== "Not yet" ? `It's been paid off since ${car}.` : "I'm still paying it off."} ${repair}${cardLine}`.replace(/\s+/g, " ").trim();
   }
   const cardPaid = p.events.find((e) => e.title === "Card paid off");
-  const parts = [
-    repair,
-    cardPaid ? `the card's been at $0 since ${mon(cardPaid.date)}` : card ? `the card is at ${card.display}` : "",
-    car && car !== "Not yet" ? `and the car was paid off in ${car}` : "",
-  ].filter(Boolean);
-  return `Yes. ${parts.join(", ")}.`.replace(/\s+/g, " ").replace(/,\s*\./, ".");
+  const cardLine = cardPaid ? `The card's been at $0 since ${mon(cardPaid.date)}` : card ? `The card is at ${card.display}` : "";
+  const carLine = car && car !== "Not yet" ? `the car was paid off in ${car}` : "";
+  const last = [cardLine, carLine].filter(Boolean).join(", and ");
+  return `Yes. ${repair}${last ? ` ${last[0].toUpperCase()}${last.slice(1)}.` : ""}`.replace(/\s+/g, " ").trim();
 }
 
 function offerText(ctx: SavedContext): string {

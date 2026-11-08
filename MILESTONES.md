@@ -178,7 +178,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M12: Ship it (video, Devpost, repo) + P2 stretch
+## M12: Ship it (video, Devpost, repo) + P2 stretch · 🟡 docs done; video, Devpost submit, rehearsals are the team's
 **Depends on:** M10 at minimum (M11 if it's finished)
 **Goal:** a complete, honest submission and a rehearsed pitch.
 

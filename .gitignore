@@ -19,3 +19,6 @@ frontend/out/
 Thumbs.db
 .vscode/
 .idea/
+
+# tool output
+.playwright-mcp/
