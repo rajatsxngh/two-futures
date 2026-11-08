@@ -109,12 +109,12 @@ def rule1_transfer(p: Params) -> tuple[float, float]:
 
 @lru_cache(maxsize=None)
 def _cached_forecast(customer_id: str, today: date) -> ForecastResponse:
-    from .data import load
+    from .data import history_months, load
     from .futures import futures_for
     from .params import build_params
 
     data = load(customer_id)
-    p = build_params(data, today)
+    p = build_params(data, today, months=history_months(data, today) or 12)
     bal, _ = simulate_daily(p)
     p10, p50, p90 = np.percentile(bal, [10, 50, 90], axis=0)
     dates = [today + timedelta(days=i) for i in range(DAYS)]
@@ -173,7 +173,7 @@ def _cached_forecast(customer_id: str, today: date) -> ForecastResponse:
         ],
         assumptions=A.listed(plan=False) + [
             f"Typical low point for {p.checking.name} in the next 90 days: {usd(float(p50[:91].min()))}; "
-            f"bad case: {usd(float(p10[:91].min()))}."],
+            f"bad case: {usd(float(p10[:91].min()))}."] + data.assumptions,
     )
 
 

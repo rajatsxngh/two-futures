@@ -2,7 +2,17 @@
 
 import { useEffect, useRef } from "react";
 import type { CustomerId } from "@/lib/api";
-import { goTo, highlightMetric, loadCustomer, proposeTransfer, resetDemo, switchCustomer, updatePlan } from "@/lib/actions";
+import {
+  goTo,
+  highlightMetric,
+  loadCustomer,
+  openConnect,
+  proposeTransfer,
+  refreshPlaid,
+  resetDemo,
+  switchCustomer,
+  updatePlan,
+} from "@/lib/actions";
 import { useApp, type Screen } from "@/lib/store";
 import { TodayScreen } from "./screens/Today";
 import { ForecastScreen } from "./screens/Forecast";
@@ -13,6 +23,7 @@ import { Logo } from "./Logo";
 import { MathSheet } from "./MathSheet";
 import { ActivityPanel } from "./ActivityPanel";
 import { TransferSheet } from "./TransferSheet";
+import { ConnectSheet, SandboxBanner } from "./ConnectBank";
 
 const TABS: { id: Screen; label: string; icon: string }[] = [
   { id: "today", label: "Today", icon: "M3 10.5 10 4l7 6.5V17a1 1 0 0 1-1 1h-4v-5H8v5H4a1 1 0 0 1-1-1v-6.5Z" },
@@ -26,11 +37,15 @@ export function App() {
   const loading = useApp((s) => s.loading);
   const error = useApp((s) => s.error);
   const hasData = useApp((s) => s.profile !== null && s.health !== null);
+  const hasForecast = useApp((s) => s.forecast !== null);
+  const hasFutures = useApp((s) => s.futures !== null);
+  const sandbox = useApp((s) => s.customer === "sandbox");
 
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     void loadCustomer();
+    void refreshPlaid();
     // Dev handle for trying the agent tools from the console, e.g. futureYou.highlightMetric("health.credit_health").
     if (process.env.NODE_ENV !== "production") {
       (window as unknown as { futureYou: unknown }).futureYou = { updatePlan, proposeTransfer, highlightMetric };
@@ -47,6 +62,7 @@ export function App() {
       {/* Phone frame. On a real phone it goes full-bleed. */}
       <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-white sm:h-[844px] sm:max-h-[calc(100dvh-3rem)] sm:w-[400px] sm:rounded-[44px] sm:border-[10px] sm:border-navy sm:shadow-2xl">
         <Header />
+        <SandboxBanner />
         <main ref={mainRef} id="phone-screen" className="phone-scroll flex-1 overflow-y-auto">
           {error && (
             <div role="alert" className="mx-4 mt-3 rounded-xl border border-bad/30 bg-bad/5 px-3 py-2 text-sm text-bad">
@@ -58,18 +74,21 @@ export function App() {
           ) : (
             <>
               {screen === "today" && <TodayScreen />}
-              {screen === "forecast" && <ForecastScreen />}
-              {screen === "futures" && <FuturesScreen />}
-              {screen === "next" && <NextStepScreen />}
+              {screen === "forecast" && (hasForecast ? <ForecastScreen /> : <Unavailable />)}
+              {screen === "futures" && (hasFutures ? <FuturesScreen /> : <Unavailable />)}
+              {screen === "next" && (hasFutures ? <NextStepScreen /> : <Unavailable />)}
             </>
           )}
         </main>
         <p className="border-t border-line bg-surface px-3 py-1 text-center text-[10.5px] leading-snug text-muted">
-          Educational demo · made-up data · not financial advice · not a credit score
+          {sandbox
+            ? "Educational demo · Plaid sandbox test data · not financial advice · not a credit score"
+            : "Educational demo · made-up data · not financial advice · not a credit score"}
         </p>
         <WhatIfDrawer />
         <MathSheet />
         <TransferSheet />
+        <ConnectSheet />
         <nav className="grid grid-cols-4 border-t border-line bg-white pb-[env(safe-area-inset-bottom)]" aria-label="Screens">
           {TABS.map((t) => (
             <button
@@ -95,8 +114,23 @@ export function App() {
   );
 }
 
+/** A screen that can't be shown for this customer (a sandbox bank with too little history). */
+function Unavailable() {
+  const reason = useApp((s) => s.unavailable);
+  return (
+    <div className="px-4 py-6 text-sm text-navy">
+      <p className="rounded-2xl border border-line bg-surface px-4 py-3 leading-snug">
+        {reason ?? "This screen isn't available for this customer."}
+      </p>
+    </div>
+  );
+}
+
+const CONNECT = "__connect__";
+
 function Header() {
   const customer = useApp((s) => s.customer);
+  const plaid = useApp((s) => s.plaid);
   return (
     <header className="flex items-center justify-between border-b border-line px-4 pb-2 pt-3">
       <div className="flex items-center gap-2">
@@ -110,11 +144,16 @@ function Header() {
         <select
           id="customer"
           value={customer}
-          onChange={(e) => switchCustomer(e.target.value as CustomerId)}
-          className="rounded-full border border-line bg-surface px-2 py-1 text-xs font-medium text-navy"
+          onChange={(e) => {
+            if (e.target.value === CONNECT) openConnect(true);
+            else switchCustomer(e.target.value as CustomerId);
+          }}
+          className="w-[7.5rem] rounded-full border border-line bg-surface px-2 py-1 text-xs font-medium text-navy"
         >
           <option value="maya">Maya</option>
           <option value="household">Jordan & Priya</option>
+          {plaid.connection && <option value="sandbox">{plaid.connection.label}</option>}
+          {plaid.configured && <option value={CONNECT}>{plaid.connection ? "Reconnect a bank (sandbox)..." : "Connect a bank (sandbox)..."}</option>}
         </select>
         <button
           onClick={() => void resetDemo()}

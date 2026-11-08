@@ -538,3 +538,88 @@ class ShockResponse(BaseModel):
 class SetupRequest(BaseModel):
     customer: str = "maya"
     setup: SetupAnswers
+
+
+# ---------------------------------------------------------------------------
+# GET /api/backtest
+# ---------------------------------------------------------------------------
+
+class BacktestPoint(BaseModel):
+    date: dt.date
+    actual: float = Field(description="Real end-of-day checking balance, rebuilt from the transactions")
+    p10: float
+    p25: float
+    p50: float = Field(description="Typical (median) forecast")
+    p75: float
+    p90: float
+
+
+class BacktestResponse(BaseModel):
+    """The forecast re-run as if today were `cutoff`, learning only from history up to it, then compared with
+    what really happened over the hidden days after it."""
+
+    customer: str
+    as_of: dt.date = Field(description="The demo's today: the end of the hidden window")
+    cutoff: dt.date = Field(description="Last day the model could see; the simulation starts here")
+    train_start: dt.date = Field(description="First day of the history the model learned from")
+    train_months: int
+    holdout_days: int = Field(description="Hidden days scored, after the cutoff")
+    runs: int
+    seed: int
+    series: list[BacktestPoint] = Field(description="Cutoff day plus each hidden day")
+    verdict: str = Field(description="One plain sentence with the headline result")
+    coverage_80: Metric = Field(description="Share of hidden days inside the 10th-90th percentile band")
+    coverage_50: Metric = Field(description="Share of hidden days inside the 25th-75th percentile band")
+    median_error: Metric = Field(description="Mean absolute error of the median forecast, in dollars")
+    low_actual: Metric = Field(description="Real lowest balance in the hidden window")
+    low_predicted: Metric = Field(description="Median of each run's lowest balance; its math holds the 10-90 range")
+    low_in_band: bool = Field(description="Whether the real low fell inside the 10th-90th percentile of run lows")
+    caveat: str
+    assumptions: list[str]
+
+
+# ---------------------------------------------------------------------------
+# Plaid sandbox bank connection (POST /api/plaid/link_token, /api/plaid/exchange, /api/plaid/disconnect,
+# GET /api/plaid/status). The browser only ever sees a link_token and sends back a public_token.
+# ---------------------------------------------------------------------------
+
+class PlaidLinkTokenResponse(BaseModel):
+    link_token: str
+    expiration: str | None = None
+
+
+class PlaidExchangeRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    public_token: str = Field(min_length=20, max_length=200, pattern=r"^public-sandbox-[A-Za-z0-9-]+$",
+                              description="The public_token Plaid Link returned (sandbox only)")
+
+
+class ConnectedAccount(BaseModel):
+    id: str
+    name: str
+    type: AccountType
+    balance: float
+
+
+class PlaidConnection(BaseModel):
+    """The connected sandbox customer, in plain numbers (no tokens, no Plaid ids)."""
+
+    customer: str = Field(description="Customer id to load, e.g. 'sandbox'")
+    label: str = Field(description="For the customer picker, e.g. 'Sandbox bank'")
+    institution: str
+    connected_at: dt.datetime
+    accounts: list[ConnectedAccount]
+    transactions: int
+    history_days: int
+    forecast_ready: bool = Field(description="Enough history for the forecast, futures and what-ifs")
+    backtest_ready: bool = Field(description="Enough history (12 months) for the backtest")
+    defaults: list[str] = Field(description="Every default or guess the adapter filled in, in plain words")
+    note: str | None = Field(default=None, description="Plain-words caveat, e.g. too little history")
+
+
+class PlaidStatusResponse(BaseModel):
+    configured: bool = Field(description="Plaid keys are set and PLAID_ENV is sandbox")
+    reason: str | None = Field(default=None, description="Why not, in plain words (never a key value)")
+    environment: Literal["sandbox"] = "sandbox"
+    connection: PlaidConnection | None = None

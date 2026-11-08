@@ -91,7 +91,8 @@ def profile_for(data: CustomerData, health: HealthResponse, today: date) -> Prof
         account_metrics.append(metric(
             f"account.{a.id}.balance", a.name, a.balance, "usd", usd(a.balance),
             f"{labels[a.type.value]} balance{owed} as of {today:%B} {today.day}, {today.year}",
-            inputs, ["Made-up demo data: no real accounts are connected."]))
+            inputs, data.account_notes.get(a.id, []) if data.source else
+            ["Made-up demo data: no real accounts are connected."]))
 
     answers = data.customer.setup.subscriptions
     subscriptions = [to_model(sub, bill, answers) for sub, bill in build_params(data, today).subscriptions]

@@ -25,7 +25,7 @@ from ..models import CarLoanOption, CarPurchase, HomePurchase, PathResult, WhatI
 from . import assumptions as A
 from .fmt import round_half_up, usd
 from .params import Params
-from .sim import Adjust, CarPlan, HomePlan, SimResult
+from .sim import Adjust, CarPlan, HomePlan, SimResult, reserve_ids
 
 
 def _mo(x: float) -> str:
@@ -171,7 +171,7 @@ def _about(x: float) -> str:
 
 def _down_short(p: Params, sim: SimResult, start: int, down: float) -> str:
     """Can savings cover the down payment at `start`? If not, say so plainly: an unmet need, not affordable."""
-    liquid = sim.balances[p.checking.id][:, start] + (sim.balances[p.savings.id][:, start] if p.savings else 0)
+    liquid = sim.balances[p.checking.id][:, start] + sum((sim.balances[r][:, start] for r in reserve_ids(p)), 0.0)
     short = float(np.median(np.maximum(down - liquid, 0)))
     card = p.card
     room = (float(np.median(np.maximum(card.limit - sim.balances[card.id][:, start], 0)))
@@ -213,11 +213,11 @@ def car_sentence(p: Params, before_sim: SimResult | None, after_sim: SimResult, 
                 f"{_left_text(_leftover(after_sim, s), _leftover(before_sim, s))}.")
     out += _down_short(p, after_sim, s, c.down)
     # When would checking come up short (savings gone, so the card or unpaid bills cover the gap)?
-    liquid = after_sim.balances[p.checking.id] + (after_sim.balances[p.savings.id] if p.savings else 0)
+    liquid = after_sim.balances[p.checking.id] + sum((after_sim.balances[r] for r in reserve_ids(p)), 0.0)
     dry = np.median(liquid, axis=0) < 50
     unpaid = np.median(after_sim.balances["unpaid_bills"], axis=0) >= 50
     if before_sim is not None:
-        liquid0 = before_sim.balances[p.checking.id] + (before_sim.balances[p.savings.id] if p.savings else 0)
+        liquid0 = before_sim.balances[p.checking.id] + sum((before_sim.balances[r] for r in reserve_ids(p)), 0.0)
         dry &= np.median(liquid0, axis=0) >= 50  # only gaps the car causes
         unpaid &= np.median(before_sim.balances["unpaid_bills"], axis=0) < 50
     late = next((j for j in range(s + 2, len(months) + 1) if unpaid[j]), None)

@@ -12,6 +12,8 @@ export function NextStepScreen() {
   const step = futures.next_step;
   const nameOf = (id: string) => profile.accounts.find((a) => a.id === id)?.name ?? id;
   const action = futures.plan.actions.find((a) => a.id === step.action_id);
+  // "none": the plan has no automatic transfer to start (e.g. a connected bank whose checking already runs short).
+  const noTransfer = step.action_id === "none";
 
   return (
     <div className="space-y-4 px-4 py-4">
@@ -25,7 +27,7 @@ export function NextStepScreen() {
         <p className="mt-1 text-xl font-semibold leading-snug text-navy">{step.title}</p>
         {action && <p className="mt-1 text-sm leading-snug text-muted">{action.description}</p>}
 
-        <div className="mt-3 flex items-end gap-2">
+        {!noTransfer && <div className="mt-3 flex items-end gap-2">
           {step.amount_metric ? (
             <MetricValue metric={step.amount_metric} className="text-[44px] font-semibold leading-none text-navy" />
           ) : (
@@ -34,7 +36,7 @@ export function NextStepScreen() {
           <span className="pb-1 text-sm text-muted">
             {nameOf(step.from_account_id)} → {nameOf(step.to_account_id)}
           </span>
-        </div>
+        </div>}
 
         <div className="mt-4 grid grid-cols-2 gap-2">
           {step.effects.map((m) => (
@@ -45,7 +47,7 @@ export function NextStepScreen() {
           ))}
         </div>
 
-        {transfer?.status === "scheduled" ? (
+        {noTransfer ? null : transfer?.status === "scheduled" ? (
           <ScheduledBadge transfer={transfer} />
         ) : (
           <>

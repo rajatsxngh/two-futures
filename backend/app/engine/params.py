@@ -1,9 +1,9 @@
 """Turn a customer's data into cash-flow parameters the simulations use.
 
 Fixed bills come from the bills list. Everyday ("variable") spending is
-learned from the last 12 months of transactions: for each category, the
-monthly average and how much it has moved, minus whatever the bills list
-already covers. Debts are modeled from their accounts (balance, APR,
+learned from the last 12 months of transactions (or `months`, for the
+backtest): for each category, the monthly average and how much it has moved,
+minus whatever the bills list already covers. Debts are modeled from their accounts (balance, APR,
 minimum payment), not from bills.
 """
 
@@ -73,7 +73,11 @@ class Params:
         return sum(c.mean * (1 - trim if plan and c.flexible else 1) for c in self.categories)
 
 
-def build_params(data: CustomerData, today: date) -> Params:
+def build_params(data: CustomerData, today: date, months: int = 12) -> Params:
+    """Parameters as of `today`, learned from the `months` months of transactions ending on `today`.
+
+    Nothing dated after `today` is used. `months` other than 12 is only for the backtest.
+    """
     by_type = lambda t: [a for a in data.accounts if a.type == t]  # noqa: E731
     checking = by_type(AccountType.checking)[0]
     savings = next(iter(by_type(AccountType.savings)), None)
@@ -82,20 +86,21 @@ def build_params(data: CustomerData, today: date) -> Params:
              if a.group == AccountGroup.debt and a.type != AccountType.credit_card and a.min_payment]
     spend_accounts = {checking.id} | {c.id for c in cards}
 
-    start = today - timedelta(days=364)
+    window_days = round(months * 365 / 12)  # 365 for 12 months
+    start = today - timedelta(days=window_days - 1)
     window = [t for t in data.transactions if start <= t.date <= today]
     income = sum(t.amount for t in window if t.category in INCOME_CATEGORIES)
 
-    # 12 equal buckets of the 365-day window, so bucket means are exact monthly means
+    # `months` equal buckets of the window (12 for 365 days), so bucket means are monthly means
     def bucket(d: date) -> int:
-        return min(11, (d - start).days * 12 // 365)
+        return min(months - 1, (d - start).days * months // window_days)
 
     totals: dict[str, np.ndarray] = {}
     on_card: dict[str, float] = {}
     for t in window:
         if t.amount >= 0 or t.account_id not in spend_accounts or t.category in NOT_VARIABLE:
             continue
-        arr = totals.setdefault(t.category, np.zeros(12))
+        arr = totals.setdefault(t.category, np.zeros(months))
         arr[bucket(t.date)] += -t.amount
         if t.account_id != checking.id:
             on_card[t.category] = on_card.get(t.category, 0.0) - t.amount
@@ -132,7 +137,7 @@ def build_params(data: CustomerData, today: date) -> Params:
         ))
 
     return Params(
-        data=data, today=today, take_home_monthly=income / 12, checking=checking, savings=savings,
+        data=data, today=today, take_home_monthly=income / months, checking=checking, savings=savings,
         cards=cards, loans=loans, cds=by_type(AccountType.cd), iras=by_type(AccountType.ira),
         fixed_bills=fixed_bills, categories=categories,
         reserve_contrib=sum(a.monthly_contribution or 0 for a in by_type(AccountType.savings)),

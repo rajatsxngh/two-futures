@@ -22,6 +22,7 @@ export type Pillar = S["Pillar"];
 export type HealthResponse = S["HealthResponse"];
 export type ForecastPoint = S["ForecastPoint"];
 export type ForecastResponse = S["ForecastResponse"];
+export type BacktestResponse = S["BacktestResponse"];
 export type PathResult = S["PathResult"];
 export type YearSnapshot = S["YearSnapshot"];
 export type LifeEvent = S["LifeEvent"];
@@ -40,8 +41,12 @@ export type ResetResponse = S["ResetResponse"];
 export type SetupAnswers = S["SetupAnswers"];
 export type ShockRequest = S["ShockRequest"];
 export type ShockResponse = S["ShockResponse"];
+export type PlaidConnection = S["PlaidConnection"];
+export type PlaidStatusResponse = S["PlaidStatusResponse"];
+export type PlaidLinkTokenResponse = S["PlaidLinkTokenResponse"];
 export type PathId = "same_path" | "plan";
-export type CustomerId = "maya" | "household";
+/** "sandbox" exists only while a Plaid sandbox bank is connected. */
+export type CustomerId = "maya" | "household" | "sandbox";
 
 export class ApiError extends Error {
   constructor(
@@ -76,6 +81,7 @@ export const api = {
   profile: (c: CustomerId = "maya") => call<ProfileResponse>(`/api/profile${q(c)}`),
   health: (c: CustomerId = "maya") => call<HealthResponse>(`/api/health${q(c)}`),
   forecast: (c: CustomerId = "maya") => call<ForecastResponse>(`/api/forecast${q(c)}`),
+  backtest: (c: CustomerId = "maya") => call<BacktestResponse>(`/api/backtest${q(c)}`),
   futures: (c: CustomerId = "maya") => call<FuturesResponse>(`/api/futures${q(c)}`),
   updatePlan: (body: WhatIfRequest) =>
     call<UpdatePlanResponse>("/api/update_plan", { method: "POST", body: JSON.stringify(body) }),
@@ -90,4 +96,10 @@ export const api = {
   shock: (body: ShockRequest) => call<ShockResponse>("/api/shock", { method: "POST", body: JSON.stringify(body) }),
   setup: (customer: CustomerId, setup: SetupAnswers) =>
     call<HealthResponse>("/api/setup", { method: "POST", body: JSON.stringify({ customer, setup }) }),
+  // Plaid sandbox bank connection. The browser only ever holds the link_token and hands back the public_token.
+  plaidStatus: () => call<PlaidStatusResponse>("/api/plaid/status"),
+  plaidLinkToken: () => call<PlaidLinkTokenResponse>("/api/plaid/link_token", { method: "POST" }),
+  plaidExchange: (publicToken: string) =>
+    call<PlaidConnection>("/api/plaid/exchange", { method: "POST", body: JSON.stringify({ public_token: publicToken }) }),
+  plaidDisconnect: () => call<PlaidStatusResponse>("/api/plaid/disconnect", { method: "POST" }),
 };

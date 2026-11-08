@@ -21,6 +21,7 @@ from ..models import (
 )
 from . import assumptions as A
 from . import state
+from .calendar import paydays
 from .data import CustomerData, load
 import numpy as np
 
@@ -234,9 +235,8 @@ def schedule_transfer(req: TransferRequest, today: date) -> TransferResponse:
     src, dst = checking, savings
 
     if req.frequency == "payday":
-        first = data.customer.next_payday
-        while first <= today:
-            first += timedelta(days=14)
+        first = next(iter(paydays(data.customer, today + timedelta(days=1), today + timedelta(days=62))),
+                     today + timedelta(days=1))
         how = "every payday"
     elif req.frequency == "monthly":
         first = (today.replace(day=28) + timedelta(days=4)).replace(day=1)

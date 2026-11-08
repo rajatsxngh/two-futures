@@ -41,9 +41,11 @@ def paydays(customer: Customer, start: date, end: date) -> list[date]:
             if d >= start:
                 out.append(d)
             d += timedelta(days=step)
-    else:
-        days_of_month = (1, 15) if customer.pay_schedule == "semimonthly" else (1,)
-        out = [d for d in _days(start, end) if d.day in days_of_month]
+    elif customer.pay_schedule == "semimonthly":
+        out = [d for d in _days(start, end) if d.day in (1, 15)]
+    else:  # monthly: the same day each month as the next payday (the last day in shorter months)
+        day = customer.next_payday.day
+        out = [d for d in _days(start, end) if d.day == min(day, _last_day(d))]
     return out
 
 

@@ -35,6 +35,15 @@ PathId = Literal["same_path", "plan"]
 PAYS_PER_YEAR = {"weekly": 52, "biweekly": 26, "semimonthly": 24, "monthly": 12}
 
 
+def reserve_ids(p: Params) -> list[str]:
+    """Cash besides the main checking account: the main savings account first, then any other checking or savings
+    accounts, largest first. (The made-up customers have exactly one of each; a connected bank can have several.)"""
+    others = sorted((a for a in p.data.accounts if a.type in (AccountType.checking, AccountType.savings)
+                     and a.id != p.checking.id and (p.savings is None or a.id != p.savings.id)),
+                    key=lambda a: -a.balance)
+    return ([p.savings.id] if p.savings else []) + [a.id for a in others]
+
+
 def month_starts(today: date, end_year: int) -> list[date]:
     """First day of each month from next month through December of `end_year`."""
     out, d = [], (today.replace(day=28) + timedelta(days=4)).replace(day=1)
@@ -163,6 +172,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
     spend_typ = np.zeros((runs, n + 1))
 
     chk, sav = p.checking.id, (p.savings.id if p.savings else None)
+    reserves = reserve_ids(p)  # where surprises and shortfalls are paid from, in order, before the card
     cards = p.cards
     snowball = [c for c in cards] + sorted(
         [l for l in p.loans if l.type != AccountType.mortgage], key=lambda a: -(a.rate or 0))
@@ -181,7 +191,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         return fixed_regular + var_typ + card_int + mins + extra
 
     def liquid() -> np.ndarray:
-        return bal[chk] + (bal[sav] if sav else 0)
+        return bal[chk] + sum((bal[r] for r in reserves), 0.0)
 
     card_limit = float(cards[0].limit) if cards and cards[0].limit else float("inf")
 
@@ -197,7 +207,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
 
     st = typical_spend()
     spend_typ[:, 0] = st
-    cushion[:, 0] = liquid() / st
+    cushion[:, 0] = liquid() / np.maximum(st, 1.0)  # the $1 floor only matters with no spending at all
 
     for i, md in enumerate(months):
         # income and fixed bills
@@ -259,7 +269,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         # plan waterfall (rules 1, 4, 5)
         if plan:
             st = typical_spend(adj.spending[i] + new_costs)
-            cush = liquid() / st
+            cush = liquid() / np.maximum(st, 1.0)
             # no plan transfers while out of work or behind on bills
             pool = np.where(adj.pause[i] | (unpaid > 0.005), 0.0, base_pool + freed + adj.pool[i])
             bal[chk] -= pool
@@ -287,9 +297,11 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         ev = event_by_month.get((md.year, md.month))
         if ev:
             s = s + ev["amount"]
-        from_sav = np.minimum(s, np.maximum(bal[sav], 0)) if sav else np.zeros(runs)
-        if sav:
-            bal[sav] -= from_sav
+        from_sav = np.zeros(runs)
+        for r in reserves:
+            x = np.minimum(s - from_sav, np.maximum(bal[r], 0))
+            bal[r] -= x
+            from_sav = from_sav + x
         overflow(s - from_sav)
         if ev:
             # how the scheduled event itself was paid (assume it comes first in the month)
@@ -316,9 +328,9 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
 
         # never let checking go negative: pull from savings, then the card
         short = np.maximum(-bal[chk], 0)
-        if sav:
-            pull = np.minimum(short, np.maximum(bal[sav], 0))
-            bal[sav] -= pull
+        for r in reserves:
+            pull = np.minimum(short, np.maximum(bal[r], 0))
+            bal[r] -= pull
             short -= pull
         overflow(short)
         bal[chk] += np.maximum(-bal[chk], 0)
@@ -347,7 +359,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         spending[:, i] = spent
         st = typical_spend(adj.spending[i] + new_costs)
         spend_typ[:, i + 1] = st
-        cushion[:, i + 1] = liquid() / st
+        cushion[:, i + 1] = liquid() / np.maximum(st, 1.0)
 
     return SimResult(
         path=path, months=months, balances=hist, spending=spending, ira_extra=ira_extra, card_interest=card_interest, cushion=cushion,

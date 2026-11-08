@@ -2,7 +2,7 @@
 
 Fourteen likely questions with short answers, updated to match the current build. Practice each until it comes out in one breath. Where a number appears, it's the engine's.
 
-1. **How accurate is the forecast?** It's a range, not a promise. I simulate the year 1,000 times from her bills and spending patterns (made-up demo data); Maya's typical balance in a year is $1,375, with a range of $379 to $2,327. Tap any number for its assumptions. In production PNC would check forecasts against what actually happened.
+1. **How accurate is the forecast?** It's a range, not a promise. I simulate the year 1,000 times from her bills and spending patterns (made-up demo data); Maya's typical balance in a year is $1,375, with a range of $379 to $2,327. Tap any number for its assumptions. We also backtest it: hide the last 91 days of history, learn only from the 9 months before, and forecast from that day. Maya's real balance stayed inside the range on 88% of days (aim: about 80%), the typical miss was $125, and her real low ($774) landed inside the predicted range of lows; for the household it was 97% and $389. The range runs a little wide, and that history is made up by our own generator, so this checks the method, not real-world accuracy. In production PNC would run the same check on real history.
 
 2. **Isn't this just a chatbot?** The chat is the front door. Underneath, an engine scores 8 indicators, forecasts every account and builds two paths. She can change a number only by calling that engine, and the panel shows every call.
 

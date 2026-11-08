@@ -25,12 +25,12 @@ from ..models import (
     YearSnapshot,
 )
 from . import assumptions as A
-from .data import CustomerData, load
+from .data import CustomerData, history_months, load
 from .fmt import metric, months as fmt_months, round_half_up, usd
 from .forecast import rule1_transfer
 from .health import FinancialState, band_of, health_for, score_state
 from .params import Params, build_params
-from .sim import PathId, SimResult, make_draws, month_starts, simulate
+from .sim import PathId, SimResult, make_draws, month_starts, reserve_ids, simulate
 from .subscriptions import money
 from .whatif import to_adjust
 
@@ -88,6 +88,7 @@ def state_for_year(p: Params, sim: SimResult, year: int, today: date) -> Financi
     j = year_index(sim, year, today)
     cols = [i for i, m in enumerate(sim.months) if m.year == year]
     bal = {k: med(v[:, j]) for k, v in sim.balances.items()}
+    reserves, kinds = reserve_ids(p), {a.id: a.type for a in p.data.accounts}
     plan = sim.path == "plan"
     debts = [(l.name, l.min_payment or 0) for l in p.loans if bal[l.id] > 0.005]
     debts += [(c.name, c.min_payment or 0) for c in p.cards if bal[c.id] > 0.005 and c.min_payment]
@@ -106,8 +107,8 @@ def state_for_year(p: Params, sim: SimResult, year: int, today: date) -> Financi
         take_home_monthly=float(sim.income[cols].mean()) if sim.income is not None else p.take_home_monthly,
         spending_monthly=med(sim.spending[:, cols].mean(axis=1)),
         late_payments_12m=int(round(med(sim.late[:, cols].sum(axis=1)))) if sim.late is not None else 0,
-        checking=bal[p.checking.id],
-        savings=bal[p.savings.id] if p.savings else 0.0,
+        checking=bal[p.checking.id] + sum((bal[r] for r in reserves if kinds[r] == AccountType.checking), 0.0),
+        savings=sum((bal[r] for r in reserves if kinds[r] == AccountType.savings), 0.0),
         retirement_contrib_monthly=p.ira_contrib + med(sim.ira_extra[:, cols].mean(axis=1)),
         debt_payments=debts,
         card_balance=sum(bal[c.id] for c in p.cards),
@@ -133,7 +134,7 @@ def _snapshots(p: Params, sim: SimResult, health_today: HealthResponse, today: d
         else:
             s = state_for_year(p, sim, year, today)
             h = score_state(s, date(year, 12, 31), prefix=f"{sim.path}.{year}")
-            state_cushion = (s.checking + s.savings) / s.spending_monthly
+            state_cushion = (s.checking + s.savings) / s.spending_monthly if s.spending_monthly else 99.0
         scored[year] = h
         assets = sum(sim.balances[a.id][:, j] for a in p.data.accounts if a.group.value != "debt")
         debts = sum(sim.balances[a.id][:, j] for a in p.data.accounts if a.group.value == "debt")
@@ -384,7 +385,7 @@ def build_futures(data: CustomerData, today: date,
                   applied: list[tuple[WhatIfRequest, str]] | None = None) -> FuturesBundle:
     """Both paths. `applied` what-ifs (request, sentence) change the plan path only."""
     applied = applied or []
-    p = build_params(data, today)
+    p = build_params(data, today, months=history_months(data, today) or 12)
     health_today = health_for(data, today)
     transfer, low = rule1_transfer(p)
     months = month_starts(today, A.TARGET_YEAR)
@@ -447,6 +448,14 @@ def build_futures(data: CustomerData, today: date,
                         ("Same path", round(med(sims["same_path"].cushion[:, j1]), 2), "months")]),
             ],
         )
+    elif transfer == 0 and low < A.CHECKING_FLOOR:
+        # No safe payday transfer: bad-case checking already dips below the floor (a connected bank can look like this)
+        first_any = plan.actions[0].title if plan.actions else None
+        next_text = (f"No automatic transfer yet: in the bad case, {p.checking.name} already dips to {usd(low)} in the "
+                     f"next 12 months, below the ${A.CHECKING_FLOOR:,.0f} floor."
+                     + (f" Start with: {first_any[0].lower() + first_any[1:]}." if first_any else ""))
+        next_step = NextStep(action_id="none", title=next_text, amount=0, from_account_id=p.checking.id,
+                             to_account_id=p.checking.id, frequency="monthly", first_date=today, effects=[])
     else:
         next_text = "Keep going: your cushion and debts are already on track."
         next_step = NextStep(action_id="none", title=next_text, amount=0, from_account_id=p.checking.id,
@@ -463,7 +472,7 @@ def build_futures(data: CustomerData, today: date,
         fact_sheets=fact_sheets,
         assumptions=A.listed(plan=True) + [
             f"Plan rule 1 picks the largest ${A.TRANSFER_STEP:,.0f} payday transfer that keeps bad-case "
-            f"(10th percentile) checking above ${A.CHECKING_FLOOR:,.0f} for the next 12 months."],
+            f"(10th percentile) checking above ${A.CHECKING_FLOOR:,.0f} for the next 12 months."] + data.assumptions,
     )
     same = sims["same_path"]
     labels = [today.strftime("%Y-%m")] + [m.strftime("%Y-%m") for m in months]

@@ -37,11 +37,12 @@
             "required": false,
             "schema": {
               "type": "string",
-              "description": "Customer id: 'maya' or 'household'",
+              "maxLength": 40,
+              "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected",
               "default": "maya",
               "title": "Customer"
             },
-            "description": "Customer id: 'maya' or 'household'"
+            "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected"
           }
         ],
         "responses": {
@@ -79,11 +80,12 @@
             "required": false,
             "schema": {
               "type": "string",
-              "description": "Customer id: 'maya' or 'household'",
+              "maxLength": 40,
+              "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected",
               "default": "maya",
               "title": "Customer"
             },
-            "description": "Customer id: 'maya' or 'household'"
+            "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected"
           }
         ],
         "responses": {
@@ -121,11 +123,12 @@
             "required": false,
             "schema": {
               "type": "string",
-              "description": "Customer id: 'maya' or 'household'",
+              "maxLength": 40,
+              "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected",
               "default": "maya",
               "title": "Customer"
             },
-            "description": "Customer id: 'maya' or 'household'"
+            "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected"
           }
         ],
         "responses": {
@@ -135,6 +138,50 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ForecastResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/backtest": {
+      "get": {
+        "summary": "Get Backtest",
+        "description": "How good is the forecast? Re-run it on history with the last 91 days hidden, then score it on those days.\nAlways computed by the engine (there's no fixture); cached after the first call.",
+        "operationId": "get_backtest_api_backtest_get",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 40,
+              "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected",
+              "default": "maya",
+              "title": "Customer"
+            },
+            "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestResponse"
                 }
               }
             }
@@ -163,11 +210,12 @@
             "required": false,
             "schema": {
               "type": "string",
-              "description": "Customer id: 'maya' or 'household'",
+              "maxLength": 40,
+              "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected",
               "default": "maya",
               "title": "Customer"
             },
-            "description": "Customer id: 'maya' or 'household'"
+            "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected"
           }
         ],
         "responses": {
@@ -323,11 +371,12 @@
             "required": false,
             "schema": {
               "type": "string",
-              "description": "Customer id: 'maya' or 'household'",
+              "maxLength": 40,
+              "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected",
               "default": "maya",
               "title": "Customer"
             },
-            "description": "Customer id: 'maya' or 'household'"
+            "description": "Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected"
           }
         ],
         "responses": {
@@ -425,6 +474,102 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/plaid/status": {
+      "get": {
+        "summary": "Plaid Status",
+        "description": "Whether the sandbox connection can be used (keys set), and the connected customer if there is one.",
+        "operationId": "plaid_status_api_plaid_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaidStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/plaid/link_token": {
+      "post": {
+        "summary": "Plaid Link Token",
+        "description": "A short-lived token for opening Plaid Link in the browser (sandbox; transactions, plus liabilities).",
+        "operationId": "plaid_link_token_api_plaid_link_token_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaidLinkTokenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/plaid/exchange": {
+      "post": {
+        "summary": "Plaid Exchange",
+        "description": "Exchange Link's public_token, pull accounts, transactions and liabilities, and register the bank as\ncustomer 'sandbox'. Replaces any earlier connection.",
+        "operationId": "plaid_exchange_api_plaid_exchange_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaidExchangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaidConnection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/plaid/disconnect": {
+      "post": {
+        "summary": "Plaid Disconnect",
+        "description": "Forget the connected bank (and remove it at Plaid). Maya and the household are untouched.",
+        "operationId": "plaid_disconnect_api_plaid_disconnect_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaidStatusResponse"
                 }
               }
             }
@@ -680,6 +825,167 @@
         ],
         "title": "AccountType"
       },
+      "BacktestPoint": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "actual": {
+            "type": "number",
+            "title": "Actual",
+            "description": "Real end-of-day checking balance, rebuilt from the transactions"
+          },
+          "p10": {
+            "type": "number",
+            "title": "P10"
+          },
+          "p25": {
+            "type": "number",
+            "title": "P25"
+          },
+          "p50": {
+            "type": "number",
+            "title": "P50",
+            "description": "Typical (median) forecast"
+          },
+          "p75": {
+            "type": "number",
+            "title": "P75"
+          },
+          "p90": {
+            "type": "number",
+            "title": "P90"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "actual",
+          "p10",
+          "p25",
+          "p50",
+          "p75",
+          "p90"
+        ],
+        "title": "BacktestPoint"
+      },
+      "BacktestResponse": {
+        "properties": {
+          "customer": {
+            "type": "string",
+            "title": "Customer"
+          },
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of",
+            "description": "The demo's today: the end of the hidden window"
+          },
+          "cutoff": {
+            "type": "string",
+            "format": "date",
+            "title": "Cutoff",
+            "description": "Last day the model could see; the simulation starts here"
+          },
+          "train_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Train Start",
+            "description": "First day of the history the model learned from"
+          },
+          "train_months": {
+            "type": "integer",
+            "title": "Train Months"
+          },
+          "holdout_days": {
+            "type": "integer",
+            "title": "Holdout Days",
+            "description": "Hidden days scored, after the cutoff"
+          },
+          "runs": {
+            "type": "integer",
+            "title": "Runs"
+          },
+          "seed": {
+            "type": "integer",
+            "title": "Seed"
+          },
+          "series": {
+            "items": {
+              "$ref": "#/components/schemas/BacktestPoint"
+            },
+            "type": "array",
+            "title": "Series",
+            "description": "Cutoff day plus each hidden day"
+          },
+          "verdict": {
+            "type": "string",
+            "title": "Verdict",
+            "description": "One plain sentence with the headline result"
+          },
+          "coverage_80": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "Share of hidden days inside the 10th-90th percentile band"
+          },
+          "coverage_50": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "Share of hidden days inside the 25th-75th percentile band"
+          },
+          "median_error": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "Mean absolute error of the median forecast, in dollars"
+          },
+          "low_actual": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "Real lowest balance in the hidden window"
+          },
+          "low_predicted": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "Median of each run's lowest balance; its math holds the 10-90 range"
+          },
+          "low_in_band": {
+            "type": "boolean",
+            "title": "Low In Band",
+            "description": "Whether the real low fell inside the 10th-90th percentile of run lows"
+          },
+          "caveat": {
+            "type": "string",
+            "title": "Caveat"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Assumptions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "customer",
+          "as_of",
+          "cutoff",
+          "train_start",
+          "train_months",
+          "holdout_days",
+          "runs",
+          "seed",
+          "series",
+          "verdict",
+          "coverage_80",
+          "coverage_50",
+          "median_error",
+          "low_actual",
+          "low_predicted",
+          "low_in_band",
+          "caveat",
+          "assumptions"
+        ],
+        "title": "BacktestResponse",
+        "description": "The forecast re-run as if today were `cutoff`, learning only from history up to it, then compared with\nwhat really happened over the hidden days after it."
+      },
       "Bill": {
         "properties": {
           "id": {
@@ -795,6 +1101,33 @@
         ],
         "title": "CarPurchase",
         "description": "Buy a car with a loan (what-if). The down payment comes out of savings at the start; the loan runs for the term."
+      },
+      "ConnectedAccount": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "type": {
+            "$ref": "#/components/schemas/AccountType"
+          },
+          "balance": {
+            "type": "number",
+            "title": "Balance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "balance"
+        ],
+        "title": "ConnectedAccount"
       },
       "Customer": {
         "properties": {
@@ -1743,6 +2076,173 @@
           "indicator_ids"
         ],
         "title": "Pillar"
+      },
+      "PlaidConnection": {
+        "properties": {
+          "customer": {
+            "type": "string",
+            "title": "Customer",
+            "description": "Customer id to load, e.g. 'sandbox'"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "For the customer picker, e.g. 'Sandbox bank'"
+          },
+          "institution": {
+            "type": "string",
+            "title": "Institution"
+          },
+          "connected_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Connected At"
+          },
+          "accounts": {
+            "items": {
+              "$ref": "#/components/schemas/ConnectedAccount"
+            },
+            "type": "array",
+            "title": "Accounts"
+          },
+          "transactions": {
+            "type": "integer",
+            "title": "Transactions"
+          },
+          "history_days": {
+            "type": "integer",
+            "title": "History Days"
+          },
+          "forecast_ready": {
+            "type": "boolean",
+            "title": "Forecast Ready",
+            "description": "Enough history for the forecast, futures and what-ifs"
+          },
+          "backtest_ready": {
+            "type": "boolean",
+            "title": "Backtest Ready",
+            "description": "Enough history (12 months) for the backtest"
+          },
+          "defaults": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Defaults",
+            "description": "Every default or guess the adapter filled in, in plain words"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note",
+            "description": "Plain-words caveat, e.g. too little history"
+          }
+        },
+        "type": "object",
+        "required": [
+          "customer",
+          "label",
+          "institution",
+          "connected_at",
+          "accounts",
+          "transactions",
+          "history_days",
+          "forecast_ready",
+          "backtest_ready",
+          "defaults"
+        ],
+        "title": "PlaidConnection",
+        "description": "The connected sandbox customer, in plain numbers (no tokens, no Plaid ids)."
+      },
+      "PlaidExchangeRequest": {
+        "properties": {
+          "public_token": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 20,
+            "pattern": "^public-sandbox-[A-Za-z0-9-]+$",
+            "title": "Public Token",
+            "description": "The public_token Plaid Link returned (sandbox only)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "public_token"
+        ],
+        "title": "PlaidExchangeRequest"
+      },
+      "PlaidLinkTokenResponse": {
+        "properties": {
+          "link_token": {
+            "type": "string",
+            "title": "Link Token"
+          },
+          "expiration": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expiration"
+          }
+        },
+        "type": "object",
+        "required": [
+          "link_token"
+        ],
+        "title": "PlaidLinkTokenResponse"
+      },
+      "PlaidStatusResponse": {
+        "properties": {
+          "configured": {
+            "type": "boolean",
+            "title": "Configured",
+            "description": "Plaid keys are set and PLAID_ENV is sandbox"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason",
+            "description": "Why not, in plain words (never a key value)"
+          },
+          "environment": {
+            "type": "string",
+            "const": "sandbox",
+            "title": "Environment",
+            "default": "sandbox"
+          },
+          "connection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlaidConnection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "configured"
+        ],
+        "title": "PlaidStatusResponse"
       },
       "Plan": {
         "properties": {

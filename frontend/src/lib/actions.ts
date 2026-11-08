@@ -9,7 +9,7 @@
  * - each returns plain data the agent can read back (the API response, or a short status),
  * - none of them needs React; they write to the shared store in `store.ts`.
  */
-import { api, type CustomerId, type Metric, type PathId, type TransferResponse, type UpdatePlanResponse, type WhatIfRequest } from "./api";
+import { api, ApiError, type CustomerId, type Metric, type PathId, type TransferResponse, type UpdatePlanResponse, type WhatIfRequest } from "./api";
 import { getState, initialState, setState, type Screen, type VoiceMode } from "./store";
 import type { ProposalResult, ToolEvent, ToolEventName, TransferProposal, VoiceStatus } from "@/components/voice/types";
 import { decisionNote, proposalReply, REPLY } from "@/components/voice/toolReplies";
@@ -210,16 +210,33 @@ export function screenForMetric(metricId: string): Screen | null {
 /** Load every read endpoint for a customer. */
 export async function loadCustomer(customer: CustomerId = getState().customer) {
   setState({ customer, loading: true, error: null });
+  // A connected sandbox bank can have too little history for the forecast and futures (the API says so with a
+  // 422); the score and accounts still load. Maya and the household always load all four.
+  function optional<T>(p: Promise<T>): Promise<T | ApiError> {
+    if (customer !== "sandbox") return p;
+    return p.catch((e: unknown) => {
+      if (e instanceof ApiError && e.status === 422) return e;
+      throw e;
+    });
+  }
   try {
     const [profile, health, forecast, futures] = await Promise.all([
       api.profile(customer),
       api.health(customer),
-      api.forecast(customer),
-      api.futures(customer),
+      optional(api.forecast(customer)),
+      optional(api.futures(customer)),
     ]);
     // Ignore a slow response for a customer we've already switched away from.
     if (getState().customer !== customer) return;
-    setState({ profile, health, forecast, futures, loading: false });
+    const missing = forecast instanceof ApiError ? forecast : futures instanceof ApiError ? futures : null;
+    setState({
+      profile,
+      health,
+      forecast: forecast instanceof ApiError ? null : forecast,
+      futures: futures instanceof ApiError ? null : futures,
+      unavailable: missing ? missing.detail : null,
+      loading: false,
+    });
   } catch (e) {
     setState({ loading: false, error: errorText(e) });
   }
@@ -228,8 +245,50 @@ export async function loadCustomer(customer: CustomerId = getState().customer) {
 /** Switch customer: clears what-ifs and transfers, then reloads. */
 export function switchCustomer(customer: CustomerId) {
   if (customer === getState().customer) return;
-  setState({ ...initialState, customer, screen: getState().screen });
+  const { plaid } = getState();
+  setState({ ...initialState, customer, screen: getState().screen, plaid });
   void loadCustomer(customer);
+}
+
+// ---------------------------------------------------------------------------
+// Plaid sandbox bank connection
+// ---------------------------------------------------------------------------
+
+/** Ask the server whether the sandbox connection is usable (keys set) and what's connected. Never throws. */
+export async function refreshPlaid() {
+  try {
+    const s = await api.plaidStatus();
+    setState({ plaid: { configured: s.configured, reason: s.reason ?? null, connection: s.connection ?? null } });
+  } catch {
+    setState({ plaid: { configured: false, reason: "The server couldn't be reached.", connection: null } });
+  }
+}
+
+export function openConnect(open = true) {
+  setState({ connectOpen: open });
+}
+
+/** Plaid Link finished: the server exchanges the public_token, pulls the data and registers customer "sandbox". */
+export async function finishConnect(publicToken: string) {
+  const connection = await api.plaidExchange(publicToken);
+  const plaid = { ...getState().plaid, configured: true, connection };
+  const { voiceMode, voiceModeChosen } = getState();
+  // A fresh start on the connected customer, even if it was already showing (a reconnect replaces it).
+  setState({ ...initialState, customer: "sandbox", screen: "today", plaid, voiceMode, voiceModeChosen });
+  await loadCustomer("sandbox");
+  return connection;
+}
+
+/** Forget the connected bank and go back to Maya. */
+export async function disconnectBank() {
+  try {
+    const s = await api.plaidDisconnect();
+    setState({ plaid: { configured: s.configured, reason: s.reason ?? null, connection: null } });
+  } catch (e) {
+    setState({ error: errorText(e) });
+    return;
+  }
+  if (getState().customer === "sandbox") switchCustomer("maya");
 }
 
 /** Demo reset: server state back to start, front-end state cleared, back to Today. */
@@ -240,8 +299,8 @@ export async function resetDemo() {
   } catch {
     // Fixture mode can't fail here; keep going so the UI still resets.
   }
-  const { voiceMode, voiceModeChosen } = getState();
-  setState({ ...initialState, customer, voiceMode, voiceModeChosen });
+  const { voiceMode, voiceModeChosen, plaid } = getState();
+  setState({ ...initialState, customer, voiceMode, voiceModeChosen, plaid });
   await loadCustomer(customer);
 }
 

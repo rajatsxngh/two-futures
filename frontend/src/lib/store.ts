@@ -14,6 +14,7 @@ import type {
   FuturesResponse,
   HealthResponse,
   PathId,
+  PlaidConnection,
   ProfileResponse,
   TransferResponse,
   UpdatePlanResponse,
@@ -68,6 +69,12 @@ export type AppState = {
   voiceMode: VoiceMode;
   /** True once someone picked a mode by hand (stops the automatic switch to saved answers). */
   voiceModeChosen: boolean;
+  /** Plaid sandbox: keys set on the server (null = not checked yet), why not, and the connected bank if any. */
+  plaid: { configured: boolean | null; reason: string | null; connection: PlaidConnection | null };
+  /** The "Connect a bank (sandbox)" sheet is open. */
+  connectOpen: boolean;
+  /** Why the forecast / futures aren't shown for this customer (e.g. too little history), in plain words. */
+  unavailable: string | null;
 };
 
 export type VoiceMode = "live" | "text" | "saved";
@@ -106,6 +113,9 @@ export const initialState: AppState = {
   mathMetric: null,
   voiceMode: "live",
   voiceModeChosen: false,
+  plaid: { configured: null, reason: null, connection: null },
+  connectOpen: false,
+  unavailable: null,
 };
 
 let state: AppState = initialState;

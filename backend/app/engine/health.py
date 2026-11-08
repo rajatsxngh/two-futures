@@ -29,6 +29,7 @@ from ..models import (
     Status,
 )
 from .data import (
+    history_days,
     INCOME_CATEGORIES,
     LATE_FEE,
     RETIREMENT_CONTRIBUTION,
@@ -82,13 +83,19 @@ def state_from_data(data: CustomerData, today: date) -> FinancialState:
              if a.group == AccountGroup.debt and a.balance > 0 and a.min_payment]
     auto = [f"{a.name} ${a.monthly_contribution:,.0f}/month" for a in data.accounts if a.monthly_contribution]
 
+    # Monthly averages over the last 12 months, or over the history there is when it's shorter (a connected bank).
+    months = 12
+    days = history_days(data, today)
+    if 0 < days < 365:
+        months = days * 12 / 365
+
     return FinancialState(
-        take_home_monthly=income / 12,
-        spending_monthly=spending / 12,
+        take_home_monthly=income / months,
+        spending_monthly=spending / months,
         late_payments_12m=late,
         checking=total(AccountType.checking),
         savings=total(AccountType.savings),
-        retirement_contrib_monthly=retirement / 12,
+        retirement_contrib_monthly=retirement / months,
         debt_payments=debts,
         card_balance=total(AccountType.credit_card),
         card_limit=sum(a.limit or 0 for a in data.accounts if a.type == AccountType.credit_card),
@@ -267,7 +274,12 @@ def score_state(s: FinancialState, as_of: date, prefix: str = "health") -> Healt
 
 
 def health_for(data: CustomerData, today: date) -> HealthResponse:
-    return score_state(state_from_data(data, today), today)
+    h = score_state(state_from_data(data, today), today)
+    if data.assumptions or data.indicator_notes:  # a connected bank: list where the data came from and every default
+        h.score.math.assumptions += data.assumptions
+        for ind in h.indicators:
+            ind.value.math.assumptions += data.indicator_notes.get(ind.id, [])
+    return h
 
 
 __all__ = ["FinancialState", "health_for", "linear_score", "score_state", "state_from_data", "usd"]

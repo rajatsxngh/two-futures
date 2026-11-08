@@ -72,6 +72,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/backtest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Backtest
+         * @description How good is the forecast? Re-run it on history with the last 91 days hidden, then score it on those days.
+         *     Always computed by the engine (there's no fixture); cached after the first call.
+         */
+        get: operations["get_backtest_api_backtest_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/futures": {
         parameters: {
             query?: never;
@@ -210,6 +231,87 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/plaid/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Plaid Status
+         * @description Whether the sandbox connection can be used (keys set), and the connected customer if there is one.
+         */
+        get: operations["plaid_status_api_plaid_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/plaid/link_token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Plaid Link Token
+         * @description A short-lived token for opening Plaid Link in the browser (sandbox; transactions, plus liabilities).
+         */
+        post: operations["plaid_link_token_api_plaid_link_token_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/plaid/exchange": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Plaid Exchange
+         * @description Exchange Link's public_token, pull accounts, transactions and liabilities, and register the bank as
+         *     customer 'sandbox'. Replaces any earlier connection.
+         */
+        post: operations["plaid_exchange_api_plaid_exchange_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/plaid/disconnect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Plaid Disconnect
+         * @description Forget the connected bank (and remove it at Plaid). Maya and the household are untouched.
+         */
+        post: operations["plaid_disconnect_api_plaid_disconnect_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -299,6 +401,99 @@ export interface components {
          * @enum {string}
          */
         AccountType: "checking" | "savings" | "cd" | "ira" | "auto_loan" | "personal_loan" | "credit_card" | "mortgage";
+        /** BacktestPoint */
+        BacktestPoint: {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /**
+             * Actual
+             * @description Real end-of-day checking balance, rebuilt from the transactions
+             */
+            actual: number;
+            /** P10 */
+            p10: number;
+            /** P25 */
+            p25: number;
+            /**
+             * P50
+             * @description Typical (median) forecast
+             */
+            p50: number;
+            /** P75 */
+            p75: number;
+            /** P90 */
+            p90: number;
+        };
+        /**
+         * BacktestResponse
+         * @description The forecast re-run as if today were `cutoff`, learning only from history up to it, then compared with
+         *     what really happened over the hidden days after it.
+         */
+        BacktestResponse: {
+            /** Customer */
+            customer: string;
+            /**
+             * As Of
+             * Format: date
+             * @description The demo's today: the end of the hidden window
+             */
+            as_of: string;
+            /**
+             * Cutoff
+             * Format: date
+             * @description Last day the model could see; the simulation starts here
+             */
+            cutoff: string;
+            /**
+             * Train Start
+             * Format: date
+             * @description First day of the history the model learned from
+             */
+            train_start: string;
+            /** Train Months */
+            train_months: number;
+            /**
+             * Holdout Days
+             * @description Hidden days scored, after the cutoff
+             */
+            holdout_days: number;
+            /** Runs */
+            runs: number;
+            /** Seed */
+            seed: number;
+            /**
+             * Series
+             * @description Cutoff day plus each hidden day
+             */
+            series: components["schemas"]["BacktestPoint"][];
+            /**
+             * Verdict
+             * @description One plain sentence with the headline result
+             */
+            verdict: string;
+            /** @description Share of hidden days inside the 10th-90th percentile band */
+            coverage_80: components["schemas"]["Metric"];
+            /** @description Share of hidden days inside the 25th-75th percentile band */
+            coverage_50: components["schemas"]["Metric"];
+            /** @description Mean absolute error of the median forecast, in dollars */
+            median_error: components["schemas"]["Metric"];
+            /** @description Real lowest balance in the hidden window */
+            low_actual: components["schemas"]["Metric"];
+            /** @description Median of each run's lowest balance; its math holds the 10-90 range */
+            low_predicted: components["schemas"]["Metric"];
+            /**
+             * Low In Band
+             * @description Whether the real low fell inside the 10th-90th percentile of run lows
+             */
+            low_in_band: boolean;
+            /** Caveat */
+            caveat: string;
+            /** Assumptions */
+            assumptions: string[];
+        };
         /** Bill */
         Bill: {
             /** Id */
@@ -366,6 +561,16 @@ export interface components {
              * @description Loan length in months, 12 to 84
              */
             term_months: number;
+        };
+        /** ConnectedAccount */
+        ConnectedAccount: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            type: components["schemas"]["AccountType"];
+            /** Balance */
+            balance: number;
         };
         /** Customer */
         Customer: {
@@ -785,6 +990,90 @@ export interface components {
             score: components["schemas"]["Metric"];
             /** Indicator Ids */
             indicator_ids: string[];
+        };
+        /**
+         * PlaidConnection
+         * @description The connected sandbox customer, in plain numbers (no tokens, no Plaid ids).
+         */
+        PlaidConnection: {
+            /**
+             * Customer
+             * @description Customer id to load, e.g. 'sandbox'
+             */
+            customer: string;
+            /**
+             * Label
+             * @description For the customer picker, e.g. 'Sandbox bank'
+             */
+            label: string;
+            /** Institution */
+            institution: string;
+            /**
+             * Connected At
+             * Format: date-time
+             */
+            connected_at: string;
+            /** Accounts */
+            accounts: components["schemas"]["ConnectedAccount"][];
+            /** Transactions */
+            transactions: number;
+            /** History Days */
+            history_days: number;
+            /**
+             * Forecast Ready
+             * @description Enough history for the forecast, futures and what-ifs
+             */
+            forecast_ready: boolean;
+            /**
+             * Backtest Ready
+             * @description Enough history (12 months) for the backtest
+             */
+            backtest_ready: boolean;
+            /**
+             * Defaults
+             * @description Every default or guess the adapter filled in, in plain words
+             */
+            defaults: string[];
+            /**
+             * Note
+             * @description Plain-words caveat, e.g. too little history
+             */
+            note?: string | null;
+        };
+        /** PlaidExchangeRequest */
+        PlaidExchangeRequest: {
+            /**
+             * Public Token
+             * @description The public_token Plaid Link returned (sandbox only)
+             */
+            public_token: string;
+        };
+        /** PlaidLinkTokenResponse */
+        PlaidLinkTokenResponse: {
+            /** Link Token */
+            link_token: string;
+            /** Expiration */
+            expiration?: string | null;
+        };
+        /** PlaidStatusResponse */
+        PlaidStatusResponse: {
+            /**
+             * Configured
+             * @description Plaid keys are set and PLAID_ENV is sandbox
+             */
+            configured: boolean;
+            /**
+             * Reason
+             * @description Why not, in plain words (never a key value)
+             */
+            reason?: string | null;
+            /**
+             * Environment
+             * @default sandbox
+             * @constant
+             */
+            environment: "sandbox";
+            connection?: components["schemas"]["PlaidConnection"] | null;
         };
         /** Plan */
         Plan: {
@@ -1290,7 +1579,7 @@ export interface operations {
     get_profile_api_profile_get: {
         parameters: {
             query?: {
-                /** @description Customer id: 'maya' or 'household' */
+                /** @description Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected */
                 customer?: string;
             };
             header?: never;
@@ -1322,7 +1611,7 @@ export interface operations {
     get_health_api_health_get: {
         parameters: {
             query?: {
-                /** @description Customer id: 'maya' or 'household' */
+                /** @description Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected */
                 customer?: string;
             };
             header?: never;
@@ -1354,7 +1643,7 @@ export interface operations {
     get_forecast_api_forecast_get: {
         parameters: {
             query?: {
-                /** @description Customer id: 'maya' or 'household' */
+                /** @description Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected */
                 customer?: string;
             };
             header?: never;
@@ -1383,10 +1672,42 @@ export interface operations {
             };
         };
     };
+    get_backtest_api_backtest_get: {
+        parameters: {
+            query?: {
+                /** @description Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected */
+                customer?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BacktestResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_futures_api_futures_get: {
         parameters: {
             query?: {
-                /** @description Customer id: 'maya' or 'household' */
+                /** @description Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected */
                 customer?: string;
             };
             header?: never;
@@ -1517,7 +1838,7 @@ export interface operations {
     reset_api_reset_post: {
         parameters: {
             query?: {
-                /** @description Customer id: 'maya' or 'household' */
+                /** @description Customer id: 'maya', 'household', or 'sandbox' once a Plaid sandbox bank is connected */
                 customer?: string;
             };
             header?: never;
@@ -1608,6 +1929,99 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    plaid_status_api_plaid_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaidStatusResponse"];
+                };
+            };
+        };
+    };
+    plaid_link_token_api_plaid_link_token_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaidLinkTokenResponse"];
+                };
+            };
+        };
+    };
+    plaid_exchange_api_plaid_exchange_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlaidExchangeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaidConnection"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    plaid_disconnect_api_plaid_disconnect_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaidStatusResponse"];
                 };
             };
         };

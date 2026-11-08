@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Area,
   CartesianGrid,
@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { ForecastResponse } from "@/lib/api";
+import { api, type BacktestResponse, type CustomerId, type ForecastResponse } from "@/lib/api";
 import { goTo } from "@/lib/actions";
 import { useApp } from "@/lib/store";
 import { Card, MetricValue, NumberHook, SectionTitle, shortDate, usd } from "../ui";
@@ -47,6 +47,7 @@ export function ForecastScreen() {
         </p>
       </div>
       <CashChart forecast={forecast} />
+      <BacktestCard />
       <AccountsChart forecast={forecast} />
       <Card className="bg-surface p-3">
         <p className="text-xs font-semibold text-navy">How this works</p>
@@ -295,6 +296,110 @@ function AccountsChart({ forecast }: { forecast: ForecastResponse }) {
               );
             })}
         </ul>
+      </Card>
+    </div>
+  );
+}
+
+/** "How good is this forecast?": the same forecast re-run on history with the last 91 days hidden. Hidden if the
+ * back end can't serve it, so the screen never breaks over it. */
+function BacktestCard() {
+  const customer = useApp((s) => s.customer);
+  const [result, setResult] = useState<{ customer: CustomerId; data: BacktestResponse | null } | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    api
+      .backtest(customer)
+      .then((data) => live && setResult({ customer, data }))
+      .catch(() => live && setResult({ customer, data: null }));
+    return () => {
+      live = false;
+    };
+  }, [customer]);
+
+  const bt = result?.customer === customer ? result.data : null;
+  const data = useMemo(
+    () => bt?.series.map((p) => ({ t: ts(p.date), actual: p.actual, p50: p.p50, band: [p.p10, p.p90] as [number, number] })) ?? [],
+    [bt],
+  );
+  const ticks = useMemo(() => {
+    if (!data.length) return [];
+    const out: number[] = [];
+    const d = new Date(data[0].t);
+    d.setDate(1);
+    d.setMonth(d.getMonth() + 1);
+    while (d.getTime() <= data[data.length - 1].t) {
+      out.push(d.getTime());
+      d.setMonth(d.getMonth() + 1);
+    }
+    return out;
+  }, [data]);
+
+  if (!bt) return null;
+  return (
+    <div>
+      <SectionTitle>How good is this forecast?</SectionTitle>
+      <Card className="px-2 pb-3 pt-3">
+        <p className="px-2 text-sm font-medium leading-snug text-navy">{bt.verdict}</p>
+        <div className="mt-3 grid grid-cols-3 gap-2 px-2">
+          <div>
+            <p className="text-[11px] text-muted">Days in range</p>
+            <MetricValue metric={bt.coverage_80} className="text-lg font-semibold text-navy" />
+            <p className="text-[10px] text-muted">aim: about 80%</p>
+          </div>
+          <div>
+            <p className="text-[11px] text-muted">Typical miss</p>
+            <MetricValue metric={bt.median_error} className="text-lg font-semibold text-navy" />
+            <p className="text-[10px] text-muted">per day</p>
+          </div>
+          <div>
+            <p className="text-[11px] text-muted">Low point</p>
+            <MetricValue metric={bt.low_actual} className="text-lg font-semibold text-navy" />
+            <p className="text-[10px] text-muted">
+              we said <MetricValue metric={bt.low_predicted} className="font-semibold" />
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-2 h-[110px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data} margin={{ top: 6, right: 8, bottom: 0, left: -8 }}>
+              <CartesianGrid vertical={false} stroke="var(--color-line)" />
+              <XAxis
+                dataKey="t"
+                type="number"
+                scale="time"
+                domain={["dataMin", "dataMax"]}
+                tickFormatter={monthTick}
+                tick={{ fontSize: 10, fill: "var(--color-muted)" }}
+                ticks={ticks}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis tickFormatter={kUsd} tick={{ fontSize: 10, fill: "var(--color-muted)" }} axisLine={false} tickLine={false} width={44} />
+              <Area dataKey="band" stroke="none" fill="var(--color-accent)" fillOpacity={0.14} isAnimationActive={false} name="Our range" />
+              <Line dataKey="p50" stroke="var(--color-muted)" strokeWidth={1.5} strokeDasharray="4 3" dot={false} isAnimationActive={false} name="Our typical" />
+              <Line dataKey="actual" stroke="var(--color-navy)" strokeWidth={2} dot={false} isAnimationActive={false} name="Real balance" />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 px-2 text-[11px] text-muted">
+          <span className="inline-flex items-center gap-1">
+            <span className="h-0.5 w-3 bg-navy" /> Real balance
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <span className="h-0 w-3 border-t-2 border-dashed border-muted" /> Our typical
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <span className="h-2.5 w-3 rounded-sm bg-accent/20" /> Our range
+          </span>
+        </div>
+        <p className="mt-2 px-2 text-[11px] leading-snug text-muted">
+          We hid the last {bt.holdout_days} days, learned from the {bt.train_months} months before, and forecast from {shortDate(bt.cutoff)}.
+          The middle half of our range caught <MetricValue metric={bt.coverage_50} className="font-semibold text-navy" /> of days (aim: about 50%).{" "}
+          {bt.caveat}
+        </p>
       </Card>
     </div>
   );
