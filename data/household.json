@@ -136,8 +136,7 @@
     "kind": "monthly",
     "day": 1,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "auto1",
@@ -149,8 +148,7 @@
     "kind": "monthly",
     "day": 10,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "personal",
@@ -162,8 +160,7 @@
     "kind": "monthly",
     "day": 12,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "insurance",
@@ -175,8 +172,7 @@
     "kind": "monthly",
     "day": 14,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "utilities",
@@ -188,8 +184,7 @@
     "kind": "monthly",
     "day": 18,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "auto2",
@@ -201,8 +196,7 @@
     "kind": "monthly",
     "day": 20,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "card_pay",
@@ -214,8 +208,7 @@
     "kind": "monthly",
     "day": 25,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "daycare_deposit",
@@ -227,8 +220,7 @@
     "kind": "once",
     "day": null,
     "date": "2027-02-01"
-   },
-   "unused": false
+   }
   },
   {
    "id": "cd_maturity",
@@ -240,8 +232,7 @@
     "kind": "once",
     "day": null,
     "date": "2027-09-01"
-   },
-   "unused": false
+   }
   }
  ],
  "transactions": [

@@ -12,7 +12,7 @@ Plan path (fixed order, no AI):
      builds savings (amount from `forecast.rule1_transfer`). It replaces the old
      monthly savings transfer.
   2. Card over 30% used: windfalls (a maturing CD) go half to the card, half to savings.
-  3. Cancel unused subscriptions; spend less on flexible categories.
+  3. Cancel subscriptions the customer said they don't use; spend less on flexible categories.
   4. Starter cushion in place: the transfer pays down debts, highest rate first
      (mortgage excluded), so a 25% card isn't carried while savings earn almost
      nothing. When a debt is paid off, its payment joins the transfer.
@@ -170,7 +170,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
     base_pool = transfer * pays / 12
     freed = np.zeros(runs)
     paid_off = {a.id: np.zeros(runs, dtype=bool) for a in snowball}
-    fixed_regular = sum(b.amount for b in p.fixed_bills if b.due_rule.kind == "monthly" and not (plan and b.unused))
+    fixed_regular = sum(b.amount for b in p.fixed_bills if b.due_rule.kind == "monthly" and not (plan and b.id in p.cancelled))
     var_typ = float((np.array([c.mean for c in p.categories]) * trim).sum())
     event_by_month = {(e["date"].year, e["date"].month): e for e in shared_events}
     split_log: dict[str, tuple[np.ndarray, np.ndarray]] = {}

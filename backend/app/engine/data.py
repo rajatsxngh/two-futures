@@ -21,6 +21,8 @@ TRANSFER_CATEGORIES = {"card_payment", "savings_transfer", "retirement_contribut
 INCOME_CATEGORIES = {"paycheck"}
 RETIREMENT_CONTRIBUTION = "retirement_contribution"
 LATE_FEE = "late_fee"
+# Bills that are really debt payments or account events: modeled from accounts instead.
+DEBT_BILL_CATEGORIES = {"auto_loan", "card_payment", "mortgage", "personal_loan", "cd_maturity"}
 
 
 class CustomerData(BaseModel):

@@ -8,6 +8,8 @@ from ..models import AccountGroup, AccountGroupSummary, AccountType, HealthRespo
 from .calendar import upcoming
 from .data import CustomerData
 from .fmt import metric, round_half_up, usd
+from .params import build_params
+from .subscriptions import to_model
 
 GROUP_LABELS = {
     AccountGroup.cash: "Cash",
@@ -91,8 +93,12 @@ def profile_for(data: CustomerData, health: HealthResponse, today: date) -> Prof
             f"{labels[a.type.value]} balance{owed} as of {today:%B} {today.day}, {today.year}",
             inputs, ["Made-up demo data: no real accounts are connected."]))
 
+    answers = data.customer.setup.subscriptions
+    subscriptions = [to_model(sub, bill, answers) for sub, bill in build_params(data, today).subscriptions]
+
     return ProfileResponse(
         account_metrics=account_metrics,
+        subscriptions=subscriptions,
         as_of=today,
         customer=data.customer,
         accounts=data.accounts,

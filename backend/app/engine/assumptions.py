@@ -71,7 +71,7 @@ def listed(plan: bool = True, home: bool = False, car: bool = False) -> list[str
     if plan:
         out += [
             f"The plan spends {FLEXIBLE_TRIM:.0%} less on flexible categories (dining, shopping, entertainment, "
-            "other) and cancels unused subscriptions.",
+            "other) and cancels subscriptions you said you don't use.",
             "Both paths get the same random surprises and the same scheduled repair, so only the decisions differ.",
             "On the same path, money freed when a loan is paid off stays in checking "
             "(it isn't spent and isn't put to work).",

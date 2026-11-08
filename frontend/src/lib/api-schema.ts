@@ -312,12 +312,6 @@ export interface components {
             due_rule: components["schemas"]["DueRule"];
             /** Account Id */
             account_id: string;
-            /**
-             * Unused
-             * @description Subscription with no recent use (plan rule 3 cancels it)
-             * @default false
-             */
-            unused: boolean;
         };
         /**
          * CarLoanOption
@@ -858,6 +852,12 @@ export interface components {
              * @default []
              */
             account_metrics: components["schemas"]["Metric"][];
+            /**
+             * Subscriptions
+             * @description Repeating charges found in the transactions, with the customer's 'still using?' answer
+             * @default []
+             */
+            subscriptions: components["schemas"]["Subscription"][];
         };
         /** ResetResponse */
         ResetResponse: {
@@ -874,6 +874,14 @@ export interface components {
              * @enum {string}
              */
             planning_ahead: "yes" | "sometimes" | "no";
+            /**
+             * Subscriptions
+             * @description Still using it? per detected subscription id (e.g. 'iron_gym'), as the customer answered. Unanswered counts as still using: the plan never cancels on a guess.
+             * @default {}
+             */
+            subscriptions: {
+                [key: string]: boolean;
+            };
         };
         /** SetupRequest */
         SetupRequest: {
@@ -954,6 +962,64 @@ export interface components {
             customer: string;
             /** Transfer Id */
             transfer_id: string;
+        };
+        /**
+         * Subscription
+         * @description A repeating charge found in the transactions (engine/subscriptions.py). Whether it's still used is the
+         *     customer's answer, never inferred.
+         */
+        Subscription: {
+            /**
+             * Id
+             * @description Stable id from the cleaned-up merchant, e.g. 'iron_gym'
+             */
+            id: string;
+            /** Merchant */
+            merchant: string;
+            /**
+             * Cadence
+             * @enum {string}
+             */
+            cadence: "weekly" | "monthly";
+            /**
+             * Count
+             * @description Charges found
+             */
+            count: number;
+            /**
+             * Last Charge
+             * Format: date
+             */
+            last_charge: string;
+            /**
+             * Typical Amount
+             * @description Median of the charges before the latest
+             */
+            typical_amount: number;
+            /** Latest Amount */
+            latest_amount: number;
+            /**
+             * Monthly Amount
+             * @description What it costs a month now
+             */
+            monthly_amount: number;
+            /**
+             * Price Change
+             * @description Latest charge is more than 5% above the earlier typical amount
+             */
+            price_change: boolean;
+            /**
+             * Still Using
+             * @description The customer's answer; null = not answered (treated as yes)
+             */
+            still_using: boolean | null;
+            /**
+             * Bill Id
+             * @description The bill it matches (the plan cancels this bill when still_using is false)
+             */
+            bill_id: string;
+            /** @description Monthly cost with the detection math, id 'subscription.<id>.monthly' */
+            metric: components["schemas"]["Metric"];
         };
         /** Thresholds */
         Thresholds: {

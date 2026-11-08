@@ -16,7 +16,12 @@
     "renters_or_home": true,
     "disability": false
    },
-   "planning_ahead": "sometimes"
+   "planning_ahead": "sometimes",
+   "subscriptions": {
+    "iron_gym": false,
+    "streamly": true,
+    "tunewave": true
+   }
   }
  },
  "accounts": [
@@ -97,8 +102,7 @@
     "kind": "monthly",
     "day": 1,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "gym",
@@ -110,8 +114,7 @@
     "kind": "monthly",
     "day": 3,
     "date": null
-   },
-   "unused": true
+   }
   },
   {
    "id": "car",
@@ -123,8 +126,7 @@
     "kind": "monthly",
     "day": 5,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "stream1",
@@ -136,8 +138,7 @@
     "kind": "monthly",
     "day": 9,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "insurance",
@@ -149,8 +150,7 @@
     "kind": "monthly",
     "day": 15,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "phone",
@@ -162,8 +162,7 @@
     "kind": "monthly",
     "day": 18,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "card_pay",
@@ -175,8 +174,7 @@
     "kind": "monthly",
     "day": 22,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "stream2",
@@ -188,8 +186,7 @@
     "kind": "monthly",
     "day": 27,
     "date": null
-   },
-   "unused": false
+   }
   },
   {
    "id": "renters",
@@ -201,8 +198,7 @@
     "kind": "yearly",
     "day": null,
     "date": "2027-01-12"
-   },
-   "unused": false
+   }
   },
   {
    "id": "cd_maturity",
@@ -214,8 +210,7 @@
     "kind": "once",
     "day": null,
     "date": "2027-04-15"
-   },
-   "unused": false
+   }
   }
  ],
  "transactions": [

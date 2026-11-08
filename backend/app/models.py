@@ -107,6 +107,9 @@ class InsuranceAnswers(BaseModel):
 class SetupAnswers(BaseModel):
     insurance: InsuranceAnswers
     planning_ahead: Literal["yes", "sometimes", "no"]
+    subscriptions: dict[str, bool] = Field(
+        default={}, description="Still using it? per detected subscription id (e.g. 'iron_gym'), as the customer "
+                                "answered. Unanswered counts as still using: the plan never cancels on a guess.")
 
 
 class Customer(BaseModel):
@@ -162,7 +165,6 @@ class Bill(BaseModel):
     category: str
     due_rule: DueRule
     account_id: str
-    unused: bool = Field(default=False, description="Subscription with no recent use (plan rule 3 cancels it)")
 
 
 class UpcomingBill(BaseModel):
@@ -172,6 +174,24 @@ class UpcomingBill(BaseModel):
     date: dt.date
     account_id: str
     kind: Literal["bill", "income", "maturity"] = "bill"
+
+
+class Subscription(BaseModel):
+    """A repeating charge found in the transactions (engine/subscriptions.py). Whether it's still used is the
+    customer's answer, never inferred."""
+
+    id: str = Field(description="Stable id from the cleaned-up merchant, e.g. 'iron_gym'")
+    merchant: str
+    cadence: Literal["weekly", "monthly"]
+    count: int = Field(description="Charges found")
+    last_charge: dt.date
+    typical_amount: float = Field(description="Median of the charges before the latest")
+    latest_amount: float
+    monthly_amount: float = Field(description="What it costs a month now")
+    price_change: bool = Field(description="Latest charge is more than 5% above the earlier typical amount")
+    still_using: bool | None = Field(description="The customer's answer; null = not answered (treated as yes)")
+    bill_id: str = Field(description="The bill it matches (the plan cancels this bill when still_using is false)")
+    metric: Metric = Field(description="Monthly cost with the detection math, id 'subscription.<id>.monthly'")
 
 
 # ---------------------------------------------------------------------------
@@ -195,6 +215,8 @@ class ProfileResponse(BaseModel):
     bills_next_90: list[UpcomingBill]
     totals: list[Metric] = Field(description="e.g. net worth, total cash, total debt")
     account_metrics: list[Metric] = Field(default=[], description="Each account balance as a Metric, id 'account.<id>.balance'")
+    subscriptions: list[Subscription] = Field(default=[], description="Repeating charges found in the transactions, "
+                                                                      "with the customer's 'still using?' answer")
 
 
 # ---------------------------------------------------------------------------
@@ -510,7 +532,7 @@ class ShockResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# POST /api/setup (the two setup questions)
+# POST /api/setup (the setup questions: insurance, planning ahead, subscriptions still in use)
 # ---------------------------------------------------------------------------
 
 class SetupRequest(BaseModel):

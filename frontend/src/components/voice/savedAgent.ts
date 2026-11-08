@@ -115,6 +115,21 @@ function carAnswer(ctx: SavedContext): string {
   return `Yes. ${repair}${last ? ` ${last[0].toUpperCase()}${last.slice(1)}.` : ""}`.replace(/\s+/g, " ").trim();
 }
 
+/** Subscriptions: the plan cancels only the ones the user said they don't use (engine plan rule 3). */
+function subscriptionAnswer(ctx: SavedContext): string {
+  const cancelled = ctx.futures.plan.actions.filter((a) => a.id.startsWith("cancel_"));
+  const year = ctx.futures.as_of.slice(0, 4);
+  const names = cancelled.map((a) => lowerFirst(a.title.replace(/^Cancel /, ""))).join(" and ");
+  if (ctx.path === "same_path") {
+    return cancelled.length
+      ? `I never cancelled ${names}. I kept paying for it, even though I'd said I didn't use it.`
+      : "I kept the subscriptions I said I still use.";
+  }
+  if (!cancelled.length) return "I kept the subscriptions I said I still use. The plan only cancels the ones I say I don't use.";
+  const saved = cancelled.map((a) => (a.amount ? `$${a.amount.toLocaleString("en-US")}` : "")).filter(Boolean);
+  return `I cancelled ${names} in ${year}, because I'd said I didn't use it${saved.length ? `. That's ${saved.join(" and ")} a month back` : ""}.`;
+}
+
 /** Yes words; a clear yes is made only of these (e.g. "yes", "yes please", "ok do it"). */
 const YES_WORDS = "yes|yeah|yep|yup|sure|ok|okay|alright|all right|please|do it|please do|go ahead|let'?s do it|sounds good|set it up|start it|absolutely|definitely";
 const ONLY_YES = new RegExp(`^(?:${YES_WORDS})(?: (?:${YES_WORDS}))*$`);
@@ -304,6 +319,7 @@ export async function savedReply(text: string, ctx: SavedContext): Promise<Saved
     ctx.memory.offeredTransfer = true;
     return done(offerText(ctx));
   }
+  if (/subscription|\bgym\b|membership|streaming|repeating charge/.test(t)) return done(subscriptionAnswer(ctx));
   if (/\bcar\b|worth it/.test(t)) return done(carAnswer(ctx));
 
   const asked = (re: RegExp, suffix: string, say: (d: string) => string) => {

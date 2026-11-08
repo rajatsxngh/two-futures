@@ -72,7 +72,7 @@ def simulate_daily(p: Params, plan: bool = False, trim: float = 0.0,
             count += 1
         k[i] = count
         for b in p.fixed_bills:
-            if b.account_id == p.checking.id and not (plan and b.unused) and bill_due_on(b, d):
+            if b.account_id == p.checking.id and not (plan and b.id in p.cancelled) and bill_due_on(b, d):
                 det[i] -= b.amount
         for loan in p.loans:
             if loan.due_day and d.day == min(loan.due_day, _days_in_month(d)):

@@ -17,7 +17,8 @@
         "renters_or_home": true,
         "disability": false
       },
-      "planning_ahead": "sometimes"
+      "planning_ahead": "sometimes",
+      "subscriptions": {}
     }
   },
   "accounts": [
@@ -257,8 +258,7 @@
         "day": 1,
         "date": null
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "gym",
@@ -270,8 +270,7 @@
         "day": 3,
         "date": null
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "car",
@@ -283,8 +282,7 @@
         "day": 5,
         "date": null
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "stream1",
@@ -296,8 +294,7 @@
         "day": 9,
         "date": null
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "insurance",
@@ -309,8 +306,7 @@
         "day": 15,
         "date": null
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "phone",
@@ -322,8 +318,7 @@
         "day": 18,
         "date": null
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "card_pay",
@@ -335,8 +330,7 @@
         "day": 22,
         "date": null
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "stream2",
@@ -348,8 +342,7 @@
         "day": 27,
         "date": null
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "renters",
@@ -361,8 +354,7 @@
         "day": null,
         "date": "2027-01-12"
       },
-      "account_id": "spend",
-      "unused": false
+      "account_id": "spend"
     },
     {
       "id": "cd_maturity",
@@ -374,8 +366,7 @@
         "day": null,
         "date": "2027-04-15"
       },
-      "account_id": "cd",
-      "unused": false
+      "account_id": "cd"
     }
   ],
   "bills_next_90": [
@@ -677,5 +668,6 @@
       }
     }
   ],
-  "account_metrics": []
+  "account_metrics": [],
+  "subscriptions": []
 }

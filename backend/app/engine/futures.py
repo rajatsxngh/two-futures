@@ -31,6 +31,7 @@ from .forecast import rule1_transfer
 from .health import FinancialState, band_of, health_for, score_state
 from .params import Params, build_params
 from .sim import PathId, SimResult, make_draws, month_starts, simulate
+from .subscriptions import money
 from .whatif import to_adjust
 
 LABELS: dict[PathId, str] = {"same_path": "Same path", "plan": "With a plan"}
@@ -272,12 +273,14 @@ def _plan(p: Params, plan_sim: SimResult, transfer: float, low: float) -> Plan:
                 start_date=cd.maturity_date, amount=round(value, 2), frequency="once", from_account_id=cd.id,
                 automatable=False))
     first_of_next = (p.today.replace(day=28) + timedelta(days=4)).replace(day=1)
-    for b in p.fixed_bills:
-        if b.unused:
+    for sub, b in p.subscriptions:
+        if b.id in p.cancelled:  # the customer said they don't use it; the app never guesses
+            every = "month" if sub.cadence == "monthly" else "week"
             acts.append(PlanAction(
-                id=f"cancel_{b.id}", rule=3, title=f"Cancel the unused {b.name.lower()}",
-                description=f"No recent use. Saves ${b.amount:,.0f} a month.", start_date=first_of_next,
-                amount=b.amount, frequency="monthly", automatable=False))
+                id=f"cancel_{b.id}", rule=3, title=f"Cancel the {b.name[0].lower() + b.name[1:]}",
+                description=(f"You said you don't use it. {sub.merchant} has charged {money(sub.latest_amount)} every "
+                             f"{every} ({sub.count} charges found). Saves {money(b.amount)} a month."),
+                start_date=first_of_next, amount=b.amount, frequency="monthly", automatable=False))
     flex = sum(c.mean for c in p.categories if c.flexible) * A.FLEXIBLE_TRIM
     if flex >= 1:
         acts.append(PlanAction(
@@ -326,6 +329,13 @@ def _fact_sheet(path: PathId, p: Params, health_today: HealthResponse, snap: Yea
         f"Savings cushion: {ind['savings_cushion'].value.display}. Financial Health Score: "
         f"{int(health_today.score.value)} ({health_today.band}).",
     ]
+    if p.subscriptions:
+        answer = {True: "you said you still use it", False: "you said you don't use it"}
+        subs = [f"{s.merchant} {money(s.monthly_amount)} a month"
+                + (f" (price went up from {money(s.typical_amount)})" if s.price_change else "")
+                + (f" ({answer[a]})" if (a := c.setup.subscriptions.get(s.id)) is not None else "")
+                for s, _ in p.subscriptions]
+        today_facts.append(f"Repeating charges found in your transactions: {'; '.join(subs)}.")
     y, age = snap.year, snap.age
     how = {e.title: e for e in events if not e.shared}
     facts = [f"It's {y}. You're {age}."]
@@ -422,8 +432,8 @@ def build_futures(data: CustomerData, today: date,
                 [("Bad-case low point with this amount", round(low, 2), "usd", "12-month simulation"),
                  ("Floor", A.CHECKING_FLOOR, "usd"), ("Step", A.TRANSFER_STEP, "usd"),
                  ("Next step up", (first.amount or 0) + A.TRANSFER_STEP, "usd", "would dip below the floor")],
-                [f"The plan spends {A.FLEXIBLE_TRIM:.0%} less on flexible categories and cancels unused "
-                 "subscriptions.", f"It replaces the ${p.reserve_contrib:,.0f} monthly savings transfer."
+                [f"The plan spends {A.FLEXIBLE_TRIM:.0%} less on flexible categories and cancels "
+                 "subscriptions you said you don't use.", f"It replaces the ${p.reserve_contrib:,.0f} monthly savings transfer."
                  if p.reserve_contrib else "No existing savings transfer to replace."]),
             effects=[
                 metric("next_step.score_2031", f"Score in {A.TARGET_YEAR}", plan_end.score, "score",

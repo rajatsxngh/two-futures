@@ -129,8 +129,12 @@ def customer_data(customer_id: str) -> CustomerData:
 
 
 def set_setup(customer_id: str, setup: SetupAnswers, today: date) -> HealthResponse:
-    """Answer the two setup questions (insurance, planning ahead). Re-scores indicators 7 and 8 everywhere."""
+    """Answer the setup questions: insurance and planning ahead (indicators 7 and 8) and, per detected subscription,
+    whether it's still used (plan rule 3 cancels only the ones answered "no"). Futures re-run for the new answers."""
     with state.LOCK:
+        if "subscriptions" not in setup.model_fields_set:  # an older client: keep the subscription answers
+            current = state.get(customer_id).setup or load(customer_id).customer.setup
+            setup = setup.model_copy(update={"subscriptions": current.subscriptions})
         state.get(customer_id).setup = setup
     return health_for(customer_data(customer_id), today)
 

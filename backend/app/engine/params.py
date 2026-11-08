@@ -17,10 +17,9 @@ import numpy as np
 from ..models import Account, AccountGroup, AccountType, Bill
 from .assumptions import FLEXIBLE_CATEGORIES
 from .calendar import bill_due_on
-from .data import INCOME_CATEGORIES, TRANSFER_CATEGORIES, CustomerData
+from .data import DEBT_BILL_CATEGORIES, INCOME_CATEGORIES, TRANSFER_CATEGORIES, CustomerData
+from .subscriptions import Detected, as_bill, detect, matching_bill
 
-# Bills that are really debt payments or account events: modeled from accounts instead.
-DEBT_BILL_CATEGORIES = {"auto_loan", "card_payment", "mortgage", "personal_loan", "cd_maturity"}
 NOT_VARIABLE = DEBT_BILL_CATEGORIES | TRANSFER_CATEGORIES | INCOME_CATEGORIES | {"interest"}
 
 
@@ -48,6 +47,8 @@ class Params:
     categories: list[Category]
     reserve_contrib: float  # existing automatic monthly transfer to savings
     ira_contrib: float
+    subscriptions: list[tuple[Detected, Bill]]  # repeating charges found in the history, with their bill
+    cancelled: set[str]  # bill ids the plan cancels: subscriptions the customer said they don't use
 
     @property
     def card(self) -> Account | None:
@@ -58,7 +59,7 @@ class Params:
         end = (month.replace(day=28) + timedelta(days=4)).replace(day=1)
         total = 0.0
         for b in self.fixed_bills:
-            if plan and b.unused:
+            if plan and b.id in self.cancelled:
                 continue
             r = b.due_rule
             if r.kind == "monthly":
@@ -99,8 +100,19 @@ def build_params(data: CustomerData, today: date) -> Params:
         if t.account_id != checking.id:
             on_card[t.category] = on_card.get(t.category, 0.0) - t.amount
 
-    # subtract what the bills list already covers
+    # subscriptions found in the transactions, each tied to its bill (or made into one when there's none)
     fixed_bills = [b for b in data.bills if b.category not in DEBT_BILL_CATEGORIES]
+    subscriptions: list[tuple[Detected, Bill]] = []
+    for sub in detect(data.transactions, today):
+        bill = matching_bill(sub, fixed_bills)
+        if bill is None:
+            bill = as_bill(sub)
+            fixed_bills.append(bill)
+        subscriptions.append((sub, bill))
+    answers = data.customer.setup.subscriptions  # id -> still using? (the customer's answer; unanswered = yes)
+    cancelled = {bill.id for sub, bill in subscriptions if answers.get(sub.id) is False}
+
+    # subtract what the bills list already covers
     d = start
     while d <= today:
         for b in fixed_bills:
@@ -125,4 +137,5 @@ def build_params(data: CustomerData, today: date) -> Params:
         fixed_bills=fixed_bills, categories=categories,
         reserve_contrib=sum(a.monthly_contribution or 0 for a in by_type(AccountType.savings)),
         ira_contrib=sum(a.monthly_contribution or 0 for a in by_type(AccountType.ira)),
+        subscriptions=subscriptions, cancelled=cancelled,
     )

@@ -366,8 +366,9 @@ def maya_futures() -> M.FuturesResponse:
                      description="When the CD matures in April 2027, half goes to the card and half to Reserve.",
                      start_date=date(2027, 4, 15), amount=2080, frequency="once", from_account_id="cd",
                      automatable=False),
-        M.PlanAction(id="cancel_gym", rule=3, title="Cancel the unused gym membership",
-                     description="No gym visits in 4 months. Saves $40 a month.", start_date=date(2026, 12, 1),
+        M.PlanAction(id="cancel_gym", rule=3, title="Cancel the gym membership",
+                     description="You said you don't use it. Iron Gym has charged $40 every month (12 charges "
+                                 "found). Saves $40 a month.", start_date=date(2026, 12, 1),
                      amount=40, frequency="monthly", automatable=False),
         M.PlanAction(id="snowball_car", rule=4, title="Card paid off: put its payment plus $200 toward the car",
                      description="Once the card is at $0, $317 a month extra goes to the auto loan.",
@@ -409,7 +410,7 @@ def maya_futures() -> M.FuturesResponse:
 
     def sheet(path, facts, opening):
         plan_summary = ("Move $150 from Spend to savings every payday; split the CD between card and savings; "
-                        "cancel the unused gym; then snowball the card payment into the car loan.")
+                        "cancel the gym you said you don't use; then snowball the card payment into the car loan.")
         nxt = "Move $150 from Spend to savings every payday, starting November 13, 2026."
         text = "\n".join(["TODAY (2026):", *today_facts, "", f"YOUR LIFE IN 2031 ({path}):", *facts, "",
                           f"PLAN: {plan_summary}", f"NEXT STEP: {nxt}"])

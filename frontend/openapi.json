@@ -704,12 +704,6 @@
           "account_id": {
             "type": "string",
             "title": "Account Id"
-          },
-          "unused": {
-            "type": "boolean",
-            "title": "Unused",
-            "description": "Subscription with no recent use (plan rule 3 cancels it)",
-            "default": false
           }
         },
         "type": "object",
@@ -1919,6 +1913,15 @@
             "title": "Account Metrics",
             "description": "Each account balance as a Metric, id 'account.<id>.balance'",
             "default": []
+          },
+          "subscriptions": {
+            "items": {
+              "$ref": "#/components/schemas/Subscription"
+            },
+            "type": "array",
+            "title": "Subscriptions",
+            "description": "Repeating charges found in the transactions, with the customer's 'still using?' answer",
+            "default": []
           }
         },
         "type": "object",
@@ -1965,6 +1968,15 @@
               "no"
             ],
             "title": "Planning Ahead"
+          },
+          "subscriptions": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "type": "object",
+            "title": "Subscriptions",
+            "description": "Still using it? per detected subscription id (e.g. 'iron_gym'), as the customer answered. Unanswered counts as still using: the plan never cancels on a guess.",
+            "default": {}
           }
         },
         "type": "object",
@@ -2150,6 +2162,94 @@
           "transfer_id"
         ],
         "title": "StopTransferRequest"
+      },
+      "Subscription": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Stable id from the cleaned-up merchant, e.g. 'iron_gym'"
+          },
+          "merchant": {
+            "type": "string",
+            "title": "Merchant"
+          },
+          "cadence": {
+            "type": "string",
+            "enum": [
+              "weekly",
+              "monthly"
+            ],
+            "title": "Cadence"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count",
+            "description": "Charges found"
+          },
+          "last_charge": {
+            "type": "string",
+            "format": "date",
+            "title": "Last Charge"
+          },
+          "typical_amount": {
+            "type": "number",
+            "title": "Typical Amount",
+            "description": "Median of the charges before the latest"
+          },
+          "latest_amount": {
+            "type": "number",
+            "title": "Latest Amount"
+          },
+          "monthly_amount": {
+            "type": "number",
+            "title": "Monthly Amount",
+            "description": "What it costs a month now"
+          },
+          "price_change": {
+            "type": "boolean",
+            "title": "Price Change",
+            "description": "Latest charge is more than 5% above the earlier typical amount"
+          },
+          "still_using": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Still Using",
+            "description": "The customer's answer; null = not answered (treated as yes)"
+          },
+          "bill_id": {
+            "type": "string",
+            "title": "Bill Id",
+            "description": "The bill it matches (the plan cancels this bill when still_using is false)"
+          },
+          "metric": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "Monthly cost with the detection math, id 'subscription.<id>.monthly'"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "merchant",
+          "cadence",
+          "count",
+          "last_charge",
+          "typical_amount",
+          "latest_amount",
+          "monthly_amount",
+          "price_change",
+          "still_using",
+          "bill_id",
+          "metric"
+        ],
+        "title": "Subscription",
+        "description": "A repeating charge found in the transactions (engine/subscriptions.py). Whether it's still used is the\ncustomer's answer, never inferred."
       },
       "Thresholds": {
         "properties": {

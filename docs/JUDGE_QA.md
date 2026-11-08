@@ -18,7 +18,7 @@ Fourteen likely questions with short answers, updated to match the current build
 
 8. **Why voice?** It makes the future self feel real and helps people who avoid dashboards. Typing, captions and an offline mode always work too.
 
-9. **Where does the $150 come from?** Plan rule 1: the largest $25 step per payday that keeps bad-case checking above $200 for the next year. With $150 her bad-case low is $438; $175 would dip below the floor. It assumes the plan trims flexible spending 20% (about $157 a month) and cancels an unused gym membership. Tap the $150 in the app to see it.
+9. **Where does the $150 come from?** Plan rule 1: the largest $25 step per payday that keeps bad-case checking above $200 for the next year. With $150 her bad-case low is $438; $175 would dip below the floor. It assumes the plan trims flexible spending 20% (about $157 a month) and cancels the gym membership Maya said she doesn't use. Tap the $150 in the app to see it.
 
 10. **Why isn't the same path worse?** Because I don't do scare tactics. Both paths get identical surprises, and if the same path's existing savings cover the 2028 repair, I say so. The difference that's real: a $3,900 card that never goes away and about $4,954 in interest, versus a paid-off card and a 92 score.
 
@@ -29,6 +29,8 @@ Fourteen likely questions with short answers, updated to match the current build
 13. **What did you build, and what did you use?** I built the engine, scoring, plan rules, what-ifs, screens, tool layer, grounding test and offline agent. ElevenLabs provides speech and runs the live agent.
 
 14. **What if someone is in crisis?** She stays kind, stops talking about money, and points to 988 and to people they trust. A launched version would add a hand-off to a person.
+
+15. **How did you find the gym she doesn't use?** I didn't, and a bank can't. The engine finds repeating charges in her transactions (same merchant, 3+ charges about a month apart, amounts within 10%, skipping rent, utilities, insurance, transfers, pay and loan payments) and asks "Still using this?" on the Today screen. She answered no for the gym, so plan rule 3 cancels it; answer yes and the plan and futures re-run without it.
 
 **Bonus, if they push on depth:**
 - *What about a job loss?* The job-loss check: 3 months without pay in 2029 means the same path's savings cover 1.5 months, the card hits its $5,000 limit and about $4,700 of bills go unpaid. On the plan the card is already paid off, so nothing goes unpaid. A year without pay is shown honestly too: savings and the card run out and the unpaid bills are named, not hidden in a fake card balance.

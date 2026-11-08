@@ -3,6 +3,7 @@
 import type { Account, HealthResponse, Indicator, UpcomingBill } from "@/lib/api";
 import { goTo, showIndicators } from "@/lib/actions";
 import { useApp } from "@/lib/store";
+import { RepeatingCharges } from "../RepeatingCharges";
 import { SetupQuestions } from "../SetupQuestions";
 import { BackButton, Card, MetricValue, NumberHook, SectionTitle, StatusIcon, StatusPill, shortDate, usd } from "../ui";
 
@@ -31,6 +32,8 @@ export function TodayScreen() {
       <Accounts />
 
       <BillsStrip bills={profile.bills_next_90} />
+
+      <RepeatingCharges />
 
       <button
         onClick={() => goTo("futures")}
