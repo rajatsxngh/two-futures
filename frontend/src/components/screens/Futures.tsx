@@ -22,6 +22,7 @@ import { useApp } from "@/lib/store";
 import { SavedSession, VoiceSession, type VoiceTools } from "../voice";
 import type { VoiceMode } from "@/lib/store";
 import { CountUp, MetricValue } from "../ui";
+import { JobLossCheck } from "../JobLossCheck";
 
 // The agent's client tools are the same functions the buttons use, so a spoken
 // what-if or "yes" changes exactly the same state as a tap.
@@ -52,6 +53,7 @@ export function FuturesScreen() {
       <VoicePanel />
       <AskBoth />
       <WhatIfResult />
+      <JobLossCheck />
 
       <div className="grid grid-cols-2 gap-2">
         <button

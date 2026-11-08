@@ -35,6 +35,9 @@ export type UpdatePlanResponse = S["UpdatePlanResponse"];
 export type TransferRequest = S["TransferRequest"];
 export type TransferResponse = S["TransferResponse"];
 export type ResetResponse = S["ResetResponse"];
+export type SetupAnswers = S["SetupAnswers"];
+export type ShockRequest = S["ShockRequest"];
+export type ShockResponse = S["ShockResponse"];
 export type PathId = "same_path" | "plan";
 export type CustomerId = "maya" | "household";
 
@@ -77,4 +80,7 @@ export const api = {
   startTransfer: (body: TransferRequest) =>
     call<TransferResponse>("/api/start_transfer", { method: "POST", body: JSON.stringify(body) }),
   reset: (c: CustomerId = "maya") => call<ResetResponse>(`/api/reset${q(c)}`, { method: "POST" }),
+  shock: (body: ShockRequest) => call<ShockResponse>("/api/shock", { method: "POST", body: JSON.stringify(body) }),
+  setup: (customer: CustomerId, setup: SetupAnswers) =>
+    call<HealthResponse>("/api/setup", { method: "POST", body: JSON.stringify({ customer, setup }) }),
 };

@@ -179,6 +179,17 @@ export async function savedReply(text: string, ctx: SavedContext): Promise<Saved
       input = { description: text, preset: "new_job", income_change_yearly: /pay cut/.test(t) && yearly ? -yearly : yearly };
       if (monthly !== undefined) input.spending_change_monthly = monthly;
       if (/austin/.test(t)) input.start_month = `${Number(ctx.futures.as_of.slice(0, 4)) + 1}-01`; // starts next January
+    } else if (/\bbuy (a|an|my first)\b[^.?!]*\b(home|house|condo|place)\b/.test(t)) {
+      const price = nums.find((x) => x >= 50000) ?? 250000;
+      const down = nums.find((x) => x >= 1000 && x < price) ?? Math.round(price * 0.05);
+      const rate = Number(t.match(/(\d+(?:\.\d+)?)\s?%/)?.[1] ?? 6.5);
+      const year = t.match(/\b(20[2-4]\d)\b/)?.[1] ?? "2029";
+      input = {
+        description: text,
+        preset: "buy_home",
+        start_month: `${year}-06`,
+        home: { price, down_payment: down, rate, term_years: 30 },
+      };
     } else if (/buy a /.test(t) && nums[0]) {
       input = { description: text, preset: "big_purchase", one_time_cost: nums[0] };
     } else if (/move|cheaper/.test(t)) {

@@ -47,6 +47,15 @@ export function toUpdatePlanInput(raw: Record<string, unknown>): UpdatePlanInput
   if (oneTime !== undefined) input.one_time_cost = oneTime;
   if (jobLoss !== undefined) input.job_loss_months = Math.round(jobLoss);
   if (startMonth && /^\d{4}-\d{2}$/.test(startMonth)) input.start_month = startMonth;
+  // Buy a home: flat params from the agent (or a nested `home` object).
+  const nested = (raw.home ?? {}) as Record<string, unknown>;
+  const price = num(raw.home_price ?? nested.price);
+  const down = num(raw.home_down_payment ?? nested.down_payment);
+  const rate = num(raw.home_rate ?? nested.rate);
+  if (price !== undefined && down !== undefined && rate !== undefined) {
+    input.home = { price, down_payment: down, rate, term_years: Math.round(num(raw.home_term_years ?? nested.term_years) ?? 30) };
+    input.preset = "buy_home";
+  }
   return input;
 }
 

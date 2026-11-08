@@ -314,6 +314,84 @@
           }
         }
       }
+    },
+    "/api/shock": {
+      "post": {
+        "summary": "Job Loss Shock",
+        "description": "How long each future's cushion would last without pay. Changes nothing.",
+        "operationId": "job_loss_shock_api_shock_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShockRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShockResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/setup": {
+      "post": {
+        "summary": "Answer Setup",
+        "description": "Answer the two setup questions; indicators 7 and 8 (and the futures) re-score. Reset restores them.",
+        "operationId": "answer_setup_api_setup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1766,6 +1844,154 @@
           "planning_ahead"
         ],
         "title": "SetupAnswers"
+      },
+      "SetupRequest": {
+        "properties": {
+          "customer": {
+            "type": "string",
+            "title": "Customer",
+            "default": "maya"
+          },
+          "setup": {
+            "$ref": "#/components/schemas/SetupAnswers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "setup"
+        ],
+        "title": "SetupRequest"
+      },
+      "ShockPath": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "same_path",
+              "plan"
+            ],
+            "title": "Path"
+          },
+          "runway": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "Months of no pay that checking + savings would cover"
+          },
+          "covered_months": {
+            "type": "number",
+            "title": "Covered Months"
+          },
+          "card": {
+            "$ref": "#/components/schemas/Metric",
+            "description": "About how much would go on the card for the months not covered"
+          },
+          "sentence": {
+            "type": "string",
+            "title": "Sentence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path",
+          "runway",
+          "covered_months",
+          "card",
+          "sentence"
+        ],
+        "title": "ShockPath"
+      },
+      "ShockRequest": {
+        "properties": {
+          "customer": {
+            "type": "string",
+            "title": "Customer",
+            "default": "maya"
+          },
+          "job_loss_months": {
+            "type": "integer",
+            "maximum": 12.0,
+            "minimum": 1.0,
+            "title": "Job Loss Months",
+            "default": 3
+          },
+          "start_month": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Month",
+            "description": "YYYY-MM; defaults to two years from now"
+          }
+        },
+        "type": "object",
+        "title": "ShockRequest"
+      },
+      "ShockResponse": {
+        "properties": {
+          "job_loss_months": {
+            "type": "integer",
+            "title": "Job Loss Months"
+          },
+          "start_month": {
+            "type": "string",
+            "title": "Start Month"
+          },
+          "paths": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ShockPath"
+            },
+            "propertyNames": {
+              "enum": [
+                "same_path",
+                "plan"
+              ]
+            },
+            "type": "object",
+            "title": "Paths"
+          },
+          "by_year": {
+            "items": {
+              "$ref": "#/components/schemas/ShockYear"
+            },
+            "type": "array",
+            "title": "By Year"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_loss_months",
+          "start_month",
+          "paths",
+          "by_year"
+        ],
+        "title": "ShockResponse"
+      },
+      "ShockYear": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "same_path": {
+            "type": "number",
+            "title": "Same Path",
+            "description": "Runway in months at the start of that year"
+          },
+          "plan": {
+            "type": "number",
+            "title": "Plan"
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "same_path",
+          "plan"
+        ],
+        "title": "ShockYear"
       },
       "Thresholds": {
         "properties": {

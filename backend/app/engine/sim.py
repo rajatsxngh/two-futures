@@ -59,6 +59,19 @@ def make_draws(p: Params, n_months: int, runs: int = A.RUNS, seed: int = A.SEED 
 
 
 @dataclass
+class HomePlan:
+    """A home purchase on the plan path (what-if): a mortgage replaces rent from month `start`."""
+
+    start: int  # month index of the purchase
+    price: float
+    down: float
+    rate: float  # APR, percent
+    term_years: int
+    payment: float  # monthly principal and interest
+    rent: float  # rent it replaces
+
+
+@dataclass
 class Adjust:
     """Month-by-month changes from what-ifs (plan path only). Arrays have one entry per simulated month."""
 
@@ -67,6 +80,7 @@ class Adjust:
     pool: np.ndarray  # extra automatic saving
     one_time: np.ndarray  # one-time costs (savings first, then the card)
     pause: np.ndarray  # bool: plan transfers paused (e.g. while out of work)
+    home: HomePlan | None = None
 
     @classmethod
     def none(cls, n: int) -> "Adjust":
@@ -87,6 +101,7 @@ class SimResult:
     event_split: dict[str, tuple[float, float]] = field(default_factory=dict)  # title -> (from savings, on card), medians
     transfer: float = 0.0
     income: np.ndarray | None = None  # monthly take-home per month, after what-ifs
+    home: HomePlan | None = None
 
 
 def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_events: list[dict],
@@ -104,6 +119,11 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
     for a in accounts:
         hist[a.id][:, 0] = a.balance
     spending = np.zeros((runs, n))
+    home = adj.home
+    mortgage = np.zeros(runs)
+    if home:
+        hist["home_mortgage"] = np.zeros((runs, n + 1))
+        hist["home_value"] = np.zeros((runs, n + 1))
     ira_extra = np.zeros((runs, n))
     card_interest = np.zeros((runs, n))
     cushion = np.zeros((runs, n + 1))
@@ -156,6 +176,16 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
             bal[l.id] = owed - pay
             bal[chk] -= pay
             spent = spent + pay
+        home_payment = 0.0
+        if home and i >= home.start:
+            if i == home.start:
+                mortgage = np.full(runs, home.price - home.down)
+            owed = mortgage * (1 + home.rate / 100 / 12)
+            pay = np.minimum(home.payment, owed)
+            mortgage = owed - pay
+            bal[chk] -= pay
+            spent = spent + pay
+            home_payment = home.payment
 
         # retirement and the existing savings habit
         g = A.IRA_GROWTH["typical"] / 12
@@ -168,7 +198,7 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
 
         # plan waterfall (rules 1, 4, 5)
         if plan:
-            st = typical_spend(adj.spending[i])
+            st = typical_spend(adj.spending[i] + home_payment)
             cush = liquid() / st
             pool = np.zeros(runs) if adj.pause[i] else base_pool + freed + adj.pool[i]
             bal[chk] -= pool
@@ -248,13 +278,16 @@ def simulate(p: Params, path: PathId, draws: Draws, transfer: float, shared_even
         for a in accounts:
             bal[a.id] = np.where(np.abs(bal[a.id]) < 0.005, 0.0, bal[a.id])
             hist[a.id][:, i + 1] = bal[a.id]
+        if home:
+            hist["home_mortgage"][:, i + 1] = mortgage
+            hist["home_value"][:, i + 1] = home.price if i >= home.start else 0.0
         spending[:, i] = spent
-        st = typical_spend(adj.spending[i])
+        st = typical_spend(adj.spending[i] + home_payment)
         spend_typ[:, i + 1] = st
         cushion[:, i + 1] = liquid() / st
 
     return SimResult(
         path=path, months=months, balances=hist, spending=spending, ira_extra=ira_extra, card_interest=card_interest, cushion=cushion,
-        spend_typical=spend_typ, transfer=transfer, income=p.take_home_monthly + adj.income,
+        spend_typical=spend_typ, transfer=transfer, income=p.take_home_monthly + adj.income, home=home,
         event_split={k: (float(np.median(a)), float(np.median(b))) for k, (a, b) in split_log.items()},
     )

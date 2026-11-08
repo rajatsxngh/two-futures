@@ -48,6 +48,14 @@ const PRESETS: Preset[] = [
     values: { income: 0, spending: 0, savings: 100 },
   },
   {
+    id: "buy_home",
+    label: "Buy a home",
+    description: "What if I buy a $250,000 home in June 2029 with 5% down at 6.5%?",
+    values: ZERO,
+    extra: { start_month: "2029-06", home: { price: 250000, down_payment: 12500, rate: 6.5, term_years: 30 } },
+    note: "$250,000 home, $12,500 down, 6.5% for 30 years, June 2029. The payment replaces rent.",
+  },
+  {
     id: "job_loss",
     label: "Job loss",
     description: "What if I lose my job for 3 months?",

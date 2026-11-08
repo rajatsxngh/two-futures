@@ -4,12 +4,27 @@ from __future__ import annotations
 
 from datetime import date, timedelta
 
-from ..models import Metric, TransferRequest, TransferResponse, UpdatePlanResponse, WhatIfRequest
+from ..models import (
+    HealthResponse,
+    Metric,
+    SetupAnswers,
+    ShockPath,
+    ShockRequest,
+    ShockResponse,
+    ShockYear,
+    TransferRequest,
+    TransferResponse,
+    UpdatePlanResponse,
+    WhatIfRequest,
+)
 from . import state
-from .data import load
+from .data import CustomerData, load
+import numpy as np
+
 from .fmt import metric, round_half_up, usd
 from .futures import futures_for
-from .whatif import TAKE_HOME_SHARE, WhatIfError, monthly_net, sentence
+from .health import health_for
+from .whatif import TAKE_HOME_SHARE, WhatIfError, monthly_net, sentence, start_index
 
 CHANGE_FIELDS = ("income_change_yearly", "spending_change_monthly", "savings_change_monthly", "one_time_cost",
                  "job_loss_months", "home")
@@ -28,12 +43,12 @@ def apply_whatif(customer_id: str, req: WhatIfRequest, today: date) -> UpdatePla
         raise WhatIfError("A what-if needs at least one change (income, spending, savings, one-time cost or job loss).")
     with state.LOCK:
         st = state.get(customer_id)
-        before = futures_for(customer_id, today, st.whatifs)
-        trial = futures_for(customer_id, today, st.whatifs + [(req, "")])
+        before = futures_for(customer_id, today, st.whatifs, st.setup)
+        trial = futures_for(customer_id, today, st.whatifs + [(req, "")], st.setup)
         b, a = before.response.paths["plan"], trial.response.paths["plan"]
-        line = sentence(req, b, a, trial.sims["plan"].months, trial.sims["plan"])
+        line = sentence(req, b, a, trial.sims["plan"].months, trial.sims["plan"], trial.params)
         st.whatifs.append((req, line))
-        after = futures_for(customer_id, today, st.whatifs)
+        after = futures_for(customer_id, today, st.whatifs, st.setup)
         applied = [w for w, _ in st.whatifs]
 
     year = after.response.target_year
@@ -75,7 +90,71 @@ def apply_whatif(customer_id: str, req: WhatIfRequest, today: date) -> UpdatePla
 
 
 def current_futures(customer_id: str, today: date):
-    return futures_for(customer_id, today, state.get(customer_id).whatifs)
+    st = state.get(customer_id)
+    return futures_for(customer_id, today, st.whatifs, st.setup)
+
+
+def customer_data(customer_id: str) -> CustomerData:
+    """The customer's data with any changed setup answers applied."""
+    data = load(customer_id)
+    setup = state.get(customer_id).setup
+    if setup is None:
+        return data
+    return data.model_copy(update={"customer": data.customer.model_copy(update={"setup": setup})})
+
+
+def set_setup(customer_id: str, setup: SetupAnswers, today: date) -> HealthResponse:
+    """Answer the two setup questions (insurance, planning ahead). Re-scores indicators 7 and 8 everywhere."""
+    with state.LOCK:
+        state.get(customer_id).setup = setup
+    return health_for(customer_data(customer_id), today)
+
+
+def job_loss_shock(req: ShockRequest, today: date) -> ShockResponse:
+    """How long each future's cushion would last with no pay. Changes nothing.
+
+    Months of no pay that checking + savings cover is exactly the cushion in months
+    (liquid money / monthly spending), read from each path at the start month.
+    """
+    bundle = current_futures(req.customer, today)
+    months = bundle.sims["plan"].months
+    start = req.start_month or f"{today.year + 2}-{today.month:02d}"
+    i = start_index(months, WhatIfRequest(description="job loss", start_month=start))
+    k = req.job_loss_months
+    when = months[i]
+    paths = {}
+    for path, sim in bundle.sims.items():
+        runway = float(np.median(sim.cushion[:, i]))
+        spend = float(np.median(sim.spend_typical[:, i]))
+        covered = min(k, runway)
+        short = max(0.0, k - runway) * spend
+        plural = "s" if k != 1 else ""
+        cover_txt = (f"would cover all {k} month{plural}" if runway >= k else
+                     f"would cover about {runway:.1f} of the {k} month{plural}")
+        card_txt = "" if short < 50 else f", and about {usd(round_half_up(short / 100) * 100)} would go on the card"
+        paths[path] = ShockPath(
+            path=path, covered_months=round(covered, 2),
+            runway=metric(f"shock.{path}.runway", "Months your savings cover", round(runway, 2), "months",
+                          f"{runway:.1f} months",
+                          f"(Checking + savings) ÷ monthly spending at the start of {when:%B %Y}",
+                          [("Monthly spending then", round(spend, 2), "usd_per_month"),
+                           ("Months without pay", k, "count")],
+                          ["Spending carries on as usual while out of work.", "Typical (middle) simulated run."]),
+            card=metric(f"shock.{path}.card", "On the card", round(short, 2), "usd", usd(short),
+                        "Months not covered × monthly spending",
+                        [("Months not covered", round(max(0.0, k - runway), 2), "months"),
+                         ("Monthly spending", round(spend, 2), "usd_per_month")]),
+            sentence=f"Losing your income for {k} month{plural} in {when:%B %Y}: savings {cover_txt}{card_txt}.",
+        )
+    years = []
+    for y in range(today.year + 1, bundle.response.target_year + 1):
+        j = next((n for n, d in enumerate(months) if d.year == y and d.month == 1), None)
+        if j is None:
+            continue
+        years.append(ShockYear(year=y,
+                               same_path=round(float(np.median(bundle.sims["same_path"].cushion[:, j])), 2),
+                               plan=round(float(np.median(bundle.sims["plan"].cushion[:, j])), 2)))
+    return ShockResponse(job_loss_months=k, start_month=f"{when:%Y-%m}", paths=paths, by_year=years)
 
 
 class TransferError(ValueError):

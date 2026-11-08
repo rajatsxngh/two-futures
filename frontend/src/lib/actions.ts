@@ -78,6 +78,13 @@ export function setVoiceMode(mode: VoiceMode, auto = false) {
   setState({ voiceMode: mode, ...(auto ? {} : { voiceModeChosen: true }) });
 }
 
+/** Answer the two setup questions; the score and futures re-score, so reload everything. */
+export async function answerSetup(setup: import("./api").SetupAnswers) {
+  const customer = getState().customer;
+  await api.setup(customer, setup);
+  await loadCustomer(customer);
+}
+
 /** Open the "show the math" sheet for one number. */
 export function openMath(metric: Metric) {
   setState({ mathMetric: metric });

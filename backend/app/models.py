@@ -425,3 +425,43 @@ class TransferResponse(BaseModel):
 class ResetResponse(BaseModel):
     ok: bool
     customer: str
+
+
+# ---------------------------------------------------------------------------
+# POST /api/shock (job-loss check across both futures, changes nothing)
+# ---------------------------------------------------------------------------
+
+class ShockRequest(BaseModel):
+    customer: str = "maya"
+    job_loss_months: int = Field(default=3, ge=1, le=12)
+    start_month: str | None = Field(default=None, description="YYYY-MM; defaults to two years from now")
+
+
+class ShockPath(BaseModel):
+    path: PathId
+    runway: Metric = Field(description="Months of no pay that checking + savings would cover")
+    covered_months: float
+    card: Metric = Field(description="About how much would go on the card for the months not covered")
+    sentence: str
+
+
+class ShockYear(BaseModel):
+    year: int
+    same_path: float = Field(description="Runway in months at the start of that year")
+    plan: float
+
+
+class ShockResponse(BaseModel):
+    job_loss_months: int
+    start_month: str
+    paths: dict[PathId, ShockPath]
+    by_year: list[ShockYear]
+
+
+# ---------------------------------------------------------------------------
+# POST /api/setup (the two setup questions)
+# ---------------------------------------------------------------------------
+
+class SetupRequest(BaseModel):
+    customer: str = "maya"
+    setup: SetupAnswers

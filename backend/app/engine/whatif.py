@@ -20,7 +20,7 @@ import numpy as np
 from ..models import PathResult, WhatIfRequest
 from .fmt import round_half_up, usd
 from .params import Params
-from .sim import Adjust, SimResult
+from .sim import Adjust, HomePlan, SimResult
 
 FEDERAL_TAX = 0.22
 PAYROLL_TAX = 0.0765
@@ -44,6 +44,12 @@ def start_index(months: list[date], wi: WhatIfRequest) -> int:
     raise WhatIfError(f"start_month {wi.start_month} is after {months[-1]:%B %Y}")
 
 
+def mortgage_payment(principal: float, rate: float, years: int) -> float:
+    """Monthly principal and interest: L x r / (1 - (1 + r)^-n)."""
+    r, n = rate / 100 / 12, years * 12
+    return principal / n if r == 0 else principal * r / (1 - (1 + r) ** -n)
+
+
 def take_home_change(wi: WhatIfRequest) -> float:
     return (wi.income_change_yearly or 0) * TAKE_HOME_SHARE / 12
 
@@ -57,9 +63,16 @@ def to_adjust(p: Params, months: list[date], whatifs: list[WhatIfRequest]) -> Ad
     n = len(months)
     adj = Adjust.none(n)
     for wi in whatifs:
-        if wi.home:
-            raise WhatIfError("The buy-a-home what-if isn't built yet (milestone M11).")
         s = start_index(months, wi)
+        if wi.home:
+            h = wi.home
+            if h.price <= 0 or not 0 <= h.down_payment < h.price or h.rate < 0 or h.term_years <= 0:
+                raise WhatIfError("A home needs a price, a down payment below the price, a rate and a term.")
+            rent = sum(b.amount for b in p.fixed_bills if b.category == "housing" and b.due_rule.kind == "monthly")
+            adj.spending[s:] -= rent
+            adj.one_time[s] += h.down_payment
+            adj.home = HomePlan(start=s, price=h.price, down=h.down_payment, rate=h.rate, term_years=h.term_years,
+                                payment=mortgage_payment(h.price - h.down_payment, h.rate, h.term_years), rent=rent)
         if wi.income_change_yearly:
             adj.income[s:] += take_home_change(wi)
         if wi.spending_change_monthly:
@@ -87,7 +100,7 @@ def _about(x: float) -> str:
 
 
 def sentence(wi: WhatIfRequest, before: PathResult, after: PathResult, months: list[date],
-             after_sim: SimResult) -> str:
+             after_sim: SimResult, p: Params | None = None) -> str:
     """One ready-made sentence the agent can say. Every number in it comes from the engine."""
     year = after.snapshots[-1].year
     c0, c1 = before.snapshots[-1].cushion_months, after.snapshots[-1].cushion_months
@@ -100,6 +113,18 @@ def sentence(wi: WhatIfRequest, before: PathResult, after: PathResult, months: l
         tail = f"By {year}, it barely changes your numbers."
     net = monthly_net(wi)
 
+    if wi.home and after_sim.home:
+        h = after_sim.home
+        when = months[h.start]
+        out = (f"Buying a {usd(h.price)} home in {when:%B %Y} with {usd(h.down)} down means a {usd(h.payment)} "
+               f"mortgage payment instead of {usd(h.rent)} rent. {tail}")
+        if p is not None:
+            liquid = after_sim.balances[p.checking.id][:, h.start] + (
+                after_sim.balances[p.savings.id][:, h.start] if p.savings else 0)
+            short = float(np.median(np.maximum(h.down - liquid, 0)))
+            if short >= 50:
+                out += f" You'd be about {_about(short)} short for the down payment then, so that part would go on the card."
+        return out
     if wi.job_loss_months:
         s = start_index(months, wi)
         e = min(len(months), s + wi.job_loss_months)

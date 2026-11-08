@@ -96,9 +96,9 @@ def test_what_ifs_stack_and_reset_clears_them():
 def test_bad_what_ifs_are_422():
     assert client.post("/api/update_plan", json={"description": "nothing"}).status_code == 422
     assert client.post("/api/update_plan", json={**AUSTIN, "start_month": "soon"}).status_code == 422
-    home = {"description": "buy a home", "preset": "buy_home",
-            "home": {"price": 300000, "down_payment": 30000, "rate": 6.5}}
-    assert client.post("/api/update_plan", json=home).status_code == 422  # M11
+    bad_home = {"description": "buy a home", "preset": "buy_home",
+                "home": {"price": 300000, "down_payment": 400000, "rate": 6.5}}
+    assert client.post("/api/update_plan", json=bad_home).status_code == 422
 
 
 def test_what_if_is_fast():
@@ -138,3 +138,49 @@ def test_reset_clears_transfers():
     client.post("/api/reset")
     b = client.post("/api/start_transfer", json=TRANSFER).json()
     assert re.fullmatch(r"tr_maya_1", a["id"]) and b["id"] == "tr_maya_1"
+
+
+# --- M11: buy a home, job-loss check, setup questions ---------------------------
+
+HOME = {"description": "Buy a $250,000 home", "preset": "buy_home", "start_month": "2029-06",
+        "home": {"price": 250000, "down_payment": 12500, "rate": 6.5}}
+
+
+def test_buy_a_home_replaces_rent_with_a_mortgage():
+    body = client.post("/api/update_plan", json=HOME).json()
+    # 237,500 at 6.5% over 30 years
+    assert "$1,501 mortgage payment instead of $1,450 rent" in body["sentence"]
+    snap = body["result"]["snapshots"][-1]
+    assert 0 < snap["balances"]["home_mortgage"] < 237500
+    assert snap["balances"]["home_value"] == 250000
+    assert any(e["title"] == "Bought a home" for e in body["result"]["events"])
+    assert "Bought a home" in body["fact_sheet"]["text"]
+
+
+def test_home_too_soon_warns_about_the_down_payment():
+    early = {**HOME, "start_month": "2027-03", "home": {**HOME["home"], "down_payment": 25000}}
+    assert "short for the down payment" in client.post("/api/update_plan", json=early).json()["sentence"]
+
+
+def test_job_loss_shock_compares_both_futures_and_changes_nothing():
+    before = client.get("/api/futures").json()
+    body = client.post("/api/shock", json={"job_loss_months": 3, "start_month": "2029-01"}).json()
+    same, plan = body["paths"]["same_path"], body["paths"]["plan"]
+    assert plan["runway"]["value"] > same["runway"]["value"]
+    assert plan["card"]["value"] < same["card"]["value"]
+    assert same["runway"]["math"]["formula"]
+    assert same["sentence"].startswith("Losing your income for 3 months in January 2029")
+    assert [y["year"] for y in body["by_year"]] == [2027, 2028, 2029, 2030, 2031]
+    assert client.get("/api/futures").json() == before
+
+
+def test_setup_answers_rescore_and_reset_restores():
+    setup = {"insurance": {"health": True, "auto": True, "renters_or_home": True, "disability": True},
+             "planning_ahead": "yes"}
+    h = client.post("/api/setup", json={"setup": setup}).json()
+    scores = {i["id"]: i["score"] for i in h["indicators"]}
+    assert scores["insurance"] == 100 and scores["planning_ahead"] == 100
+    assert h["score"]["value"] > 55
+    assert client.get("/api/profile").json()["customer"]["setup"]["planning_ahead"] == "yes"
+    client.post("/api/reset")
+    assert client.get("/api/health").json()["score"]["value"] == 55

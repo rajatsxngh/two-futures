@@ -149,6 +149,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Job Loss Shock
+         * @description How long each future's cushion would last without pay. Changes nothing.
+         */
+        post: operations["job_loss_shock_api_shock_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Answer Setup
+         * @description Answer the two setup questions; indicators 7 and 8 (and the futures) re-score. Reset restores them.
+         */
+        post: operations["answer_setup_api_setup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -753,6 +793,74 @@ export interface components {
              */
             planning_ahead: "yes" | "sometimes" | "no";
         };
+        /** SetupRequest */
+        SetupRequest: {
+            /**
+             * Customer
+             * @default maya
+             */
+            customer: string;
+            setup: components["schemas"]["SetupAnswers"];
+        };
+        /** ShockPath */
+        ShockPath: {
+            /**
+             * Path
+             * @enum {string}
+             */
+            path: "same_path" | "plan";
+            /** @description Months of no pay that checking + savings would cover */
+            runway: components["schemas"]["Metric"];
+            /** Covered Months */
+            covered_months: number;
+            /** @description About how much would go on the card for the months not covered */
+            card: components["schemas"]["Metric"];
+            /** Sentence */
+            sentence: string;
+        };
+        /** ShockRequest */
+        ShockRequest: {
+            /**
+             * Customer
+             * @default maya
+             */
+            customer: string;
+            /**
+             * Job Loss Months
+             * @default 3
+             */
+            job_loss_months: number;
+            /**
+             * Start Month
+             * @description YYYY-MM; defaults to two years from now
+             */
+            start_month?: string | null;
+        };
+        /** ShockResponse */
+        ShockResponse: {
+            /** Job Loss Months */
+            job_loss_months: number;
+            /** Start Month */
+            start_month: string;
+            /** Paths */
+            paths: {
+                [key: string]: components["schemas"]["ShockPath"];
+            };
+            /** By Year */
+            by_year: components["schemas"]["ShockYear"][];
+        };
+        /** ShockYear */
+        ShockYear: {
+            /** Year */
+            year: number;
+            /**
+             * Same Path
+             * @description Runway in months at the start of that year
+             */
+            same_path: number;
+            /** Plan */
+            plan: number;
+        };
         /** Thresholds */
         Thresholds: {
             /**
@@ -1204,6 +1312,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResetResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    job_loss_shock_api_shock_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShockRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShockResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    answer_setup_api_setup_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetupRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HealthResponse"];
                 };
             };
             /** @description Validation Error */

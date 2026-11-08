@@ -10,13 +10,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from threading import Lock
 
-from ..models import TransferResponse, WhatIfRequest
+from ..models import SetupAnswers, TransferResponse, WhatIfRequest
 
 
 @dataclass
 class CustomerState:
     whatifs: list[tuple[WhatIfRequest, str]] = field(default_factory=list)  # (request, sentence)
     transfers: list[TransferResponse] = field(default_factory=list)
+    setup: SetupAnswers | None = None  # answers to the two setup questions, if changed
 
 
 _STATE: dict[str, CustomerState] = {}

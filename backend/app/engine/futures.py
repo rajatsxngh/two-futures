@@ -20,6 +20,7 @@ from ..models import (
     PathResult,
     Plan,
     PlanAction,
+    SetupAnswers,
     WhatIfRequest,
     YearSnapshot,
 )
@@ -89,6 +90,8 @@ def state_for_year(p: Params, sim: SimResult, year: int, today: date) -> Financi
     plan = sim.path == "plan"
     debts = [(l.name, l.min_payment or 0) for l in p.loans if bal[l.id] > 0.005]
     debts += [(c.name, c.min_payment or 0) for c in p.cards if bal[c.id] > 0.005 and c.min_payment]
+    if sim.home and bal.get("home_mortgage", 0) > 0.005:
+        debts.append(("New mortgage", round(sim.home.payment, 2)))
     auto = [f"IRA ${p.ira_contrib:,.0f}/month"] if p.ira_contrib else []
     if plan and sim.transfer:
         auto.insert(0, f"Payday transfer ${sim.transfer:,.0f}")
@@ -129,9 +132,12 @@ def _snapshots(p: Params, sim: SimResult, health_today: HealthResponse, today: d
         scored[year] = h
         assets = sum(sim.balances[a.id][:, j] for a in p.data.accounts if a.group.value != "debt")
         debts = sum(sim.balances[a.id][:, j] for a in p.data.accounts if a.group.value == "debt")
+        if sim.home:  # the home counts at its purchase price (today's dollars), the mortgage as debt
+            assets = assets + sim.balances["home_value"][:, j]
+            debts = debts + sim.balances["home_mortgage"][:, j]
         snaps.append(YearSnapshot(
             year=year, age=p.data.customer.age + (year - today.year),
-            balances={a.id: round(med(sim.balances[a.id][:, j]), 2) for a in p.data.accounts},
+            balances={k: round(med(v[:, j]), 2) for k, v in sim.balances.items()},
             cushion_months=round(state_cushion, 2),
             card_debt=round(sum(med(sim.balances[c.id][:, j]) for c in p.cards), 2),
             ira_balance=round(sum(med(sim.balances[a.id][:, j]) for a in p.iras), 2),
@@ -190,6 +196,12 @@ def _events(p: Params, sim: SimResult, shared: list[dict], car_paid: date | None
             ev.append(LifeEvent(
                 date=cd.maturity_date, title=f"{cd.name} matures", amount=round(value, 2), shared=False,
                 description="Half goes to the card, half to savings." if split else f"{usd(value)} moves to savings."))
+    if sim.home:
+        h = sim.home
+        ev.append(LifeEvent(
+            date=sim.months[h.start], title="Bought a home", amount=h.price, shared=False,
+            description=(f"A {usd(h.price)} home with {usd(h.down)} down. The {usd(h.payment)} mortgage payment "
+                         f"replaces {usd(h.rent)} rent.")))
     if card_paid:
         ev.append(LifeEvent(date=card_paid, title="Card paid off", shared=False,
                             description="The card balance hits $0, and its payment rolls into the next debt."))
@@ -299,7 +311,7 @@ def _fact_sheet(path: PathId, p: Params, health_today: HealthResponse, snap: Yea
             paid = next((v for k, v in how.items() if k.startswith(e.title)), None)
             facts.append(f"In {mon(e.date)}: {e.title.lower()}, {usd(e.amount or 0)}. "
                          f"{paid.description if paid else ''}".strip())
-        elif e.title in ("Card paid off", "Car paid off") or e.title.startswith("Cushion reaches"):
+        elif e.title in ("Card paid off", "Car paid off", "Bought a home") or e.title.startswith("Cushion reaches"):
             facts.append(f"{e.title} in {mon(e.date)}. {e.description}")
     facts.append(f"In {y}: cushion about {fmt_months(snap.cushion_months)}, card debt {usd(snap.card_debt)}, "
                  f"IRA about {usd(snap.ira_balance)}, net worth about {usd(snap.net_worth)}.")
@@ -421,12 +433,17 @@ def build_futures(data: CustomerData, today: date,
 
 
 @lru_cache(maxsize=256)
-def _cached(customer_id: str, today: date, key: str) -> FuturesBundle:
+def _cached(customer_id: str, today: date, key: str, setup_key: str) -> FuturesBundle:
     applied = [(WhatIfRequest.model_validate(w), line) for w, line in json.loads(key)]
-    return build_futures(load(customer_id), today, applied)
+    data = load(customer_id)
+    if setup_key:
+        data = data.model_copy(update={"customer": data.customer.model_copy(
+            update={"setup": SetupAnswers.model_validate_json(setup_key)})})
+    return build_futures(data, today, applied)
 
 
 def futures_for(customer_id: str, today: date,
-                applied: list[tuple[WhatIfRequest, str]] | None = None) -> FuturesBundle:
+                applied: list[tuple[WhatIfRequest, str]] | None = None,
+                setup: SetupAnswers | None = None) -> FuturesBundle:
     key = json.dumps([[w.model_dump(mode="json"), line] for w, line in (applied or [])], sort_keys=True)
-    return _cached(customer_id, today, key)
+    return _cached(customer_id, today, key, setup.model_dump_json() if setup else "")

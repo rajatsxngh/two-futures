@@ -163,7 +163,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M11: P1 depth: job loss, buy a home, setup questions (F12, F13, F14)
+## M11: P1 depth: job loss, buy a home, setup questions (F12, F13, F14) ✅ done
 **Depends on:** M5 (engine), M7 (drawer), M8 (agent), M10 (each new path also needs saved answers and grounding tests)
 **Goal:** more what-if depth, and mortgage coverage inside Maya's own story.
 
@@ -173,6 +173,8 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 - Extend the agent prompt and test list for these cases.
 
 **Done when:** both what-ifs work by voice and by tapping, stay grounded, and keep the 3-minute demo under 3:00.
+
+> **As built:** the job-loss check is `POST /api/shock` (changes nothing): months covered = each path's cushion at that time; Maya, 3 months in Jan 2029: same path 1.5 months (~$5,800 on the card) vs plan 2.7 (~$1,000). Buy a home is a plan-path what-if (P&I payment replaces rent; down payment from savings, then card; home value and mortgage in net worth; the payment counts in debt load). Setup questions live under the score on Today (`POST /api/setup`); reset restores them. Not yet timed inside the 3-minute demo.
 
 ---
 

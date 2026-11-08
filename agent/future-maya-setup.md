@@ -61,7 +61,7 @@ Add the three tools from `tools.json`. For each one, set the **Name** exactly (c
 
 | Name | Wait for response | Parameters (type, required = *) |
 |---|---|---|
-| `update_plan` | **On**, timeout 10 s | `description`* string, `preset` string (new_job, move, big_purchase, save_more, job_loss, custom), `income_change_yearly` number, `spending_change_monthly` number, `savings_change_monthly` number, `one_time_cost` number, `job_loss_months` integer, `start_month` string (YYYY-MM) |
+| `update_plan` | **On**, timeout 10 s | `description`* string, `preset` string (new_job, move, big_purchase, save_more, job_loss, buy_home, custom), `income_change_yearly` number, `spending_change_monthly` number, `savings_change_monthly` number, `one_time_cost` number, `job_loss_months` integer, `start_month` string (YYYY-MM), `home_price` number, `home_down_payment` number, `home_rate` number, `home_term_years` integer |
 | `start_transfer` | **On**, timeout 10 s | `amount`* number, `from_account_id`* string, `to_account_id`* string, `frequency`* string (payday, monthly, once), `confirmed`* boolean |
 | `highlight_metric` | **Off** | `metric_id`* string |
 

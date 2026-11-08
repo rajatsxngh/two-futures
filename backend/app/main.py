@@ -9,7 +9,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import config
 from .engine import actions
-from .engine import data as customer_data
 from .engine.forecast import forecast_for
 from .engine.health import health_for
 from .engine.profile import profile_for
@@ -21,6 +20,9 @@ from .models import (
     HealthResponse,
     ProfileResponse,
     ResetResponse,
+    SetupRequest,
+    ShockRequest,
+    ShockResponse,
     TransferRequest,
     TransferResponse,
     UpdatePlanResponse,
@@ -59,7 +61,7 @@ def get_profile(customer: str = CustomerParam):
     check_customer(customer)
     if config.USE_FIXTURES:
         return load(customer, "profile")
-    data = customer_data.load(customer)
+    data = actions.customer_data(customer)
     return profile_for(data, health_for(data, config.DEMO_TODAY), config.DEMO_TODAY)
 
 
@@ -68,7 +70,7 @@ def get_health(customer: str = CustomerParam):
     check_customer(customer)
     if config.USE_FIXTURES:
         return load(customer, "health")
-    return health_for(customer_data.load(customer), config.DEMO_TODAY)
+    return health_for(actions.customer_data(customer), config.DEMO_TODAY)
 
 
 @app.get("/api/forecast", response_model=ForecastResponse)
@@ -118,3 +120,20 @@ def reset(customer: str = CustomerParam):
     """Clear what-ifs and scheduled transfers: back to the starting demo state."""
     actions.reset(check_customer(customer))
     return ResetResponse(ok=True, customer=customer)
+
+
+@app.post("/api/shock", response_model=ShockResponse)
+def job_loss_shock(req: ShockRequest):
+    """How long each future's cushion would last without pay. Changes nothing."""
+    check_customer(req.customer)
+    try:
+        return actions.job_loss_shock(req, config.DEMO_TODAY)
+    except WhatIfError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
+
+
+@app.post("/api/setup", response_model=HealthResponse)
+def answer_setup(req: SetupRequest):
+    """Answer the two setup questions; indicators 7 and 8 (and the futures) re-score. Reset restores them."""
+    check_customer(req.customer)
+    return actions.set_setup(req.customer, req.setup, config.DEMO_TODAY)

@@ -3,6 +3,7 @@
 import type { Account, HealthResponse, Indicator, UpcomingBill } from "@/lib/api";
 import { goTo, showIndicators } from "@/lib/actions";
 import { useApp } from "@/lib/store";
+import { SetupQuestions } from "../SetupQuestions";
 import { BackButton, Card, MetricValue, NumberHook, SectionTitle, StatusIcon, StatusPill, shortDate, usd } from "../ui";
 
 const BAND_LABEL = { vulnerable: "Vulnerable", coping: "Coping", healthy: "Healthy" } as const;
@@ -24,6 +25,8 @@ export function TodayScreen() {
       </div>
 
       <ScoreCard health={health} onOpen={() => showIndicators(true)} />
+
+      <SetupQuestions />
 
       <Accounts />
 

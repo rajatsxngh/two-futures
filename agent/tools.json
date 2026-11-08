@@ -4,12 +4,14 @@
     {
       "type": "client",
       "name": "update_plan",
-      "description": "Plan path only. Re-runs the plan-path forecast with a change the user describes (new job, raise or pay cut, move, big purchase, saving more, spending more, job loss) and returns the new 2031 numbers plus one ready-made sentence to say. Only fill numbers the user actually said. Never call on the same path.",
+      "description": "Plan path only. Re-runs the plan-path forecast with a change the user describes (new job, raise or pay cut, move, big purchase, saving more, spending more, job loss, buying a home) and returns the new 2031 numbers plus one ready-made sentence to say. Only fill numbers the user actually said. Never call on the same path.",
       "expects_response": true,
       "response_timeout_secs": 10,
       "parameters": {
         "type": "object",
-        "required": ["description"],
+        "required": [
+          "description"
+        ],
         "properties": {
           "description": {
             "type": "string",
@@ -17,7 +19,15 @@
           },
           "preset": {
             "type": "string",
-            "enum": ["new_job", "move", "big_purchase", "save_more", "job_loss", "custom"],
+            "enum": [
+              "new_job",
+              "move",
+              "big_purchase",
+              "save_more",
+              "job_loss",
+              "buy_home",
+              "custom"
+            ],
             "description": "Closest kind of change. Use custom if none fits."
           },
           "income_change_yearly": {
@@ -43,6 +53,22 @@
           "start_month": {
             "type": "string",
             "description": "YYYY-MM when the change starts, only if the user said when. Leave empty otherwise."
+          },
+          "home_price": {
+            "type": "number",
+            "description": "Buy a home: the price as said, e.g. 250000."
+          },
+          "home_down_payment": {
+            "type": "number",
+            "description": "Buy a home: the down payment as said, e.g. 12500. If they gave a percent, leave it out and say you need the dollar amount."
+          },
+          "home_rate": {
+            "type": "number",
+            "description": "Buy a home: mortgage rate in percent as said, e.g. 6.5."
+          },
+          "home_term_years": {
+            "type": "integer",
+            "description": "Buy a home: loan length in years. Leave out unless said (default 30)."
           }
         }
       }
@@ -55,7 +81,13 @@
       "response_timeout_secs": 10,
       "parameters": {
         "type": "object",
-        "required": ["amount", "from_account_id", "to_account_id", "frequency", "confirmed"],
+        "required": [
+          "amount",
+          "from_account_id",
+          "to_account_id",
+          "frequency",
+          "confirmed"
+        ],
         "properties": {
           "amount": {
             "type": "number",
@@ -71,7 +103,11 @@
           },
           "frequency": {
             "type": "string",
-            "enum": ["payday", "monthly", "once"],
+            "enum": [
+              "payday",
+              "monthly",
+              "once"
+            ],
             "description": "How often. Use 'payday' unless the user clearly asked otherwise."
           },
           "confirmed": {
@@ -88,7 +124,9 @@
       "expects_response": false,
       "parameters": {
         "type": "object",
-        "required": ["metric_id"],
+        "required": [
+          "metric_id"
+        ],
         "properties": {
           "metric_id": {
             "type": "string",

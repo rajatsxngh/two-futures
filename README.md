@@ -32,6 +32,8 @@ The web app runs at http://localhost:3000 and the API at http://localhost:8000 (
 
 Demo tools: http://localhost:3000/checklist (pre-demo checks), http://localhost:3000/grounding ("N of 10 grounded" test), and the voice panel's **Live voice / Text / Saved answers** switch. Saved answers run fully offline and use the engine's numbers.
 
+If the API ever answers with old code or `npm run dev` logs `error while attempting to bind on address ('127.0.0.1', 8000)`, a stale API process is holding port 8000: find it with `netstat -ano | findstr :8000` and end it.
+
 ## Everyday commands
 
 | Command | What it does |
