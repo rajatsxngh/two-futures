@@ -9,7 +9,7 @@
  * - none of them needs React; they write to the shared store in `store.ts`.
  */
 import { api, type CustomerId, type Metric, type PathId, type TransferRequest, type TransferResponse, type UpdatePlanResponse, type WhatIfRequest } from "./api";
-import { getState, initialState, setState, type Screen } from "./store";
+import { getState, initialState, setState, type Screen, type VoiceMode } from "./store";
 import type { ToolEvent, VoiceStatus } from "@/components/voice/types";
 
 // ---------------------------------------------------------------------------
@@ -70,6 +70,12 @@ function tapEvent(name: "update_plan" | "start_transfer", params: Record<string,
   recordToolEvent({ id, name, path, phase: "called", params, at: t0, source: "tap" });
   return (e: Pick<ToolEvent, "phase"> & Partial<ToolEvent>) =>
     recordToolEvent({ id, name, path, params, at: Date.now(), ms: Date.now() - t0, source: "tap", ...e });
+}
+
+/** Pick how the future self talks. `auto` is the app's own choice (e.g. no ElevenLabs key -> saved answers). */
+export function setVoiceMode(mode: VoiceMode, auto = false) {
+  if (auto && getState().voiceModeChosen) return;
+  setState({ voiceMode: mode, ...(auto ? {} : { voiceModeChosen: true }) });
 }
 
 /** Open the "show the math" sheet for one number. */
@@ -161,7 +167,8 @@ export async function resetDemo() {
   } catch {
     // Fixture mode can't fail here; keep going so the UI still resets.
   }
-  setState({ ...initialState, customer });
+  const { voiceMode, voiceModeChosen } = getState();
+  setState({ ...initialState, customer, voiceMode, voiceModeChosen });
   await loadCustomer(customer);
 }
 

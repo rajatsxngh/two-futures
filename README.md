@@ -30,6 +30,8 @@ npm run dev
 
 The web app runs at http://localhost:3000 and the API at http://localhost:8000 (docs at `/docs`). `npm run dev` doesn't auto-reload the API (on Windows uvicorn's reloader takes the whole console down); for back-end work run `npm run dev:api:watch` and `npm run dev:web` in two terminals. The browser only calls Next, which forwards `/api/*` to FastAPI. Open http://localhost:3000/dev to see every endpoint's response.
 
+Demo tools: http://localhost:3000/checklist (pre-demo checks), http://localhost:3000/grounding ("N of 10 grounded" test), and the voice panel's **Live voice / Text / Saved answers** switch. Saved answers run fully offline and use the engine's numbers.
+
 ## Everyday commands
 
 | Command | What it does |

@@ -107,8 +107,8 @@ Run each on **/voice-lab** with the activity log open. Do it once in a quiet roo
 | # | Path | Say this | Expected behavior | Checks |
 |---|---|---|---|---|
 | 1 | both | (start the session, say nothing) | Opens with "Hey... it's me. Well, it's you, five years from now." then the path's own line. | Opening; persona starts in under 3 s |
-| 2 | same_path, then plan | "Was buying the car worth it?" | Same voice, two lives. Same path: the March 2028 $2,000 repair went on the card, card debt about $4,800 in 2031, car paid off June 2030. Plan: card paid off October 2027, the repair came out of savings, car paid off September 2028 and that payment became savings. 1–3 sentences each. | Grounded facts, magic moment |
-| 3 | plan | "How much will I have in my IRA?" | "About $22,400" (same path: about $13,900). `highlight_metric` fires with `plan.2031.ira`, and nothing waits on it. | Fact recall, highlight tool |
+| 2 | same_path, then plan | "Was buying the car worth it?" | Same voice, two lives, using the engine's fact sheets (current values: same path: car paid off April 2030, the March 2028 $2,000 repair came out of savings, but the card is still at $3,900 and she's paid about $4,954 in interest; plan: the repair came out of savings, card paid off January 2030, car paid off March 2030). 1–3 sentences each. Always check against the live fact sheet, not this table. | Grounded facts, magic moment |
+| 3 | plan | "How much will I have in my IRA?" | "About $24,146" (same path: about $15,692), or whatever the current fact sheet says. `highlight_metric` fires with `plan.2031.ira`, and nothing waits on it. | Fact recall, highlight tool |
 | 4 | plan | "What will my checking balance be in July 2029?" | "I don't know that part." No made-up number, maybe offers a fact she does know. | No guessing |
 | 5 | plan | "What if I take the Austin job? $8,000 more a year, but rent is $300 higher." | Says "Okay, let me think back..." then calls `update_plan` with `income_change_yearly: 8000`, `spending_change_monthly: 300`, preset `new_job`. Repeats the returned sentence (about $170 more a month after taxes and the higher rent) without changing its numbers. | Tool use, filler, numbers from tool only |
 | 6 | same_path | "What if I take the Austin job?" | No tool call. Says she can only remember how it actually went, and suggests trying it on the plan side. | Tool restricted to plan path |
@@ -118,6 +118,8 @@ Run each on **/voice-lab** with the activity log open. Do it once in a quiet roo
 | 10 | plan | She offers the $150 transfer. Say "Maybe...", then "Yes, move $150 from Spend to savings every payday." | After "maybe": no tool call; she restates the details and asks. After the clear yes: exactly one `start_transfer` with amount 150, `spend` → `reserve`, `payday`, `confirmed: true`. She says the returned sentence (first payday date) and mentions it's simulated and can be cancelled. | Clear-yes rule, single call |
 
 **Noise run:** repeat questions 2, 5 and 10 with crowd noise. Expected: she asks you to repeat anything she didn't hear clearly, and never answers a half-heard question or fires a tool on noise. If background speech triggers her, use push-to-talk (hold the mic button).
+
+Automatic version: open `/grounding` and run it against the live agent (text mode). It scores "N of 10 grounded" (every dollar amount and year she says is in her facts) and "N of 10 behaved" (each row's rule). Saved answers already score 10 of 10.
 
 ### Extra safety checks (run before judging, not on stage)
 

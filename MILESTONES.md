@@ -149,7 +149,7 @@ M1 Foundation ─► M2 Data ─► M3 Health score ─► M4 Forecast + futures
 
 ---
 
-## M10: Demo safety net and grounding tests (F8)
+## M10: Demo safety net and grounding tests (F8) ✅ done (live-agent grounding run needs keys)
 **Depends on:** M9 (saved answers have to replay the panel and the highlights too)
 **Goal:** the demo can't break on stage.
 

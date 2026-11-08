@@ -77,5 +77,7 @@ export interface VoiceSessionProps {
   onAgentReply?: (path: PathId, text: string) => void;
   /** Called when a session can't start or fails (no key, mic blocked, network). */
   onError?: (message: string) => void;
+  /** Text-only mode: hide the mic; typing starts a text session with the same agent. */
+  hideMic?: boolean;
   className?: string;
 }

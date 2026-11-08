@@ -59,7 +59,13 @@ export type AppState = {
   toolEvents: ToolEvent[];
   /** The number whose "show the math" sheet is open. */
   mathMetric: Metric | null;
+  /** How the future self talks: live ElevenLabs voice, ElevenLabs text, or offline saved answers. */
+  voiceMode: VoiceMode;
+  /** True once someone picked a mode by hand (stops the automatic switch to saved answers). */
+  voiceModeChosen: boolean;
 };
+
+export type VoiceMode = "live" | "text" | "saved";
 
 export const initialState: AppState = {
   customer: "maya",
@@ -84,6 +90,8 @@ export const initialState: AppState = {
   voiceStatus: "idle",
   toolEvents: [],
   mathMetric: null,
+  voiceMode: "live",
+  voiceModeChosen: false,
 };
 
 let state: AppState = initialState;

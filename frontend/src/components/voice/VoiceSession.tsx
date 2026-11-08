@@ -94,6 +94,7 @@ function VoiceSessionInner({
   onQueuedSent,
   onAgentReply,
   onError,
+  hideMic,
   signedUrlEndpoint = "/api/voice/signed-url",
   className,
   captions,
@@ -487,7 +488,7 @@ function VoiceSessionInner({
       )}
 
       {/* Big mic button + waveform */}
-      <div className="flex flex-col items-center gap-2">
+      <div className={`flex flex-col items-center gap-2 ${hideMic ? "hidden" : ""}`}>
         <button
           type="button"
           onClick={onMicClick}

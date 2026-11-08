@@ -12,13 +12,15 @@ import {
   queuedQuestionSent,
   recordToolEvent,
   selectFuture,
+  setVoiceMode,
   setVoiceStatus,
   startTransfer,
   updatePlan,
   voiceFailed,
 } from "@/lib/actions";
 import { useApp } from "@/lib/store";
-import { VoiceSession, type VoiceTools } from "../voice";
+import { SavedSession, VoiceSession, type VoiceTools } from "../voice";
+import type { VoiceMode } from "@/lib/store";
 import { CountUp, MetricValue } from "../ui";
 
 // The agent's client tools are the same functions the buttons use, so a spoken
@@ -194,14 +196,23 @@ function VoicePanel() {
   const sheets = useApp((s) => s.futures?.fact_sheets);
   const queue = useApp((s) => s.voiceQueue);
   const name = useApp((s) => s.profile?.customer.name ?? "You");
+  const mode = useApp((s) => s.voiceMode);
   const [configured, setConfigured] = useState<boolean | null>(null);
 
   useEffect(() => {
     let alive = true;
     fetch("/api/voice/signed-url?check=1", { cache: "no-store" })
       .then((r) => r.json())
-      .then((b: { configured?: boolean }) => alive && setConfigured(Boolean(b.configured)))
-      .catch(() => alive && setConfigured(false));
+      .then((b: { configured?: boolean }) => {
+        if (!alive) return;
+        setConfigured(Boolean(b.configured));
+        if (!b.configured) setVoiceMode("saved", true); // no key: fall back to saved answers
+      })
+      .catch(() => {
+        if (!alive) return;
+        setConfigured(false);
+        setVoiceMode("saved", true);
+      });
     return () => {
       alive = false;
     };
@@ -222,23 +233,64 @@ function VoicePanel() {
           Close
         </button>
       </div>
-      {configured === false && (
+      <ModeSwitch mode={mode} />
+      {configured === false && mode !== "saved" && (
         <p className="mb-2 rounded-lg bg-amber-50 px-2.5 py-1.5 text-xs leading-snug text-amber-800">
-          Live voice is off: add ELEVENLABS_API_KEY and ELEVENLABS_AGENT_ID to frontend/.env.local, then restart.
+          Live voice is off: add ELEVENLABS_API_KEY and ELEVENLABS_AGENT_ID to frontend/.env.local, then restart. Saved answers work without it.
         </p>
       )}
-      <VoiceSession
-        path={path}
-        factSheet={sheets[path]}
-        tools={VOICE_TOOLS}
-        onToolEvent={recordToolEvent}
-        onStatusChange={setVoiceStatus}
-        queued={queue && queue.path === path ? queue : null}
-        onQueuedSent={queuedQuestionSent}
-        onAgentReply={agentReplied}
-        onError={voiceFailed}
-      />
+      {mode === "saved" ? (
+        <SavedSession
+          path={path}
+          factSheet={sheets[path]}
+          tools={VOICE_TOOLS}
+          onToolEvent={recordToolEvent}
+          onStatusChange={setVoiceStatus}
+          queued={queue && queue.path === path ? queue : null}
+          onQueuedSent={queuedQuestionSent}
+          onAgentReply={agentReplied}
+        />
+      ) : (
+        <VoiceSession
+          key={mode}
+          path={path}
+          factSheet={sheets[path]}
+          tools={VOICE_TOOLS}
+          onToolEvent={recordToolEvent}
+          onStatusChange={setVoiceStatus}
+          queued={queue && queue.path === path ? queue : null}
+          onQueuedSent={queuedQuestionSent}
+          onAgentReply={agentReplied}
+          onError={voiceFailed}
+          hideMic={mode === "text"}
+        />
+      )}
     </section>
+  );
+}
+
+const MODES: { id: VoiceMode; label: string; hint: string }[] = [
+  { id: "live", label: "Live voice", hint: "ElevenLabs voice in and out" },
+  { id: "text", label: "Text", hint: "Same agent, typed (mic trouble)" },
+  { id: "saved", label: "Saved answers", hint: "Offline, read aloud by the browser" },
+];
+
+function ModeSwitch({ mode }: { mode: VoiceMode }) {
+  return (
+    <div role="radiogroup" aria-label="How she talks" className="mb-2 grid grid-cols-3 gap-1 rounded-full bg-surface p-1">
+      {MODES.map((m) => (
+        <button
+          key={m.id}
+          role="radio"
+          aria-checked={mode === m.id}
+          title={m.hint}
+          onClick={() => setVoiceMode(m.id)}
+          className={`rounded-full px-2 py-1 text-[11px] font-semibold ${mode === m.id ? "bg-white text-navy shadow-sm" : "text-muted hover:text-navy"}`}
+        >
+          {m.label}
+        </button>
+      ))}
+    </div>
   );
 }
 
