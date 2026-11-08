@@ -67,7 +67,7 @@ The hard part wasn't the voice, it was trust. People only believe a future self 
 
 ## Built with
 
-Next.js, React, TypeScript, Tailwind CSS, Recharts, Python, FastAPI, NumPy, Pydantic, ElevenLabs Agents
+Next.js, React, TypeScript, Tailwind CSS, Recharts, Python, FastAPI, NumPy, Pydantic, ElevenLabs Agents, Plaid
 
 ---
 
@@ -78,9 +78,11 @@ Next.js, React, TypeScript, Tailwind CSS, Recharts, Python, FastAPI, NumPy, Pyda
 3. `docs/screenshots/1-today.png`: today's whole picture and score
 4. `docs/screenshots/2-indicators.png`: the 8 indicators
 5. `docs/screenshots/3-forecast.png`: the 12-month forecast
-6. `docs/screenshots/7-show-the-math.png`: why $150
-7. `docs/screenshots/6-next-step-scheduled.png`: the scheduled first step
-8. `docs/screenshots/8-job-loss-check.png`: job-loss check across both futures
+6. `docs/screenshots/6-confirm-transfer.png`: the confirm sheet (nothing moves without a tap)
+7. `docs/screenshots/7-next-step-scheduled.png`: the scheduled first step
+8. `docs/screenshots/8-show-the-math.png`: why $150
+9. `docs/screenshots/9-job-loss-check.png`: job-loss check across both futures
+10. `docs/screenshots/10-connect-bank.png`: connect a bank with Plaid Sandbox
 
 ## Submission checklist
 
