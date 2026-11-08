@@ -41,11 +41,14 @@ export function App() {
   const hasData = useApp((s) => s.profile !== null && s.health !== null);
   const hasForecast = useApp((s) => s.forecast !== null);
   const hasFutures = useApp((s) => s.futures !== null);
+  // The judges' activity log appears once there is something to show: a call starting or a tool event.
+  const showActivity = useApp((s) => s.toolEvents.length > 0 || s.voiceStatus === "connected" || s.voiceStatus === "connecting");
 
   const frameRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const phoneScale = usePhoneScale();
 
   useEffect(() => {
     void loadCustomer();
@@ -75,23 +78,37 @@ export function App() {
   }, [screen]);
 
   return (
-    <div className="relative flex min-h-[100dvh] w-full items-center justify-center gap-8 bg-[#050506] sm:p-6">
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(255,255,255,0.045),transparent_70%),radial-gradient(40%_40%_at_100%_100%,rgba(255,255,255,0.025),transparent_70%)]"
-      />
+    <div className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-[#040405] sm:p-6">
+      <Backdrop />
 
-      {/* Phone frame. On a real phone it goes full-bleed. */}
+      {/* Phone. On a real phone the app goes full-bleed. On a laptop it sits in an iPhone-style device
+          with a real phone's 390 x 844 screen, and the whole device scales down evenly when the window is short. */}
+      <div
+        className="relative h-[100dvh] w-full shrink-0 sm:h-auto sm:w-auto"
+        style={phoneScale ? { width: DEVICE_W * phoneScale, height: DEVICE_H * phoneScale } : undefined}
+      >
+      <div
+        style={phoneScale ? { transform: `scale(${phoneScale})`, transformOrigin: "top left" } : undefined}
+        className="relative h-full w-full sm:h-[874px] sm:w-[420px] sm:rounded-[64px] sm:border-[3px] sm:border-transparent sm:p-[12px] sm:[background:linear-gradient(#050505,#050505)_padding-box,linear-gradient(150deg,#8d8d93_0%,#3a3a3e_18%,#1d1d20_40%,#6e6e74_58%,#232326_78%,#9a9aa0_100%)_border-box] sm:shadow-[0_0_0_1px_rgba(255,255,255,0.06),inset_0_0_0_1px_rgba(255,255,255,0.08),0_60px_140px_-30px_rgba(0,0,0,0.95),0_30px_60px_-20px_rgba(255,106,26,0.18)]"
+      >
+        <DeviceButtons />
       <div
         ref={frameRef}
-        className="relative flex h-[100dvh] w-full flex-col overflow-hidden bg-obsidian text-snow antialiased sm:h-[844px] sm:max-h-[calc(100dvh-3rem)] sm:w-[400px] sm:rounded-[48px] sm:shadow-[0_0_0_10px_#000,0_0_0_11px_rgba(255,255,255,0.1),0_50px_120px_-30px_rgba(0,0,0,0.95)]"
+        className="relative flex h-full w-full flex-col overflow-hidden bg-obsidian text-snow antialiased sm:h-[844px] sm:w-[390px] sm:rounded-[52px]"
       >
+        {/* Dynamic Island and home indicator: device chrome, laptop view only. */}
+        <div aria-hidden className="pointer-events-none absolute left-1/2 top-[11px] z-40 hidden h-[35px] w-[122px] -translate-x-1/2 rounded-full bg-black shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] sm:block">
+          <span className="absolute right-[14px] top-1/2 h-[11px] w-[11px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_35%_35%,#2b3a55,#0a0d14_60%)] shadow-[inset_0_0_0_1.5px_#141820]" />
+        </div>
+        <div aria-hidden className="pointer-events-none absolute bottom-[8px] left-1/2 z-40 hidden h-[5px] w-[134px] -translate-x-1/2 rounded-full bg-white mix-blend-difference sm:block" />
+
         <div
           ref={headerRef}
           className={`absolute inset-x-0 top-0 z-20 border-b transition-colors duration-200 ${
             scrolled ? "border-white/[0.06] bg-obsidian/80 backdrop-blur-xl" : "border-transparent"
           }`}
         >
+          <StatusBar />
           <Header />
           <SandboxBanner />
           {error && (
@@ -152,11 +169,93 @@ export function App() {
         <TransferSheet />
         <ConnectSheet />
       </div>
+      </div>
+      </div>
 
-      {/* Agent activity panel (M9): beside the phone on laptop screens, where judges can see it. */}
-      <aside id="activity-panel" aria-label="Agent activity" className="hidden h-[844px] max-h-[calc(100dvh-3rem)] w-[340px] shrink-0 lg:block">
-        <ActivityPanel />
+      {/* Agent activity panel (M9): beside the phone on laptop screens, where judges can see it.
+          It stays tucked away until the agent starts working, then slides in. */}
+      <aside
+        id="activity-panel"
+        aria-label="Agent activity"
+        aria-hidden={!showActivity}
+        style={{ height: DEVICE_H * (phoneScale ?? 1) }}
+        className={`hidden shrink-0 overflow-hidden transition-[width,margin,opacity,transform] duration-500 ease-out lg:block ${
+          showActivity ? "ml-8 w-[340px] translate-x-0 opacity-100" : "pointer-events-none ml-0 w-0 translate-x-6 opacity-0"
+        }`}
+      >
+        <div className="h-full w-[340px]">
+          <ActivityPanel />
+        </div>
       </aside>
+    </div>
+  );
+}
+
+// A real phone's screen is 390 x 844 CSS pixels (iPhone 14/15); the device adds a 12px bezel and a 3px titanium band.
+const DEVICE_W = 390 + 2 * 15;
+const DEVICE_H = 844 + 2 * 15;
+const FRAME_MARGIN = 56; // room around the device for its shadow
+
+/** On laptop-sized windows, how much to shrink the phone so all of it fits; null on real phones (full-bleed). */
+function usePhoneScale(): number | null {
+  const [scale, setScale] = useState<number | null>(null);
+  useEffect(() => {
+    const sync = () => {
+      if (window.innerWidth < 640) return setScale(null);
+      setScale(Math.min(1, (window.innerHeight - FRAME_MARGIN) / DEVICE_H));
+    };
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, []);
+  return scale;
+}
+
+/** The page behind the phone: a warm glow behind the device, a soft top light, a faint grid and a vignette. */
+function Backdrop() {
+  return (
+    <div aria-hidden className="pointer-events-none fixed inset-0">
+      <div className="absolute inset-0 bg-[radial-gradient(55%_45%_at_50%_-5%,rgba(255,255,255,0.07),transparent_70%)]" />
+      <div className="absolute left-1/2 top-1/2 h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(255,106,26,0.22),rgba(255,106,26,0.07)_45%,transparent_75%)] blur-2xl" />
+      <div className="absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(60%_60%_at_50%_50%,black,transparent)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_50%,transparent_55%,rgba(0,0,0,0.75))]" />
+    </div>
+  );
+}
+
+/** Titanium side buttons: action button and volume on the left, side button on the right. Laptop view only. */
+function DeviceButtons() {
+  const metal = "absolute hidden w-[4px] bg-[linear-gradient(90deg,#2a2a2d,#8d8d93_45%,#3a3a3e)] sm:block";
+  return (
+    <div aria-hidden>
+      <span className={`${metal} -left-[6px] top-[150px] h-[32px] rounded-l-[3px]`} />
+      <span className={`${metal} -left-[6px] top-[210px] h-[62px] rounded-l-[3px]`} />
+      <span className={`${metal} -left-[6px] top-[286px] h-[62px] rounded-l-[3px]`} />
+      <span className={`${metal} -right-[6px] top-[230px] h-[96px] rounded-r-[3px]`} />
+    </div>
+  );
+}
+
+/** iPhone-style status bar above the app header (laptop view only; a real phone shows its own). */
+function StatusBar() {
+  return (
+    <div aria-hidden className="hidden h-[50px] items-center justify-between px-[34px] pt-[6px] text-[15px] font-semibold tracking-tight text-snow sm:flex">
+      <span>9:41</span>
+      <span className="flex items-center gap-[6px]">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
+          <rect x="0" y="8" width="3" height="4" rx="1" /><rect x="5" y="5.5" width="3" height="6.5" rx="1" />
+          <rect x="10" y="3" width="3" height="9" rx="1" /><rect x="15" y="0" width="3" height="12" rx="1" />
+        </svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor">
+          <path d="M8 2.2c2.4 0 4.6.9 6.3 2.5l1.2-1.3A10.6 10.6 0 0 0 8 .4 10.6 10.6 0 0 0 .5 3.4l1.2 1.3A8.9 8.9 0 0 1 8 2.2Z" />
+          <path d="M8 5.6c1.5 0 2.9.6 4 1.6l1.2-1.3A7.4 7.4 0 0 0 8 3.8c-2 0-3.8.8-5.2 2.1L4 7.2a5.6 5.6 0 0 1 4-1.6Z" />
+          <path d="M8 9a2.3 2.3 0 0 1 1.7.7L8 11.6 6.3 9.7A2.3 2.3 0 0 1 8 9Z" />
+        </svg>
+        <span className="relative ml-[2px] flex h-[13px] w-[27px] items-center rounded-[4px] border border-snow/40 p-[1.5px]">
+          <span className="h-full w-[78%] rounded-[2px] bg-snow" />
+          <span className="absolute -right-[3px] top-1/2 h-[4px] w-[1.5px] -translate-y-1/2 rounded-r bg-snow/40" />
+        </span>
+      </span>
     </div>
   );
 }
